@@ -31,5 +31,11 @@ namespace TrainingTweak
         /// experience during training.
         /// </summary>
         public int LevelDifferenceMultiplierMultiple { get; set; } = 5;
+
+        /// <summary>
+        /// How many troop xp points gained through training to result in one
+        /// leadership skill xp.
+        /// </summary>
+        public double TrainingXPToLeadershipXP { get; set; } = 100.0;
     }
 }
