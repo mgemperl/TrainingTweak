@@ -36,6 +36,6 @@ namespace TrainingTweak
         /// How many troop xp points gained through training to result in one
         /// leadership skill xp.
         /// </summary>
-        public int TrainingXPToLeadershipXP { get; set; } = 0;
+        public int TrainingXPToLeadershipXP { get; set; } = 200;
     }
 }

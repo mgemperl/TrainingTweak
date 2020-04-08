@@ -13,7 +13,7 @@ namespace TrainingTweak
     {
         private static int ExecuteDailyTraining(Hero hero)
         {
-            if (hero.IsPrisoner)
+            if (hero?.PartyBelongedTo?.MemberRoster == null)
             {
                 return 0;
             }    
@@ -86,7 +86,7 @@ namespace TrainingTweak
             {
                 // Display training results to player
                 InformationManager.DisplayMessage(new InformationMessage(
-                    $"Training total xp gain: {totalXp}"));
+                    $"Total xp gained from training: {totalXp}"));
             }
         }
     }
