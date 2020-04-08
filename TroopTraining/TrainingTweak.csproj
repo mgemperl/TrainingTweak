@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.0.0.9\lib\net472\0Harmony.dll</HintPath>
-    </Reference>
     <Reference Include="SandBox">
       <HintPath>D:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.dll</HintPath>
       <Private>False</Private>
@@ -253,9 +250,6 @@
     <Compile Include="Settings.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="TrainingEventHandlers.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

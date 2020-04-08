@@ -13,6 +13,11 @@ namespace TrainingTweak
     {
         private static int ExecuteDailyTraining(Hero hero)
         {
+            if (hero.IsPrisoner)
+            {
+                return 0;
+            }    
+
             var partyMembers = hero.PartyBelongedTo.MemberRoster;
             int totalXp = 0;
             int baseXpGain = 0;
@@ -65,7 +70,7 @@ namespace TrainingTweak
             {
                 // Give hero leadership xp
                 hero.AddSkillXp(DefaultSkills.Leadership,
-                    (int)Math.Ceiling(totalXp / Settings.Instance.TrainingXPToLeadershipXP));
+                    (int)Math.Ceiling((double) totalXp / Settings.Instance.TrainingXPToLeadershipXP));
             }
 
             return totalXp;
