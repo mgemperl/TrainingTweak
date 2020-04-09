@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using TaleWorlds.CampaignSystem;
+﻿using System.Xml.Serialization;
 
 namespace TrainingTweak
 {
@@ -44,7 +38,7 @@ namespace TrainingTweak
         /// <summary>
         /// For every X levels the trainer is above the troop, the xp gain is increased by 100%.
         /// For example, if set to 5, a level 20 trainer training a level 10 troops will
-       ///  result in x3 experience gained.
+        /// result in x3 experience gained.
         /// </summary>
         [XmlElement]
         public int LevelDifferenceMultiple { get; set; } = 4;
@@ -53,7 +47,7 @@ namespace TrainingTweak
         /// How much xp a trainer has to train troops to get 1 leadership xp.
         /// </summary>
         [XmlElement]
-        public double TrainingXpPerLeadershipXp { get; set; } = 10.0;
+        public double TrainingXpPerLeadershipXp { get; set; } = 20.0;
 	
         /// <summary>
         /// Whether wounded troops receive training xp.

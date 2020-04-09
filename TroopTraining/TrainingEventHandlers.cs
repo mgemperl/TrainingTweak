@@ -1,15 +1,7 @@
-﻿using SandBox.GauntletUI;
-using SandBox.GauntletUI.Map;
-using StoryMode.GauntletUI;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
-using TaleWorlds.GauntletUI;
 
 namespace TrainingTweak
 {
@@ -47,9 +39,10 @@ namespace TrainingTweak
                 return 0;
             }
 
+            // Apply xp multiplier
             baseXpGain *= Math.Max(0, Settings.Instance.TrainingXpMultiplier);
 
-            // For each member of the hero's party
+            // For each group in the hero's party
             for (int idx = 0; idx < partyMembers.Count; idx++)
             {
                 var curMember = partyMembers.GetCharacterAtIndex(idx);

@@ -1,15 +1,8 @@
-﻿using StoryMode.GameModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
 namespace TrainingTweak
@@ -19,11 +12,6 @@ namespace TrainingTweak
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-        }
-
-        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
-        {
-            base.OnGameStart(game, gameStarterObject);
 
             try
             {
@@ -32,13 +20,17 @@ namespace TrainingTweak
             }
             catch (Exception exc)
             {
-                InformationManager.DisplayMessage(new InformationMessage(
-                    "Training Tweak mod failed to load config file. Using defaults."));
+                MessageBox.Show("Training Tweak mod failed to load config file. " +
+                    "Using default values.");
             }
+        }
+
+        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
+        {
+            base.OnGameStart(game, gameStarterObject);
 
             Campaign.Current.DailyTickEvent.AddHandler(
                 TrainingEventHandlers.DailyTrainingTickHandler);
         }
-        
     }
 }

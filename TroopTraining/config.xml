@@ -21,7 +21,7 @@
        Can be set below 1, but that would mean a lot of leadership xp.
        Set to 0 to disable.
   -->
-  <TrainingXpPerLeadershipXp>10.0</TrainingXpPerLeadershipXp>
+  <TrainingXpPerLeadershipXp>20.0</TrainingXpPerLeadershipXp>
 
   <!-- If false, wounded troops don't count toward the xp awarded to their group -->
   <WoundedReceiveTraining>false</WoundedReceiveTraining>
