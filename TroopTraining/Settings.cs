@@ -54,15 +54,17 @@ namespace TrainingTweak
         /// </summary>
         [XmlElement]
         public double TrainingXpPerLeadershipXp { get; set; } = 10.0;
-
+	
         /// <summary>
         /// Whether wounded troops receive training xp.
         /// </summary>
+        [XmlElement]
         public bool WoundedReceiveTraining { get; set; } = false;
 
         /// <summary>
         /// Whether upgradeable troops receive training xp.
         /// </summary>
+        [XmlElement]
         public bool UpgradeableReceiveTraining { get; set; } = true;
     }
 }
