@@ -47,7 +47,7 @@ namespace TrainingTweak
        ///  result in x3 experience gained.
         /// </summary>
         [XmlElement]
-        public int LevelDifferenceMultiple { get; set; } = 5;
+        public int LevelDifferenceMultiple { get; set; } = 4;
 
         /// <summary>
         /// How much xp a trainer has to train troops to get 1 leadership xp.
