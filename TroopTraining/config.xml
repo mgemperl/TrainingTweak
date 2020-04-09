@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TrainingTweak.Settings>
+
+  <!-- A multiplier for all xp awarded by this mod, for the heck of it. -->
+  <TrainingXpMultiplier>1.0</TrainingXpMultiplier>
+	
+  <!-- Max tier trained by Raise The Meek perk. 
+			 This option is mainly for any mods that lengthen the troop tree, but you can
+       do whatever.
+  -->
+  <RaiseTheMeekMaxTierTrained>3</RaiseTheMeekMaxTierTrained>
+	
+  <!-- For every X levels the trainer is above the troop, the xp gain is increased by 100%.
+			 For example, if set to 5, a level 20 trainer training a level 10 troop will
+       result in x3 experience gained.
+			 Set to 0 to disable. To take effect, must be at least 1.
+  -->
+  <LevelDifferenceMultiple>5</LevelDifferenceMultiple>
+	
+  <!-- How much xp a trainer has to train troops to get 1 leadership xp.  
+			 Can be set below 1, but that would mean a lot of leadership xp.
+			 Set to 0 to disable.
+  -->
+  <TrainingXpPerLeadershipXp>10.0</TrainingXpPerLeadershipXp>
+
+  <!-- If false, wounded troops don't count toward the xp awarded to their group -->
+  <WoundedReceiveTraining>false</WoundedReceiveTraining>
+
+  <!-- If false, upgradeable troops don't count toward the xp awarded to their group -->
+  <UpgradeableReceiveTraining>true</UpgradeableReceiveTraining>
+	
+</TrainingTweak.Settings>

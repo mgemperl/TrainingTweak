@@ -1,4 +1,7 @@
-﻿using System;
+﻿using SandBox.GauntletUI;
+using SandBox.GauntletUI.Map;
+using StoryMode.GauntletUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +9,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
+using TaleWorlds.GauntletUI;
 
 namespace TrainingTweak
 {
@@ -20,7 +24,7 @@ namespace TrainingTweak
 
             var partyMembers = hero.PartyBelongedTo.MemberRoster;
             int totalXp = 0;
-            int baseXpGain = 0;
+            double baseXpGain = 0;
             int maxTierTrained = 0;
 
             // If hero has Raise The Meek perk
@@ -43,6 +47,8 @@ namespace TrainingTweak
                 return 0;
             }
 
+            baseXpGain *= Math.Max(0, Settings.Instance.TrainingXpMultiplier);
+
             // For each member of the hero's party
             for (int idx = 0; idx < partyMembers.Count; idx++)
             {
@@ -50,27 +56,41 @@ namespace TrainingTweak
                 // If member is a troop, and low enough tier to be trained
                 if (!curMember.IsHero && curMember.Tier <= maxTierTrained)
                 {
-                    int numNotWounded = partyMembers.GetElementNumber(idx)
-                        - partyMembers.GetElementWoundedNumber(idx);
+                    int numInGroup = partyMembers.GetElementNumber(idx);
+                    int numNotTrained = 0;
+
+                    if (!Settings.Instance.WoundedReceiveTraining)
+                    {
+                        numNotTrained = partyMembers.GetElementWoundedNumber(idx);
+                    }
+                    if (!Settings.Instance.UpgradeableReceiveTraining)
+                    {
+                        numNotTrained = Math.Max(numNotTrained, 
+                            partyMembers.GetElementCopyAtIndex(idx).NumberReadyToUpgrade);
+                    }
+
+                    numInGroup -= numNotTrained;
+
                     double levelDiffMult = 1.0;
-                    if (Settings.Instance.LevelDifferenceMultiplierMultiple >= 1.0)
+                    if (Settings.Instance.LevelDifferenceMultiple >= 1.0)
                     {
                         levelDiffMult = 1.0 + Math.Max(0, (hero.Level - curMember.Level))
-                            / (double)Settings.Instance.LevelDifferenceMultiplierMultiple;
+                            / (double)Settings.Instance.LevelDifferenceMultiple;
                     }
                     double xpPerTroop = levelDiffMult * baseXpGain;
-                    int xpForCurElement = (int)Math.Round(numNotWounded * xpPerTroop);
+                    int xpForCurElement = (int)Math.Round(numInGroup * xpPerTroop);
 
                     partyMembers.AddXpToTroopAtIndex(xpForCurElement, idx);
                     totalXp += xpForCurElement;
                 }
             }
 
-            if (Settings.Instance.TrainingXPToLeadershipXP > 0)
+            if (Settings.Instance.TrainingXpPerLeadershipXp > 0)
             {
                 // Give hero leadership xp
                 hero.AddSkillXp(DefaultSkills.Leadership,
-                    (int)Math.Ceiling((double) totalXp / Settings.Instance.TrainingXPToLeadershipXP));
+                    (int)Math.Ceiling((double) totalXp 
+                        / Settings.Instance.TrainingXpPerLeadershipXp));
             }
 
             return totalXp;
@@ -87,6 +107,16 @@ namespace TrainingTweak
                 // Display training results to player
                 InformationManager.DisplayMessage(new InformationMessage(
                     $"Total xp gained from training: {totalXp}"));
+
+                // If there are troops ready to upgrade
+                if (Hero.MainHero?.PartyBelongedTo?.MemberRoster != null
+                    && !Hero.MainHero.PartyBelongedTo.MemberRoster
+                        .Where(elem => elem.NumberReadyToUpgrade > 0)
+                        .IsEmpty())
+                {
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        "Some troops are ready to upgrade."));
+                }
             }
         }
     }
