@@ -21,7 +21,7 @@ namespace TrainingTweak
             catch (Exception exc)
             {
                 MessageBox.Show("Training Tweak mod failed to load config file. " +
-                    "Using default values.");
+                    $"Using default values.\n\n{exc.Message}");
             }
         }
 

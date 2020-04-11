@@ -24,10 +24,10 @@ namespace TrainingTweak
         }
 
         /// <summary>
-        /// A multiplier for all xp awarded by this mod.
+        /// A multiplier for all xp awarded to player troops by this mod.
         /// </summary>
         [XmlElement]
-        public double TrainingXpMultiplier { get; set; } = 1.0;
+        public double PlayerPartyTrainingXpMultiplier { get; set; } = 1.0;
 
         /// <summary>
         /// Max tier trained by Raise The Meek perk. 
@@ -60,5 +60,27 @@ namespace TrainingTweak
         /// </summary>
         [XmlElement]
         public bool UpgradeableReceiveTraining { get; set; } = true;
+
+        /// <summary>
+        /// Whether training xp given to troops by companions in the player's 
+        /// party is affected by this mod.
+        /// </summary>
+        [XmlElement]
+        public bool CompanionsInPartyGiveTraining { get; set; } = true;
+
+        /// <summary>
+        /// Whether training xp given to non-player parties is affected by this mod.
+        /// (This includes player-owned caravans)
+        /// </summary>
+        [XmlElement]
+        public bool NonPlayerPartiesReceiveTraining { get; set; } = false;
+
+        /// <summary>
+        /// A multiplier for all training xp this mod gives to troops in parties not owned
+        /// by the player.
+        /// (This includes player-owned caravans)
+        /// </summary>
+        [XmlElement]
+        public double AIPartyTrainingXpMultiplier { get; set; } = 1.0;
     }
 }
