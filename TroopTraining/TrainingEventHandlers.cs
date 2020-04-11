@@ -6,6 +6,7 @@ using TaleWorlds.Core;
 
 namespace TrainingTweak
 {
+    // TODO: Change this to a campaign behavior. It's better design-wise.
     public static class TrainingEventHandlers
     {
         /// <summary>
@@ -146,8 +147,6 @@ namespace TrainingTweak
                         "Some troops are ready to upgrade."));
                 }
             }
-
-            var mainParty = Campaign.Current.MainParty;
 
             // Apply to AI
             if (Settings.Instance.NonPlayerPartiesReceiveTraining)
