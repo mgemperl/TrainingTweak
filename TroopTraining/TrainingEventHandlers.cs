@@ -90,7 +90,8 @@ namespace TrainingTweak
             }
 
             // If configured to give hero leadership xp
-            if (Settings.Instance.TrainingXpPerLeadershipXp > 0)
+            if (Settings.Instance.TrainingXpPerLeadershipXp > 0
+                && totalXp > 0)
             {
                 // Give hero leadership xp
                 hero.AddSkillXp(DefaultSkills.Leadership,
