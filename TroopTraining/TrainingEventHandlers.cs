@@ -53,39 +53,46 @@ namespace TrainingTweak
             {
                 var curMember = partyMembers.GetCharacterAtIndex(idx);
                 // If member is a troop, and low enough tier to be trained
-                if (!curMember.IsHero && curMember.Tier <= maxTierTrained)
+                if (curMember.IsSoldier && curMember.Tier <= maxTierTrained)
                 {
                     int numInGroup = partyMembers.GetElementNumber(idx);
-                    int numNotTrained = 0;
+                    int numUpgradeable = partyMembers.GetElementCopyAtIndex(idx)
+                        .NumberReadyToUpgrade;
 
-                    // Remove wounded from training if configured to
-                    if (!Settings.Instance.WoundedReceiveTraining)
+                    // If there are troops in group to train
+                    if (numUpgradeable < numInGroup)
                     {
-                        numNotTrained = partyMembers.GetElementWoundedNumber(idx);
-                    }
-                    // Remove upgradeable from training if configured to
-                    if (!Settings.Instance.UpgradeableReceiveTraining)
-                    {
-                        // Allow wounded troops to be considered the upgradeable ones
-                        numNotTrained = Math.Max(numNotTrained, 
-                            partyMembers.GetElementCopyAtIndex(idx).NumberReadyToUpgrade);
-                    }
+                        int numNotTrained = 0;
+                        // Remove wounded from training if configured to
+                        if (!Settings.Instance.WoundedReceiveTraining)
+                        {
+                            numNotTrained = partyMembers.GetElementWoundedNumber(idx);
+                        }
+                        // Remove upgradeable from training if configured to
+                        if (!Settings.Instance.UpgradeableReceiveTraining)
+                        {
+                            // Allow wounded troops to be considered the upgradeable ones
+                            numNotTrained = Math.Max(numNotTrained, numUpgradeable);
+                        }
 
-                    numInGroup -= numNotTrained;
+                        // Apply level difference multiplier
+                        double levelDiffMult = 1.0;
+                        if (Settings.Instance.LevelDifferenceMultiple >= 1.0)
+                        {
+                            levelDiffMult = 1.0 + Math.Max(0, (hero.Level - curMember.Level))
+                                / (double)Settings.Instance.LevelDifferenceMultiple;
+                        }
+                        double xpPerTroop = levelDiffMult * baseXpGain;
+                        int xpForCurGroup = (int)Math.Round(
+                            (numInGroup - numNotTrained) * xpPerTroop);
 
-                    // Apply level difference multiplier
-                    double levelDiffMult = 1.0;
-                    if (Settings.Instance.LevelDifferenceMultiple >= 1.0)
-                    {
-                        levelDiffMult = 1.0 + Math.Max(0, (hero.Level - curMember.Level))
-                            / (double)Settings.Instance.LevelDifferenceMultiple;
+                        // Add xp to current troop group
+                        if (xpForCurGroup > 0)
+                        {
+                            partyMembers.AddXpToTroopAtIndex(xpForCurGroup, idx);
+                            totalXp += xpForCurGroup;
+                        }
                     }
-                    double xpPerTroop = levelDiffMult * baseXpGain;
-
-                    // Add xp to current troop group
-                    int xpForCurElement = (int)Math.Round(numInGroup * xpPerTroop);
-                    partyMembers.AddXpToTroopAtIndex(xpForCurElement, idx);
-                    totalXp += xpForCurElement;
                 }
             }
 

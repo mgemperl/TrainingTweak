@@ -35,7 +35,7 @@
   <!-- ////////////////////////////////////// -->
 
   <!-- A multiplier for all xp awarded to the player's party by this mod -->
-  <PlayerPartyTrainingXpMultiplier>1.0</PlayerPartyTrainingXpMultiplier>
+  <PlayerPartyTrainingXpMultiplier>0.5</PlayerPartyTrainingXpMultiplier>
 
   <!-- Whether training by companions in the player's party is affected by this mod. -->
   <CompanionsInPartyGiveTraining>true</CompanionsInPartyGiveTraining>
@@ -52,6 +52,6 @@
   <!-- A multiplier for all training xp awarded to non-player parties by this mod.
       (This includes player-owned caravans)
   -->
-  <AIPartyTrainingXpMultiplier>1.0</AIPartyTrainingXpMultiplier>
+  <AIPartyTrainingXpMultiplier>0.5</AIPartyTrainingXpMultiplier>
 	
 </TrainingTweak.Settings>
