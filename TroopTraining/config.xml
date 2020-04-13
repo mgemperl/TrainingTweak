@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TrainingTweak.Settings>
 
-  <!-- A multiplier for all xp awarded by this mod, for the heck of it. -->
-  <TrainingXpMultiplier>1.0</TrainingXpMultiplier>
-	
-  <!-- Max tier trained by Raise The Meek perk. 
-       This option is mainly for any mods that lengthen the troop tree, but you can
-       do whatever.
-  -->
-  <RaiseTheMeekMaxTierTrained>3</RaiseTheMeekMaxTierTrained>
+  <!-- ////////////////////////////////////// -->
+  <!--            General Settings            -->
+  <!-- ////////////////////////////////////// -->
 	
   <!-- For every X levels the trainer is above the troop, the xp gain is increased by 100%.
        For example, if set to 5, a level 20 trainer training a level 10 troop will
@@ -23,10 +18,40 @@
   -->
   <TrainingXpPerLeadershipXp>20.0</TrainingXpPerLeadershipXp>
 
-  <!-- If false, wounded troops don't count toward the xp awarded to their group -->
+  <!-- If false, wounded troops don't count toward the xp awarded to their group. -->
   <WoundedReceiveTraining>false</WoundedReceiveTraining>
 
-  <!-- If false, upgradeable troops don't count toward the xp awarded to their group -->
+  <!-- If false, upgradeable troops don't count toward the xp awarded to their group. -->
   <UpgradeableReceiveTraining>true</UpgradeableReceiveTraining>
+
+  <!-- Max tier trained by Raise The Meek perk. 
+       This option is mainly for any mods that lengthen the troop tree, but you can
+       do whatever.
+  -->
+  <RaiseTheMeekMaxTierTrained>3</RaiseTheMeekMaxTierTrained>
+
+  <!-- ////////////////////////////////////// -->
+  <!--        Player-Specific Settings        -->
+  <!-- ////////////////////////////////////// -->
+
+  <!-- A multiplier for all xp awarded to the player's party by this mod -->
+  <PlayerPartyTrainingXpMultiplier>0.5</PlayerPartyTrainingXpMultiplier>
+
+  <!-- Whether training by companions in the player's party is affected by this mod. -->
+  <CompanionsInPartyGiveTraining>true</CompanionsInPartyGiveTraining>
+
+  <!-- ///////////////////////////////////// -->
+  <!--         AI-Specific Settings          -->
+  <!-- ///////////////////////////////////// -->
+
+  <!-- Whether training xp given to non-player parties is affected by this mod.
+       (This includes player-owned caravans)
+  -->
+  <NonPlayerPartiesReceiveTraining>false</NonPlayerPartiesReceiveTraining>
+	
+  <!-- A multiplier for all training xp awarded to non-player parties by this mod.
+      (This includes player-owned caravans)
+  -->
+  <AIPartyTrainingXpMultiplier>0.5</AIPartyTrainingXpMultiplier>
 	
 </TrainingTweak.Settings>
