@@ -29,8 +29,13 @@ namespace TrainingTweak
         {
             base.OnGameStart(game, gameStarterObject);
 
-            Campaign.Current.DailyTickEvent.AddHandler(
-                TrainingEventHandlers.DailyTrainingTickHandler);
+            // If this is campaign mode
+            if (Campaign.Current?.DailyTickEvent != null)
+            {
+                // Add daily tick handler for training
+                Campaign.Current.DailyTickEvent.AddHandler(
+                    TrainingEventHandlers.DailyTrainingTickHandler);
+            }
         }
     }
 }
