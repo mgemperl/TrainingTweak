@@ -6,7 +6,6 @@ using TaleWorlds.Core;
 
 namespace TrainingTweak
 {
-    // TODO: Change this to a campaign behavior. It's better design-wise.
     public static class TrainingEventHandlers
     {
         /// <summary>

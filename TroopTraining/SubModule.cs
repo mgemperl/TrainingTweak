@@ -7,6 +7,11 @@ using TaleWorlds.MountAndBlade;
 
 namespace TrainingTweak
 {
+    // TODO: Support when hero has both training perks.
+    // TODO: Add optional leadership skill training xp
+    // TODO: Add optional base-line xp gain (perhaps 5xp up to tier one if hero has neither perk)
+    // TODO: Add separate multipliers for player clan parties, and non-player-owned AI parties
+    // TODO: Change to use campaign behaviors. It's better design-wise.
     public class SubModule : MBSubModuleBase
     {
         protected override void OnSubModuleLoad()
