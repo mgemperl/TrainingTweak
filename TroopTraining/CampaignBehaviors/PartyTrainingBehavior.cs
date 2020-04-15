@@ -57,7 +57,7 @@ namespace TrainingTweak.CampaignBehaviors
             else if (party.IsLordParty || (party.IsCaravan && party.Party?.Owner == Hero.MainHero))
             {
                 // Get multiplier for this party
-                double multiplier = (party.Party?.Owner == Hero.MainHero)
+                float multiplier = (party.Party?.Owner == Hero.MainHero)
                     ? Settings.Instance.PlayerClanPartyTrainingXpMultiplier
                     : Settings.Instance.NonPlayerClanPartyTrainingXpMultiplier;
 
@@ -72,7 +72,7 @@ namespace TrainingTweak.CampaignBehaviors
             else if (party.IsGarrison)
             {
                 // Get multiplier for this garrison
-                double multiplier = (party.Party?.Owner == Hero.MainHero)
+                float multiplier = (party.Party?.Owner == Hero.MainHero)
                     ? Settings.Instance.PlayerClanGarrisonTrainingXpMultiplier
                     : Settings.Instance.NonPlayerClanGarrisonTrainingXpMultiplier;
 
@@ -85,7 +85,7 @@ namespace TrainingTweak.CampaignBehaviors
             }
         }
 
-        private void TrainGarrison (MobileParty party, double multiplier)
+        private void TrainGarrison (MobileParty party, float multiplier)
         {
             // If garrison's town doesn't exist for some reason, do nothing
             if (party.CurrentSettlement?.Town == null)
@@ -97,7 +97,7 @@ namespace TrainingTweak.CampaignBehaviors
 
             // Get base xp gain for this garrison
             var trainingModel = Campaign.Current.Models.DailyTroopXpBonusModel;
-            double xpPerTroop = trainingModel.CalculateDailyTroopXpBonus(town)
+            float xpPerTroop = trainingModel.CalculateDailyTroopXpBonus(town)
                 * trainingModel.CalculateGarrisonXpBonusMultiplier(town)
                 * multiplier;
 
@@ -141,7 +141,7 @@ namespace TrainingTweak.CampaignBehaviors
             }
         }
 
-        private int TrainParty(MobileParty party, double multiplier)
+        private int TrainParty(MobileParty party, float multiplier)
         {
             int totalXp = 0;
             // For each hero in the party
@@ -186,7 +186,7 @@ namespace TrainingTweak.CampaignBehaviors
         /// <summary>
         /// Apply hero's training onto their party.
         /// </summary>
-        private static int ExecuteHeroDailyTraining(Hero hero, double baseXpGain,
+        private static int ExecuteHeroDailyTraining(Hero hero, float baseXpGain,
             int maxTierTrained)
         {
             // If configured not to do this training
@@ -226,13 +226,13 @@ namespace TrainingTweak.CampaignBehaviors
                         }
 
                         // Apply level difference multiplier
-                        double levelDiffMult = 1.0;
+                        float levelDiffMult = 1.0f;
                         if (Settings.Instance.LevelDifferenceMultiple >= 1.0)
                         {
-                            levelDiffMult = 1.0 + Math.Max(0, (hero.Level - curMember.Level))
-                                / (double)Settings.Instance.LevelDifferenceMultiple;
+                            levelDiffMult = 1.0f + Math.Max(0, (hero.Level - curMember.Level))
+                                / (float)Settings.Instance.LevelDifferenceMultiple;
                         }
-                        double xpPerTroop = levelDiffMult * baseXpGain;
+                        float xpPerTroop = levelDiffMult * baseXpGain;
                         int xpForCurGroup = (int)Math.Round(
                             (numInGroup - numNotTrained) * xpPerTroop);
 
@@ -252,7 +252,7 @@ namespace TrainingTweak.CampaignBehaviors
             {
                 // Give hero leadership xp
                 hero.AddSkillXp(DefaultSkills.Leadership,
-                    (int)Math.Ceiling((double)totalXp
+                    (int)Math.Ceiling((float)totalXp
                         / Settings.Instance.TrainingXpPerLeadershipXp));
             }
 

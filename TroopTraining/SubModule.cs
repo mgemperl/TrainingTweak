@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModLib;
+using System;
 using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -15,10 +16,14 @@ namespace TrainingTweak
     // TODO: Change to use campaign behaviors. It's better design-wise.
     public class SubModule : MBSubModuleBase
     {
+        public static readonly string ModuleFolderName = "TrainingTweak";
+        public static readonly string ModName = "Training Tweak";
+
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
 
+            // Attempt to load settings xml file
             try
             {
                 Settings.Instance = SettingsLoader.LoadSettings(
@@ -29,6 +34,23 @@ namespace TrainingTweak
                 MessageBox.Show("Training Tweak mod failed to load config file. " +
                     $"Using default values.\n\n{exc.Message}");
             }
+
+            // Attempt to hook into ModLib mod configuration menu
+            try
+            {
+                SettingsDatabase.RegisterSettings(Settings.Instance);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"{exc.Message}\n{exc.StackTrace}");
+            }
+        }
+
+        public override void OnGameInitializationFinished(Game game)
+        {
+            base.OnGameInitializationFinished(game);
+
+            MessageBox.Show("Finished initialization");
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
