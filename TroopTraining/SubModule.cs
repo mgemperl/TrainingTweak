@@ -40,7 +40,6 @@ namespace TrainingTweak
 
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
-                gameStarter.AddBehavior(new GarrisonTrainingBehavior());
             }
         }
     }

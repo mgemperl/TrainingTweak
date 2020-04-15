@@ -10,23 +10,23 @@ namespace TrainingTweak.CampaignBehaviors
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickPartyEvent.AddNonSerializedListener(
-                this, TrainParty);
+                this, HandleDailyTraining);
         }
 
         public override void SyncData(IDataStore dataStore)
         {
         }
 
-        private void TrainParty(MobileParty party)
+        private void HandleDailyTraining(MobileParty party)
         {
-            // If party or member list is null, do nothing
-            if (party?.MemberRoster == null)
+            // If party or member list is invalid, do nothing
+            if (party?.MemberRoster == null || !party.IsActive)
             {
                 return;
             }
 
-            // If it is player party
-            if (party == Hero.MainHero.PartyBelongedTo)
+            // If it is the player's party
+            if (party.IsMainParty)
             {
                 // If configured to train player party
                 if (Settings.Instance.PlayerPartyTrainingXpMultiplier > 0)
@@ -53,26 +53,90 @@ namespace TrainingTweak.CampaignBehaviors
                     }
                 }
             }
-            // If it is a party owned by player
-            else if(party.Party?.Owner == Hero.MainHero)
+            // Otherwise, if it is a lord party or a player-owned caravan
+            else if (party.IsLordParty || (party.IsCaravan && party.Party?.Owner == Hero.MainHero))
             {
-                // If configured to train player clan parties
-                if (Settings.Instance.PlayerClanPartyTrainingXpMultiplier > 0)
-                {
-                    // Train player clan party
-                    int totalXp = TrainParty(party,
-                        Settings.Instance.PlayerClanPartyTrainingXpMultiplier);
-                }
-            }
-            // Is a non-player AI party
-            else
-            {
-                // If configured to train AI parties
-                if (Settings.Instance.NonPlayerClanPartyTrainingXpMultiplier > 0)
+                // Get multiplier for this party
+                double multiplier = (party.Party?.Owner == Hero.MainHero)
+                    ? Settings.Instance.PlayerClanPartyTrainingXpMultiplier
+                    : Settings.Instance.NonPlayerClanPartyTrainingXpMultiplier;
+
+                // If configured to train this party
+                if(multiplier > 0)
                 {
                     // Train AI party
-                    int totalXp = TrainParty(party,
-                        Settings.Instance.NonPlayerClanPartyTrainingXpMultiplier);
+                    TrainParty(party, multiplier);
+                }
+            }
+            // Otherwise, if it is a garrison
+            else if (party.IsGarrison)
+            {
+                // Get multiplier for this garrison
+                double multiplier = (party.Party?.Owner == Hero.MainHero)
+                    ? Settings.Instance.PlayerClanGarrisonTrainingXpMultiplier
+                    : Settings.Instance.NonPlayerClanGarrisonTrainingXpMultiplier;
+
+                // If configured to train this garrison
+                if(multiplier > 0)
+                {
+                    // Train AI party
+                    TrainGarrison(party, multiplier);
+                }
+            }
+        }
+
+        private void TrainGarrison (MobileParty party, double multiplier)
+        {
+            // If garrison's town doesn't exist for some reason, do nothing
+            if (party.CurrentSettlement?.Town == null)
+            {
+                return;
+            }
+
+            Town town = party.CurrentSettlement.Town;
+
+            // Get base xp gain for this garrison
+            var trainingModel = Campaign.Current.Models.DailyTroopXpBonusModel;
+            double xpPerTroop = trainingModel.CalculateDailyTroopXpBonus(town)
+                * trainingModel.CalculateGarrisonXpBonusMultiplier(town)
+                * multiplier;
+
+            // If training this garrison, and garrison has member list
+            if (xpPerTroop > 0 && town.GarrisonParty.MemberRoster != null)
+            {
+                var members = town.GarrisonParty.MemberRoster;
+
+                // For each group in the garrison
+                for (int idx = 0; idx < town.GarrisonParty.MemberRoster.Count; idx++)
+                {
+                    int numInGroup = members.GetElementNumber(idx);
+                    int numUpgradeable = members.GetElementCopyAtIndex(idx)
+                        .NumberReadyToUpgrade;
+
+                    // If there are troops in group to train
+                    if (numUpgradeable < numInGroup)
+                    {
+                        int numNotTrained = 0;
+                        // Remove wounded from training if configured to
+                        if (!Settings.Instance.WoundedReceiveTraining)
+                        {
+                            numNotTrained = members.GetElementWoundedNumber(idx);
+                        }
+                        // Remove upgradeable from training if configured to
+                        if (!Settings.Instance.UpgradeableReceiveTraining)
+                        {
+                            // Allow wounded troops to be considered the upgradeable ones
+                            numNotTrained = Math.Max(numNotTrained, numUpgradeable);
+                        }
+
+                        int xpForCurGroup = (int)Math.Ceiling(
+                            (numInGroup - numNotTrained) * xpPerTroop);
+                        // Add xp to current troop group
+                        if (xpForCurGroup > 0)
+                        {
+                            members.AddXpToTroopAtIndex(xpForCurGroup, idx);
+                        }
+                    }
                 }
             }
         }
@@ -92,23 +156,26 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
                         .GetTroopPerksXp(DefaultPerks.Leadership.RaiseTheMeek);
-                    totalXp += ExecuteDailyTraining(hero, baseXpGain * multiplier,
+                    totalXp += ExecuteHeroDailyTraining(hero, baseXpGain * multiplier,
                         Settings.Instance.RaiseTheMeekMaxTierTrained);
                 }
-                // Otherwise, if hero has combat tips perk
-                else if (hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
+
+                // If hero has combat tips perk
+                if (hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
                         .GetTroopPerksXp(DefaultPerks.Leadership.CombatTips);
-                    totalXp += ExecuteDailyTraining(hero, baseXpGain * multiplier,
+                    totalXp += ExecuteHeroDailyTraining(hero, baseXpGain * multiplier,
                         int.MaxValue);
                     
                 }
-                // Hero has neither perk
-                else
+
+                // If Hero has neither perk
+                if (!hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek)
+                    && !hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
                     baseXpGain = Settings.Instance.BaseTrainingXpGain;
-                    totalXp += ExecuteDailyTraining(hero, baseXpGain * multiplier,
+                    totalXp += ExecuteHeroDailyTraining(hero, baseXpGain * multiplier,
                         Settings.Instance.BaseTrainingMaxTierTrained);
                 }
             }
@@ -119,7 +186,7 @@ namespace TrainingTweak.CampaignBehaviors
         /// <summary>
         /// Apply hero's training onto their party.
         /// </summary>
-        private static int ExecuteDailyTraining(Hero hero, double baseXpGain,
+        private static int ExecuteHeroDailyTraining(Hero hero, double baseXpGain,
             int maxTierTrained)
         {
             // If configured not to do this training
