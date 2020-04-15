@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TrainingTweak.CampaignBehaviors;
 
 namespace TrainingTweak
 {
@@ -32,14 +33,14 @@ namespace TrainingTweak
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
-            base.OnGameStart(game, gameStarterObject);
-
-            // If this is campaign mode
-            if (Campaign.Current?.DailyTickEvent != null)
+            // If playing in the campaign game mode
+            if (gameStarterObject is CampaignGameStarter)
             {
-                // Add daily tick handler for training
-                Campaign.Current.DailyTickEvent.AddHandler(
-                    TrainingEventHandlers.DailyTrainingTickHandler);
+                base.OnGameStart(game, gameStarterObject);
+
+                var gameStarter = (CampaignGameStarter)gameStarterObject;
+                gameStarter.AddBehavior(new PartyTrainingBehavior());
+                gameStarter.AddBehavior(new GarrisonTrainingBehavior());
             }
         }
     }

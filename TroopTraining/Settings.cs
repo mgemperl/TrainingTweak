@@ -30,6 +30,34 @@ namespace TrainingTweak
         public double PlayerPartyTrainingXpMultiplier { get; set; } = 1.0;
 
         /// <summary>
+        /// A multiplier for all training xp this mod gives to troops in parties not owned
+        /// by the player.
+        /// (This includes player-owned caravans)
+        /// </summary>
+        [XmlElement]
+        public double PlayerClanPartyTrainingXpMultiplier { get; set; } = 1.0;
+
+        /// <summary>
+        /// A multiplier for all training xp this mod gives to troops in parties not owned
+        /// by the player.
+        /// (This includes player-owned caravans)
+        /// </summary>
+        [XmlElement]
+        public double NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 1.0;
+
+        /// <summary>
+        /// XP per troop for a hero without either training perk.
+        /// </summary>
+        [XmlElement]
+        public int BaseTrainingXpGain { get; set; } = 5;
+
+        /// <summary>
+        /// Max tier trained by hero without either training perk.
+        /// </summary>
+        [XmlElement]
+        public int BaseTrainingMaxTierTrained { get; set; } = 1;
+
+        /// <summary>
         /// Max tier trained by Raise The Meek perk. 
         /// </summary>
         [XmlElement]
@@ -62,25 +90,15 @@ namespace TrainingTweak
         public bool UpgradeableReceiveTraining { get; set; } = true;
 
         /// <summary>
-        /// Whether training xp given to troops by companions in the player's 
-        /// party is affected by this mod.
+        /// A multiplier for all xp given to player-owned garrisons by this mod.
         /// </summary>
         [XmlElement]
-        public bool CompanionsInPartyGiveTraining { get; set; } = true;
+        public double PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0;
 
         /// <summary>
-        /// Whether training xp given to non-player parties is affected by this mod.
-        /// (This includes player-owned caravans)
+        /// A multiplier for all xp given to non-player-owned garrisons by this mod.
         /// </summary>
         [XmlElement]
-        public bool NonPlayerPartiesReceiveTraining { get; set; } = false;
-
-        /// <summary>
-        /// A multiplier for all training xp this mod gives to troops in parties not owned
-        /// by the player.
-        /// (This includes player-owned caravans)
-        /// </summary>
-        [XmlElement]
-        public double AIPartyTrainingXpMultiplier { get; set; } = 1.0;
+        public double NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0;
     }
 }

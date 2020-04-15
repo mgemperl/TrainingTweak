@@ -2,9 +2,39 @@
 <TrainingTweak.Settings>
 
   <!-- ////////////////////////////////////// -->
+  <!--        Training XP Multipliers         -->
+  <!-- ////////////////////////////////////// -->
+
+  <!-- A multiplier for all training xp awarded to the player's party by this mod -->
+  <PlayerPartyTrainingXpMultiplier>1.0</PlayerPartyTrainingXpMultiplier>
+
+  <!-- A multiplier for all training xp awarded to AI parties owned by player -->
+  <PlayerClanPartyTrainingXpMultiplier>1.0</PlayerClanPartyTrainingXpMultiplier>
+
+  <!-- A multiplier for all training xp awarded to garrisons of settlements owned by player -->
+  <PlayerClanGarrisonTrainingXpMultiplier>1.0</PlayerClanGarrisonTrainingXpMultiplier>
+
+  <!-- A multiplier for all training xp awarded to AI parties not owned by player -->
+  <NonPlayerClanPartyTrainingXpMultiplier>1.0</NonPlayerClanPartyTrainingXpMultiplier>
+
+  <!-- A multiplier for all training xp awarded to garrisons of settlements not owned by player -->
+  <NonPlayerClanGarrisonTrainingXpMultiplier>1.0</NonPlayerClanGarrisonTrainingXpMultiplier>
+  
+  <!-- ////////////////////////////////////// -->
   <!--            General Settings            -->
   <!-- ////////////////////////////////////// -->
-	
+
+  <!-- Training xp per troop for a hero with neither training perk. 
+       Set to 0 to disable. 
+  -->
+  <BaseTrainingXpGain>5</BaseTrainingXpGain>
+
+  <!-- Max tier trained by a hero with neither training perk -->
+  <BaseTrainingMaxTierTrained>1</BaseTrainingMaxTierTrained>
+
+  <!-- Max tier trained by Raise The Meek perk. -->
+  <RaiseTheMeekMaxTierTrained>3</RaiseTheMeekMaxTierTrained>
+  
   <!-- For every X levels the trainer is above the troop, the xp gain is increased by 100%.
        For example, if set to 5, a level 20 trainer training a level 10 troop will
        result in x3 experience gained.
@@ -24,34 +54,4 @@
   <!-- If false, upgradeable troops don't count toward the xp awarded to their group. -->
   <UpgradeableReceiveTraining>true</UpgradeableReceiveTraining>
 
-  <!-- Max tier trained by Raise The Meek perk. 
-       This option is mainly for any mods that lengthen the troop tree, but you can
-       do whatever.
-  -->
-  <RaiseTheMeekMaxTierTrained>3</RaiseTheMeekMaxTierTrained>
-
-  <!-- ////////////////////////////////////// -->
-  <!--        Player-Specific Settings        -->
-  <!-- ////////////////////////////////////// -->
-
-  <!-- A multiplier for all xp awarded to the player's party by this mod -->
-  <PlayerPartyTrainingXpMultiplier>1.0</PlayerPartyTrainingXpMultiplier>
-
-  <!-- Whether training by companions in the player's party is affected by this mod. -->
-  <CompanionsInPartyGiveTraining>false</CompanionsInPartyGiveTraining>
-
-  <!-- ///////////////////////////////////// -->
-  <!--         AI-Specific Settings          -->
-  <!-- ///////////////////////////////////// -->
-
-  <!-- Whether training xp given to non-player parties is affected by this mod.
-       (This includes player-owned caravans)
-  -->
-  <NonPlayerPartiesReceiveTraining>false</NonPlayerPartiesReceiveTraining>
-	
-  <!-- A multiplier for all training xp awarded to non-player parties by this mod.
-      (This includes player-owned caravans)
-  -->
-  <AIPartyTrainingXpMultiplier>1.0</AIPartyTrainingXpMultiplier>
-	
 </TrainingTweak.Settings>
