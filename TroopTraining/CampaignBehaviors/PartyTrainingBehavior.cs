@@ -93,21 +93,20 @@ namespace TrainingTweak.CampaignBehaviors
                 return;
             }
 
-            Town town = party.CurrentSettlement.Town;
-
             // Get base xp gain for this garrison
+            Town town = party.CurrentSettlement.Town;
             var trainingModel = Campaign.Current.Models.DailyTroopXpBonusModel;
             float xpPerTroop = trainingModel.CalculateDailyTroopXpBonus(town)
                 * trainingModel.CalculateGarrisonXpBonusMultiplier(town)
                 * multiplier;
 
             // If training this garrison, and garrison has member list
-            if (xpPerTroop > 0 && town.GarrisonParty.MemberRoster != null)
+            if (xpPerTroop > 0 && party.MemberRoster != null)
             {
-                var members = town.GarrisonParty.MemberRoster;
+                var members = party.MemberRoster;
 
                 // For each group in the garrison
-                for (int idx = 0; idx < town.GarrisonParty.MemberRoster.Count; idx++)
+                for (int idx = 0; idx < members.Count; idx++)
                 {
                     int numInGroup = members.GetElementNumber(idx);
                     int numUpgradeable = members.GetElementCopyAtIndex(idx)
