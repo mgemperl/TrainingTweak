@@ -6,7 +6,14 @@ namespace TrainingTweak
 {
     public class Settings : SettingsBase
     {
+        public const string InstanceID = "TrainingTweakSettings";
+
         private static Settings _instance = null;
+
+        private const string XpMultipliers = "Xp Multipliers";
+        private const string GeneralSettings = "General Settings";
+        private const string TierLimits = "Tier Limits";
+        private const string TrainingModifiers = "Training Modifiers";
 
         public static Settings Instance
         {
@@ -26,7 +33,7 @@ namespace TrainingTweak
         }
 
         [XmlElement]
-        public override string ID { get; set; } = "trainingtweaksettings.mareus";
+        public override string ID { get; set; } = InstanceID;
 
         public override string ModuleFolderName => SubModule.ModuleFolderName;
         public override string ModName => SubModule.ModName;
@@ -35,8 +42,9 @@ namespace TrainingTweak
         /// A multiplier for all xp awarded to player troops by this mod.
         /// </summary>
         [XmlElement]
-        [SettingProperty("Player Party Xp Multiplier", 0, 9999, 
-            "Multiplier for all xp awarded to the player's party by this mod.")]
+        [SettingProperty("Player Party Xp Multiplier", 0, 20, 
+            "Multiplier for all xp this mod gives to the player's party.")]
+        [SettingPropertyGroup(XpMultipliers)]
         public float PlayerPartyTrainingXpMultiplier { get; set; } = 1.0f;
 
         /// <summary>
@@ -45,37 +53,63 @@ namespace TrainingTweak
         /// (This includes player-owned caravans)
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
+        [SettingProperty("Player Clan Party Xp Multiplier", 0, 20, 
+            "Multiplier for all xp this mod gives to AI parties in the player's clan.")]
+        [SettingPropertyGroup(XpMultipliers)]
         public float PlayerClanPartyTrainingXpMultiplier { get; set; } = 1.0f;
+
+        /// <summary>
+        /// A multiplier for all xp given to player-owned garrisons by this mod.
+        /// </summary>
+        [XmlElement]
+        [SettingProperty("Player Clan Garrison Xp Multiplier", 0, 20, 
+            "Multiplier for all xp this mod gives to garrisons of player-owned settlements.")]
+        [SettingPropertyGroup(XpMultipliers)]
+        public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
 
         /// <summary>
         /// A multiplier for all training xp this mod gives to troops in parties not owned
         /// by the player.
-        /// (This includes player-owned caravans)
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
+        [SettingProperty("Non-Player Clan Party Xp Multiplier", 0, 20, 
+            "Multiplier for all xp this mod gives to AI parties not in the player's clan.")]
+        [SettingPropertyGroup(XpMultipliers)]
         public float NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 1.0f;
+
+        /// <summary>
+        /// A multiplier for all xp given to non-player-owned garrisons by this mod.
+        /// </summary>
+        [XmlElement]
+        [SettingProperty("Non-Player Clan Garrison Xp Multiplier", 0, 20, 
+            "Multiplier for all xp this mod gives to garrisons of settlements not owned by the player.")]
+        [SettingPropertyGroup(XpMultipliers)]
+        public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
 
         /// <summary>
         /// XP per troop for a hero without either training perk.
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
+        [SettingProperty("Base Training Xp Gain", 0, 10, 
+            "Xp per troop when trained by a hero without either training perk.")]
         public int BaseTrainingXpGain { get; set; } = 5;
 
         /// <summary>
         /// Max tier trained by hero without either training perk.
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
+        [SettingProperty("Base Training Max Tier Trained", 0, 10, 
+            "Max tier trained by a hero without either training perk.")]
+        [SettingPropertyGroup(TierLimits)]
         public int BaseTrainingMaxTierTrained { get; set; } = 1;
 
         /// <summary>
         /// Max tier trained by Raise The Meek perk. 
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
+        [SettingProperty("Raise The Meek Max Tier Trained", 0, 10, 
+            "Max tier trained by the 'Raise The Meek' perk.")]
+        [SettingPropertyGroup(TierLimits)]
         public int RaiseTheMeekMaxTierTrained { get; set; } = 3;
 
         /// <summary>
@@ -84,43 +118,35 @@ namespace TrainingTweak
         /// result in x3 experience gained.
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
+        [SettingProperty("Level Difference Multiple", 0, 20, 
+            "For every X levels the trainer is above the troop, training xp is increased by 100%.")]
         public int LevelDifferenceMultiple { get; set; } = 4;
 
         /// <summary>
         /// How much xp a trainer has to train troops to get 1 leadership xp.
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
+        [SettingProperty("Training Xp Per Leadership Xp", 0, 999, 
+            "How much xp a trainer has to train troops to get 1 leadership xp.")]
         public float TrainingXpPerLeadershipXp { get; set; } = 20.0f;
 	
         /// <summary>
         /// Whether wounded troops receive training xp.
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", "test")]
+        [SettingProperty("Wounded Receive Training", 
+            "Whether wounded troops count toward group size during training.")]
         public bool WoundedReceiveTraining { get; set; } = false;
 
         /// <summary>
         /// Whether upgradeable troops receive training xp.
         /// </summary>
         [XmlElement]
-        [SettingProperty("TEST", "test")]
+        [SettingProperty("Upgradeable Receive Training", 
+            "Whether upgradeable troops count toward group size during training.")]
         public bool UpgradeableReceiveTraining { get; set; } = true;
 
-        /// <summary>
-        /// A multiplier for all xp given to player-owned garrisons by this mod.
-        /// </summary>
-        [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
-        public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
-
-        /// <summary>
-        /// A multiplier for all xp given to non-player-owned garrisons by this mod.
-        /// </summary>
-        [XmlElement]
-        [SettingProperty("TEST", 0, 9999, "test")]
-        public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
+        
         
     }
 }
