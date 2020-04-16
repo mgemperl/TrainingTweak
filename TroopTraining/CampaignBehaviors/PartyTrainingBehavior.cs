@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 
@@ -249,10 +250,21 @@ namespace TrainingTweak.CampaignBehaviors
             if (Settings.Instance.TrainingXpPerLeadershipXp > 0
                 && totalXp > 0)
             {
-                // Give hero leadership xp
-                hero.AddSkillXp(DefaultSkills.Leadership,
-                    (int)Math.Ceiling((double)totalXp
-                        / Settings.Instance.TrainingXpPerLeadershipXp));
+                try
+                {
+                    // Give hero leadership xp
+                    hero.AddSkillXp(DefaultSkills.Leadership,
+                        (int)Math.Ceiling((double)totalXp
+                            / Settings.Instance.TrainingXpPerLeadershipXp));
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show("Training Tweak mod has encountered an error: Your version of " +
+                        "Training Tweak does not match your game version.\n\nLeadership xp gain is not " +
+                        "working correctly and will be disabled.\n\nPlease install the version of the " +
+                        $"Training Tweak mod released for your game version.\n\n{exc.Message}\n{exc.StackTrace}");
+                    Settings.Instance.TrainingXpPerLeadershipXp = 0;
+                }
             }
 
             return totalXp;
