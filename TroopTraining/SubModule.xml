@@ -2,7 +2,7 @@
 <Module>
 	<Name value="Training Tweak"/>
 	<Id value="TrainingTweak"/>
-	<Version value="v1.1.0"/>
+	<Version value="v1.0.4"/>
 	<DefaultModule value="false"/>
 	<SingleplayerModule value="true"/>
 	<MultiplayerModule value="false"/>
@@ -12,7 +12,7 @@
 		<DependedModule Id="SandBoxCore"/>
 		<DependedModule Id="Sandbox"/>
 		<DependedModule Id="StoryMode"/>
-    <DependedModule Id="ModLib"/>
+		<DependedModule Id="ModLib"/>
 	</DependedModules>
 	<SubModules>
 		<SubModule>

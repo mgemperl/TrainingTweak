@@ -11,9 +11,7 @@ namespace TrainingTweak
         private static Settings _instance = null;
 
         private const string XpMultipliers = "Xp Multipliers";
-        private const string GeneralSettings = "General Settings";
         private const string TierLimits = "Tier Limits";
-        private const string TrainingModifiers = "Training Modifiers";
 
         public static Settings Instance
         {
