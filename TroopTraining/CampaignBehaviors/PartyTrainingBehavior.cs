@@ -8,14 +8,35 @@ namespace TrainingTweak.CampaignBehaviors
 {
     public class PartyTrainingBehavior : CampaignBehaviorBase
     {
+        private static bool _disabled = false;
+
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickPartyEvent.AddNonSerializedListener(
-                this, HandleDailyTraining);
+                this, SafeHandleDailyTraining);
         }
 
         public override void SyncData(IDataStore dataStore)
         {
+        }
+
+        private void SafeHandleDailyTraining(MobileParty party)
+        {
+            try
+            {
+                if (!_disabled)
+                {
+                    HandleDailyTraining(party);
+                }
+            }
+            catch (Exception exc)
+            {
+                _disabled = true;
+                Util.Warning("Training Tweak has encountered an error and is " +
+                    "stopping.\n\nYou may continue playing without Training Tweak, " +
+                    "but your game state may already be corrupted.",
+                    exc: exc, showDisclaimer: true);
+            }
         }
 
         private void HandleDailyTraining(MobileParty party)
@@ -88,8 +109,9 @@ namespace TrainingTweak.CampaignBehaviors
 
         private void TrainGarrison (MobileParty party, float multiplier)
         {
-            // If garrison's town doesn't exist for some reason, do nothing
-            if (party.CurrentSettlement?.Town == null)
+            // Check if garrison's town doesn't exist, or if a null is lurking amongst us
+            if (party.CurrentSettlement?.Town == null
+                || party.MemberRoster.Contains(null))
             {
                 return;
             }
@@ -156,7 +178,8 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
                         .GetTroopPerksXp(DefaultPerks.Leadership.RaiseTheMeek);
-                    totalXp += ExecuteHeroDailyTraining(hero, baseXpGain * multiplier,
+                    totalXp += ExecuteHeroDailyTraining(hero, party, 
+                        baseXpGain * multiplier,
                         Settings.Instance.RaiseTheMeekMaxTierTrained);
                 }
 
@@ -165,7 +188,8 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
                         .GetTroopPerksXp(DefaultPerks.Leadership.CombatTips);
-                    totalXp += ExecuteHeroDailyTraining(hero, baseXpGain * multiplier,
+                    totalXp += ExecuteHeroDailyTraining(hero, party, 
+                        baseXpGain * multiplier,
                         int.MaxValue);
                     
                 }
@@ -175,7 +199,8 @@ namespace TrainingTweak.CampaignBehaviors
                     && !hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
                     baseXpGain = Settings.Instance.BaseTrainingXpGain;
-                    totalXp += ExecuteHeroDailyTraining(hero, baseXpGain * multiplier,
+                    totalXp += ExecuteHeroDailyTraining(hero, party, 
+                        baseXpGain * multiplier,
                         Settings.Instance.BaseTrainingMaxTierTrained);
                 }
             }
@@ -186,16 +211,17 @@ namespace TrainingTweak.CampaignBehaviors
         /// <summary>
         /// Apply hero's training onto their party.
         /// </summary>
-        private static int ExecuteHeroDailyTraining(Hero hero, float baseXpGain,
-            int maxTierTrained)
+        private static int ExecuteHeroDailyTraining(Hero hero, MobileParty party,
+            float baseXpGain, int maxTierTrained)
         {
-            // If configured not to do this training
-            if (baseXpGain <= 0 || maxTierTrained <= 0)
+            // If configured not to do this training, or there's a null lurking
+            if (baseXpGain <= 0 || maxTierTrained <= 0
+                || party.MemberRoster.Contains(null))
             {
                 return 0;
             }
 
-            var partyMembers = hero.PartyBelongedTo.MemberRoster;
+            var partyMembers = party.MemberRoster;
             int totalXp = 0;
 
             // For each group in the hero's party

@@ -10,8 +10,9 @@ namespace TrainingTweak
 
         private static Settings _instance = null;
 
-        private const string XpMultipliers = "Xp Multipliers";
+        private const string XpMultipliers = "Training Xp Multipliers";
         private const string TierLimits = "Tier Limits";
+        private const string Debugging = "Debugging";
 
         public static Settings Instance
         {
@@ -37,31 +38,31 @@ namespace TrainingTweak
         public override string ModName => SubModule.ModName;
 
         [XmlElement]
-        [SettingProperty("Player Party Xp Multiplier", 0, 20, 
+        [SettingProperty("Player Party Training Xp Multiplier", 0, 20, 
             "Multiplier for all xp this mod gives to the player's party.")]
         [SettingPropertyGroup(XpMultipliers)]
         public float PlayerPartyTrainingXpMultiplier { get; set; } = 1.0f;
 
         [XmlElement]
-        [SettingProperty("Player Clan Party Xp Multiplier", 0, 20, 
+        [SettingProperty("Player Clan Party Training Xp Multiplier", 0, 20, 
             "Multiplier for all xp this mod gives to AI parties in the player's clan.")]
         [SettingPropertyGroup(XpMultipliers)]
         public float PlayerClanPartyTrainingXpMultiplier { get; set; } = 1.0f;
 
         [XmlElement]
-        [SettingProperty("Player Clan Garrison Xp Multiplier", 0, 20, 
+        [SettingProperty("Player Clan Garrison Training Xp Multiplier", 0, 20, 
             "Multiplier for all xp this mod gives to garrisons of player-owned settlements.")]
         [SettingPropertyGroup(XpMultipliers)]
         public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
 
         [XmlElement]
-        [SettingProperty("Non-Player Clan Party Xp Multiplier", 0, 20, 
+        [SettingProperty("Non-Player Clan Party Training Xp Multiplier", 0, 20, 
             "Multiplier for all xp this mod gives to AI parties not in the player's clan.")]
         [SettingPropertyGroup(XpMultipliers)]
         public float NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 1.0f;
 
         [XmlElement]
-        [SettingProperty("Non-Player Clan Garrison Xp Multiplier", 0, 20, 
+        [SettingProperty("Non-Player Clan Garrison Training Xp Multiplier", 0, 20, 
             "Multiplier for all xp this mod gives to garrisons of settlements not owned by the player.")]
         [SettingPropertyGroup(XpMultipliers)]
         public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
@@ -103,7 +104,10 @@ namespace TrainingTweak
             "Whether upgradeable troops count toward group size during training.")]
         public bool UpgradeableReceiveTraining { get; set; } = true;
 
-        
+        [XmlElement]
+        [SettingProperty("Debug Mode", 
+            "Whether this mod displays errors it finds while running.")]
+        public bool DebugMode { get; set; } = true;
         
     }
 }
