@@ -314,7 +314,7 @@ namespace TrainingTweak.CampaignBehaviors
         private static int ExecuteHeroDailyTraining(Hero hero, MobileParty party,
             float baseXpGain, int maxTierTrained)
         {
-            // If configured not to do this training, or there's a null lurking
+            // If configured not to do this training
             if (baseXpGain <= 0 || maxTierTrained <= 0)
             {
                 return 0;
