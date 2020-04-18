@@ -107,7 +107,7 @@ namespace TrainingTweak
         [XmlElement]
         [SettingProperty("Debug Mode", 
             "Whether this mod displays errors it finds while running.")]
-        public bool DebugMode { get; set; } = false;
+        public bool DebugMode { get; set; } = true;
         
     }
 }

@@ -167,8 +167,9 @@ namespace TrainingTweak.CampaignBehaviors
             if (party.CurrentSettlement?.Town == null)
             {
                 if (Settings.Instance.DebugMode
-                    && !_reported.Contains(party.Name.ToString()))
+                    && !_reported.Contains($"{party.Name}-town"))
                 {
+                    _reported.Add($"{party.Name}-town");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
                         $"Detected null town for garrison: {party.Name} " +
                         $"in settlement {party.CurrentSettlement?.Name}\n\n" +
@@ -233,15 +234,38 @@ namespace TrainingTweak.CampaignBehaviors
             foreach (var member in party.MemberRoster
                 .Where(member => member.Character.IsHero))
             {
-                if (Settings.Instance.DebugMode
-                    && !_reported.Contains(party.Name.ToString()))
+                if (member.Character.HeroObject == null)
                 {
-                    Util.DebugMessage($"{DebugHeader}\n\n" +
-                        $"Detected hero with null hero object in party: {party.Name} " +
-                        $"led by {party.Leader.Name}\n" +
-                        $"Character with null hero object: {member.Character.Name}\n\n" +
-                        $"\n\n{WarningDisclaimer}" +
-                        $"\n\n{DisableNote}");
+                    if (Settings.Instance.DebugMode
+                        && !_reported.Contains($"{party.Name}-heroObj"))
+                    {
+                        _reported.Add($"{party.Name}-heroObj");
+                        Util.DebugMessage($"{DebugHeader}\n\n" +
+                            $"Detected hero with null hero object in party: " +
+                            $"{party.Name} led by {party.Leader?.Name}\n" +
+                            $"Character with null hero object: " +
+                            $"{member.Character.Name}\n\n" +
+                            $"\n\n{WarningDisclaimer}" +
+                            $"\n\n{DisableNote}");
+                    }
+
+                    continue;
+                }
+                else if (member.Character.HeroObject.PartyBelongedTo != party)
+                {
+                    if (Settings.Instance.DebugMode
+                        && !_reported.Contains($"{party.Name}-heroBelong"))
+                    {
+                        _reported.Add($"{party.Name}-heroBelong");
+                        Util.DebugMessage($"{DebugHeader}\n\n" +
+                            $"Hero doesn't consider itself a member of its party. \n" +
+                            $"Party: {party.Name} led by {party.Leader?.Name}\n" +
+                            $"Hero: {member.Character.Name}\n\n" +
+                            $"\n\n{WarningDisclaimer}" +
+                            $"\n\n{DisableNote}");
+                    }
+
+                    // We can just ignore this issue ourselves, so no need to skip
                 }
 
                 Hero hero = member.Character.HeroObject;
@@ -289,7 +313,7 @@ namespace TrainingTweak.CampaignBehaviors
             float baseXpGain, int maxTierTrained)
         {
             // If configured not to do this training, or there's a null lurking
-            else if (baseXpGain <= 0 || maxTierTrained <= 0)
+            if (baseXpGain <= 0 || maxTierTrained <= 0)
             {
                 return 0;
             }
