@@ -61,7 +61,7 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     _reported.Add("null-party");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
-                        $"Detected null party in the game state.\n\n" +
+                        $"Detected null party in the game state." +
                         $"\n\n{WarningDisclaimer}" +
                         $"\n\n{DisableNote}");
                 }
@@ -80,7 +80,7 @@ namespace TrainingTweak.CampaignBehaviors
                     _reported.Add($"{party.Name}-roster");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
                         $"Detected null member roster for party:\n{party.Name} " +
-                        $"led by {party.Leader?.Name}\n\n" +
+                        $"led by {party.Leader?.Name}" +
                         $"\n\n{WarningDisclaimer}" +
                         $"\n\n{DisableNote}");
                 }
@@ -96,7 +96,7 @@ namespace TrainingTweak.CampaignBehaviors
                     _reported.Add($"{party.Name}-character");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
                         $"Detected null member character for party:\n{party.Name} " +
-                        $"led by {party.Leader?.Name}\n\n" +
+                        $"led by {party.Leader?.Name}" +
                         $"\n\n{WarningDisclaimer}" +
                         $"\n\n{DisableNote}");
                 }
@@ -174,7 +174,7 @@ namespace TrainingTweak.CampaignBehaviors
                     _reported.Add($"{party.Name}-town");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
                         $"Detected null town for garrison:\n{party.Name} " +
-                        $"in settlement {party.CurrentSettlement?.Name}\n\n" +
+                        $"in settlement {party.CurrentSettlement?.Name}" +
                         $"\n\n{WarningDisclaimer}" +
                         $"\n\n{DisableNote}");
                 }
@@ -246,7 +246,7 @@ namespace TrainingTweak.CampaignBehaviors
                             $"Detected hero with null hero object in party:\n" +
                             $"{party.Name} led by {party.Leader?.Name}\n" +
                             $"Character with null hero object: " +
-                            $"{member.Character.Name}\n\n" +
+                            $"{member.Character.Name}" +
                             $"\n\n{WarningDisclaimer}" +
                             $"\n\n{DisableNote}");
                     }
@@ -262,7 +262,7 @@ namespace TrainingTweak.CampaignBehaviors
                         Util.DebugMessage($"{DebugHeader}\n\n" +
                             $"Hero doesn't consider itself a member of its party.\n" +
                             $"Party: {party.Name} led by {party.Leader?.Name}\n" +
-                            $"Hero: {member.Character.Name}\n\n" +
+                            $"Hero: {member.Character.Name}" +
                             $"\n\n{WarningDisclaimer}" +
                             $"\n\n{DisableNote}");
                     }
