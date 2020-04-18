@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
@@ -8,7 +9,19 @@ namespace TrainingTweak.CampaignBehaviors
 {
     public class PartyTrainingBehavior : CampaignBehaviorBase
     {
+        private const string DebugHeader = 
+            "Training Tweak may have detected a corrupted game state: ";
+        string WarningDisclaimer = "Note: This was not necessarily caused by " +
+            "Training Tweak, it just detected a potential source of errors in the " +
+            "game state.";
+        string ErrorDisclaimer = "Note: This was not necessarily caused by " +
+            "Training Tweak, it just encountered an issue that prevented it " +
+            "from functioning properly.";
+        string DisableNote = "You may disable these debugging notices in the mod options " +
+            "for this mod.";
+
         private static bool _disabled = false;
+        private static HashSet<string> _reported = new HashSet<string>();
 
         public override void RegisterEvents()
         {
@@ -34,15 +47,56 @@ namespace TrainingTweak.CampaignBehaviors
                 _disabled = true;
                 Util.Warning("Training Tweak has encountered an error and is " +
                     "stopping.\n\nYou may continue playing without Training Tweak, " +
-                    "but your game state may already be corrupted.",
-                    exc: exc, showDisclaimer: true);
+                    $"but your game state may already be corrupted.\n\n{ErrorDisclaimer}",
+                    exc: exc);
             }
         }
 
         private void HandleDailyTraining(MobileParty party)
         {
-            // If party or member list is invalid, do nothing
-            if (party?.MemberRoster == null || !party.IsActive)
+            if (party == null)
+            {
+                if (Settings.Instance.DebugMode 
+                    && !_reported.Contains("null"))
+                {
+                    _reported.Add("null");
+                    Util.DebugMessage($"{DebugHeader}\n\n" +
+                        $"Detected null party in game state.\n\n" +
+                        $"\n\n{WarningDisclaimer}" +
+                        $"\n\n{DisableNote}");
+                }
+            }
+            if (party.MemberRoster == null)
+            {
+                if (Settings.Instance.DebugMode
+                    && !_reported.Contains($"{party.Name}-roster"))
+                {
+                    _reported.Add($"{party.Name}-roster");
+                    Util.DebugMessage($"{DebugHeader}\n\n" +
+                        $"Detected null member roster for party: {party.Name} " +
+                        $"led by {party.Leader?.Name}\n\n" +
+                        $"\n\n{WarningDisclaimer}" +
+                        $"\n\n{DisableNote}");
+                }
+                
+                return;
+            }
+            // If a character in the party is null
+            else if (!party.MemberRoster
+                .Where(elem => elem.Character == null).IsEmpty())
+            {
+                if (Settings.Instance.DebugMode
+                    && !_reported.Contains($"{party.Name}-character"))
+                {
+                    _reported.Add($"{party.Name}-character");
+                    Util.DebugMessage($"{DebugHeader}\n\n" +
+                        $"Detected null party character for: {party.Name} " +
+                        $"led by {party.Leader?.Name}\n\n" +
+                        $"\n\n{WarningDisclaimer}" +
+                        $"\n\n{DisableNote}");
+                }
+            }
+            else if (!party.IsActive)
             {
                 return;
             }
@@ -110,9 +164,18 @@ namespace TrainingTweak.CampaignBehaviors
         private void TrainGarrison (MobileParty party, float multiplier)
         {
             // Check if garrison's town doesn't exist, or if a null is lurking amongst us
-            if (party.CurrentSettlement?.Town == null
-                || party.MemberRoster.Contains(null))
+            if (party.CurrentSettlement?.Town == null)
             {
+                if (Settings.Instance.DebugMode
+                    && !_reported.Contains(party.Name.ToString()))
+                {
+                    Util.DebugMessage($"{DebugHeader}\n\n" +
+                        $"Detected null town for garrison: {party.Name} " +
+                        $"in settlement {party.CurrentSettlement?.Name}\n\n" +
+                        $"\n\n{WarningDisclaimer}" +
+                        $"\n\n{DisableNote}");
+                }
+
                 return;
             }
 
@@ -170,6 +233,17 @@ namespace TrainingTweak.CampaignBehaviors
             foreach (var member in party.MemberRoster
                 .Where(member => member.Character.IsHero))
             {
+                if (Settings.Instance.DebugMode
+                    && !_reported.Contains(party.Name.ToString()))
+                {
+                    Util.DebugMessage($"{DebugHeader}\n\n" +
+                        $"Detected hero with null hero object in party: {party.Name} " +
+                        $"led by {party.Leader.Name}\n" +
+                        $"Character with null hero object: {member.Character.Name}\n\n" +
+                        $"\n\n{WarningDisclaimer}" +
+                        $"\n\n{DisableNote}");
+                }
+
                 Hero hero = member.Character.HeroObject;
                 int baseXpGain;
 
@@ -215,8 +289,7 @@ namespace TrainingTweak.CampaignBehaviors
             float baseXpGain, int maxTierTrained)
         {
             // If configured not to do this training, or there's a null lurking
-            if (baseXpGain <= 0 || maxTierTrained <= 0
-                || party.MemberRoster.Contains(null))
+            else if (baseXpGain <= 0 || maxTierTrained <= 0)
             {
                 return 0;
             }
