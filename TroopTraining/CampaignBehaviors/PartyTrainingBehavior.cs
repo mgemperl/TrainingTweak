@@ -11,14 +11,14 @@ namespace TrainingTweak.CampaignBehaviors
     {
         private const string DebugHeader = 
             "Training Tweak may have detected a corrupted game state: ";
-        string WarningDisclaimer = "Note: This was not necessarily caused by " +
+        string WarningDisclaimer = "Note: This was likely not caused by " +
             "Training Tweak, it just detected a potential source of errors in the " +
             "game state.";
         string ErrorDisclaimer = "Note: This was not necessarily caused by " +
             "Training Tweak, it just encountered an issue that prevented it " +
             "from functioning properly.";
         string DisableNote = "You may disable these debugging notices in the mod options " +
-            "for this mod.";
+            "menu by disabling Debug Mode.";
 
         private static bool _disabled = false;
         private static HashSet<string> _reported = new HashSet<string>();
@@ -57,28 +57,33 @@ namespace TrainingTweak.CampaignBehaviors
             if (party == null)
             {
                 if (Settings.Instance.DebugMode 
-                    && !_reported.Contains("null"))
+                    && !_reported.Contains("null-party"))
                 {
-                    _reported.Add("null");
+                    _reported.Add("null-party");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
-                        $"Detected null party in game state.\n\n" +
+                        $"Detected null party in the game state.\n\n" +
                         $"\n\n{WarningDisclaimer}" +
                         $"\n\n{DisableNote}");
                 }
+                return;
             }
-            if (party.MemberRoster == null)
+            else if (!party.IsActive)
+            {
+                // Ignore inactive parties
+                return;
+            }
+            else if (party.MemberRoster == null)
             {
                 if (Settings.Instance.DebugMode
                     && !_reported.Contains($"{party.Name}-roster"))
                 {
                     _reported.Add($"{party.Name}-roster");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
-                        $"Detected null member roster for party: {party.Name} " +
+                        $"Detected null member roster for party:\n{party.Name} " +
                         $"led by {party.Leader?.Name}\n\n" +
                         $"\n\n{WarningDisclaimer}" +
                         $"\n\n{DisableNote}");
                 }
-                
                 return;
             }
             // If a character in the party is null
@@ -90,14 +95,11 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     _reported.Add($"{party.Name}-character");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
-                        $"Detected null party character for: {party.Name} " +
+                        $"Detected null member character for party:\n{party.Name} " +
                         $"led by {party.Leader?.Name}\n\n" +
                         $"\n\n{WarningDisclaimer}" +
                         $"\n\n{DisableNote}");
                 }
-            }
-            else if (!party.IsActive)
-            {
                 return;
             }
 
@@ -153,7 +155,7 @@ namespace TrainingTweak.CampaignBehaviors
                     : Settings.Instance.NonPlayerClanGarrisonTrainingXpMultiplier;
 
                 // If configured to train this garrison
-                if(multiplier > 0)
+                if (multiplier > 0)
                 {
                     // Train AI party
                     TrainGarrison(party, multiplier);
@@ -171,7 +173,7 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     _reported.Add($"{party.Name}-town");
                     Util.DebugMessage($"{DebugHeader}\n\n" +
-                        $"Detected null town for garrison: {party.Name} " +
+                        $"Detected null town for garrison:\n{party.Name} " +
                         $"in settlement {party.CurrentSettlement?.Name}\n\n" +
                         $"\n\n{WarningDisclaimer}" +
                         $"\n\n{DisableNote}");
@@ -188,7 +190,7 @@ namespace TrainingTweak.CampaignBehaviors
                 * multiplier;
 
             // If training this garrison, and garrison has member list
-            if (xpPerTroop > 0 && party.MemberRoster != null)
+            if (xpPerTroop > 0)
             {
                 var members = party.MemberRoster;
 
@@ -241,7 +243,7 @@ namespace TrainingTweak.CampaignBehaviors
                     {
                         _reported.Add($"{party.Name}-heroObj");
                         Util.DebugMessage($"{DebugHeader}\n\n" +
-                            $"Detected hero with null hero object in party: " +
+                            $"Detected hero with null hero object in party:\n" +
                             $"{party.Name} led by {party.Leader?.Name}\n" +
                             $"Character with null hero object: " +
                             $"{member.Character.Name}\n\n" +
@@ -258,7 +260,7 @@ namespace TrainingTweak.CampaignBehaviors
                     {
                         _reported.Add($"{party.Name}-heroBelong");
                         Util.DebugMessage($"{DebugHeader}\n\n" +
-                            $"Hero doesn't consider itself a member of its party. \n" +
+                            $"Hero doesn't consider itself a member of its party.\n" +
                             $"Party: {party.Name} led by {party.Leader?.Name}\n" +
                             $"Hero: {member.Character.Name}\n\n" +
                             $"\n\n{WarningDisclaimer}" +

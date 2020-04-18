@@ -32,8 +32,9 @@ namespace TrainingTweak
             builder.AppendLine(exc.StackTrace);
             while (exc.InnerException != null)
             {
-                builder.AppendLine(exc.InnerException.StackTrace);
                 exc = exc.InnerException;
+                builder.AppendLine(exc.Message);
+                builder.AppendLine(exc.StackTrace);
             }
             return builder.ToString();
         }
