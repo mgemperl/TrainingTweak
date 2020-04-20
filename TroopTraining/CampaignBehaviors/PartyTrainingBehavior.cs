@@ -279,7 +279,7 @@ namespace TrainingTweak.CampaignBehaviors
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
                         .GetTroopPerksXp(DefaultPerks.Leadership.RaiseTheMeek);
                     totalXp += ExecuteHeroDailyTraining(hero, party, 
-                        baseXpGain * multiplier,
+                        baseXpGain * multiplier, baseXpGain,
                         Settings.Instance.RaiseTheMeekMaxTierTrained);
                 }
 
@@ -289,7 +289,7 @@ namespace TrainingTweak.CampaignBehaviors
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
                         .GetTroopPerksXp(DefaultPerks.Leadership.CombatTips);
                     totalXp += ExecuteHeroDailyTraining(hero, party, 
-                        baseXpGain * multiplier,
+                        baseXpGain * multiplier, baseXpGain,
                         int.MaxValue);
                     
                 }
@@ -300,7 +300,7 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     baseXpGain = Settings.Instance.BaseTrainingXpGain;
                     totalXp += ExecuteHeroDailyTraining(hero, party, 
-                        baseXpGain * multiplier,
+                        baseXpGain * multiplier, 0,
                         Settings.Instance.BaseTrainingMaxTierTrained);
                 }
             }
@@ -312,7 +312,7 @@ namespace TrainingTweak.CampaignBehaviors
         /// Apply hero's training onto their party.
         /// </summary>
         private static int ExecuteHeroDailyTraining(Hero hero, MobileParty party,
-            float baseXpGain, int maxTierTrained)
+            float baseXpGain, int nativeXpGain, int maxTierTrained)
         {
             // If configured not to do this training
             if (baseXpGain <= 0 || maxTierTrained <= 0)
@@ -327,8 +327,8 @@ namespace TrainingTweak.CampaignBehaviors
             for (int idx = 0; idx < partyMembers.Count; idx++)
             {
                 var curMember = partyMembers.GetCharacterAtIndex(idx);
-                // If member is a troop, and low enough tier to be trained
-                if (curMember.IsSoldier && curMember.Tier <= maxTierTrained)
+                // If member isn't a hero and is low enough tier to be trained
+                if (!curMember.IsHero && curMember.Tier <= maxTierTrained)
                 {
                     int numInGroup = partyMembers.GetElementNumber(idx);
                     int numUpgradeable = partyMembers.GetElementCopyAtIndex(idx)
@@ -350,20 +350,25 @@ namespace TrainingTweak.CampaignBehaviors
                             numNotTrained = Math.Max(numNotTrained, numUpgradeable);
                         }
 
-                        // Apply level difference multiplier
-                        float levelDiffMult = 1.0f;
-                        if (Settings.Instance.LevelDifferenceMultiple >= 1.0)
-                        {
-                            levelDiffMult = 1.0f + Math.Max(0, (hero.Level - curMember.Level))
-                                / (float)Settings.Instance.LevelDifferenceMultiple;
-                        }
-                        float xpPerTroop = levelDiffMult * baseXpGain;
-                        int xpForCurGroup = (int)Math.Round(
-                            (numInGroup - numNotTrained) * xpPerTroop);
+                        // Compute level difference factor
+                        float levelDiffMult = 1.0f 
+                            + Math.Max(0, hero.Level - curMember.Level)
+                            * (Settings.Instance.LevelDifferenceFactor / 100.0f);
+                        // Compute leadership difference factor
+                        float leadershipDiffMult = 1.0f
+                            + Math.Max(0, hero.GetSkillValue(DefaultSkills.Leadership))
+                            * (Settings.Instance.LeadershipSkillFactor / 100.0f);
 
-                        // Add xp to current troop group
+                        float xpPerTroop = levelDiffMult * leadershipDiffMult 
+                            * baseXpGain;
+                        int xpForCurGroup = (int)Math.Round(
+                            (numInGroup - numNotTrained) * xpPerTroop)
+                            - nativeXpGain; // Subtract native perk xp gain
+
+                        // If positive xp gain
                         if (xpForCurGroup > 0)
                         {
+                            // Add xp to current troop group
                             partyMembers.AddXpToTroopAtIndex(xpForCurGroup, idx);
                             totalXp += xpForCurGroup;
                         }

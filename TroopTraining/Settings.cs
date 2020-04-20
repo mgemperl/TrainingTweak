@@ -41,13 +41,13 @@ namespace TrainingTweak
         [SettingProperty("Player Party Training Xp Multiplier", 0, 20, 
             "Multiplier for all xp this mod gives to the player's party.")]
         [SettingPropertyGroup(XpMultipliers)]
-        public float PlayerPartyTrainingXpMultiplier { get; set; } = 1.0f;
+        public float PlayerPartyTrainingXpMultiplier { get; set; } = 0.75f;
 
         [XmlElement]
         [SettingProperty("Player Clan Party Training Xp Multiplier", 0, 20, 
             "Multiplier for all xp this mod gives to AI parties in the player's clan.")]
         [SettingPropertyGroup(XpMultipliers)]
-        public float PlayerClanPartyTrainingXpMultiplier { get; set; } = 1.0f;
+        public float PlayerClanPartyTrainingXpMultiplier { get; set; } = 0.75f;
 
         [XmlElement]
         [SettingProperty("Player Clan Garrison Training Xp Multiplier", 0, 20, 
@@ -59,7 +59,7 @@ namespace TrainingTweak
         [SettingProperty("Non-Player Clan Party Training Xp Multiplier", 0, 20, 
             "Multiplier for all xp this mod gives to AI parties not in the player's clan.")]
         [SettingPropertyGroup(XpMultipliers)]
-        public float NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 1.0f;
+        public float NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 0.75f;
 
         [XmlElement]
         [SettingProperty("Non-Player Clan Garrison Training Xp Multiplier", 0, 20, 
@@ -73,26 +73,32 @@ namespace TrainingTweak
         public int BaseTrainingXpGain { get; set; } = 5;
 
         [XmlElement]
-        [SettingProperty("Base Training Max Tier Trained", 0, 10, 
+        [SettingProperty("Base Training Max Tier Trained", 0, 20, 
             "Max tier trained by a hero without either training perk.")]
         [SettingPropertyGroup(TierLimits)]
         public int BaseTrainingMaxTierTrained { get; set; } = 1;
 
         [XmlElement]
-        [SettingProperty("Raise The Meek Max Tier Trained", 0, 10, 
+        [SettingProperty("Raise The Meek Max Tier Trained", 0, 20, 
             "Max tier trained by the 'Raise The Meek' perk.")]
         [SettingPropertyGroup(TierLimits)]
         public int RaiseTheMeekMaxTierTrained { get; set; } = 3;
 
         [XmlElement]
-        [SettingProperty("Level Difference Multiple", 0, 20, 
-            "For every X levels the trainer is above the troop, training xp is increased by 100%.")]
-        public int LevelDifferenceMultiple { get; set; } = 4;
+        [SettingProperty("Level Difference Factor", 0, 25, 
+            "For every level the trainer is above the troop, training xp is increased by X percent.")]
+        public float LevelDifferenceFactor { get; set; } = 6;
+
+        [XmlElement]
+        [SettingProperty("Leadership Skill Factor", 0, 5,
+            "For each skill level in leadership, training xp is increased by X percent.")]
+        public float LeadershipSkillFactor { get; set; } = 0.4f;
 
         [XmlElement]
         [SettingProperty("Training Xp Per Leadership Xp", 0, 999, 
             "How much xp a trainer has to train troops to get 1 leadership xp.")]
         public float TrainingXpPerLeadershipXp { get; set; } = 20.0f;
+
 	
         [XmlElement]
         [SettingProperty("Wounded Receive Training", 
