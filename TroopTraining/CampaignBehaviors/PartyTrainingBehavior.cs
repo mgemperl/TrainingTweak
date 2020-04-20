@@ -350,17 +350,14 @@ namespace TrainingTweak.CampaignBehaviors
                             numNotTrained = Math.Max(numNotTrained, numUpgradeable);
                         }
 
-                        // Compute level difference factor
-                        float levelDiffMult = 1.0f 
+                        // Compute level difference and leadership skill multiplier
+                        float levelDiffLeadershipMult = 1.0f 
                             + Math.Max(0, hero.Level - curMember.Level)
-                            * (Settings.Instance.LevelDifferenceFactor / 100.0f);
-                        // Compute leadership difference factor
-                        float leadershipDiffMult = 1.0f
+                                * (Settings.Instance.LevelDifferenceFactor / 100.0f)
                             + Math.Max(0, hero.GetSkillValue(DefaultSkills.Leadership))
-                            * (Settings.Instance.LeadershipSkillFactor / 100.0f);
+                                * (Settings.Instance.LeadershipSkillFactor / 100.0f);
 
-                        float xpPerTroop = levelDiffMult * leadershipDiffMult 
-                            * baseXpGain;
+                        float xpPerTroop = levelDiffLeadershipMult * baseXpGain;
                         int xpForCurGroup = (int)Math.Round(
                             (numInGroup - numNotTrained) * xpPerTroop)
                             - nativeXpGain; // Subtract native perk xp gain
