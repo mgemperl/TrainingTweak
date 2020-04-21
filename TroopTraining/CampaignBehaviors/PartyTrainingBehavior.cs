@@ -361,6 +361,9 @@ namespace TrainingTweak.CampaignBehaviors
                         int xpForCurGroup = (int)Math.Round(
                             (numInGroup - numNotTrained) * xpPerTroop)
                             - nativeXpGain; // Subtract native perk xp gain
+                        // TODO: If user raised max tier trained for raise the meek,
+                        //       xp will still be subtracted even though vanilla didn't
+                        //       give it. Fix this.
 
                         // If positive xp gain
                         if (xpForCurGroup > 0)
