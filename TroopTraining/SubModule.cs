@@ -1,5 +1,4 @@
-﻿using ModLib;
-using System;
+﻿using System;
 using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -19,31 +18,15 @@ namespace TrainingTweak
         {
             base.OnSubModuleLoad();
 
-            bool settingsInitialized = false;
-
-            // Try initializing and loading settings file
             try
             {
-                FileDatabase.Initialise(ModuleFolderName);
-                Settings loaded = FileDatabase.Get<Settings>(Settings.Instance.ID);
-                settingsInitialized = true;
-
-                if (loaded != null)
-                {
-                    Settings.Instance = loaded;
-                }
+                Settings.Instance = SettingsLoader.LoadSettings(
+                    $"{BasePath.Name}/Modules/TrainingTweak/config.xml");
             }
             catch (Exception exc)
             {
-                MessageBox.Show("Training Tweak mod failed to initialize config file. " +
-                    $"Using default values. Not integrating with mod configuration menu." +
-                    $"\n\n{exc.Message}");
-            }
-
-            if (settingsInitialized)
-            {
-                // Hook into ModLib mod configuration menu
-                SettingsDatabase.RegisterSettings(Settings.Instance);
+                MessageBox.Show("Training Tweak mod failed to load config file. " +
+                    $"Using default values.\n\n{exc.Message}");
             }
         }
 
