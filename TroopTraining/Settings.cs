@@ -55,7 +55,6 @@ namespace TrainingTweak
 
         [XmlElement]
         public float TrainingXpPerLeadershipXp { get; set; } = 20.0f;
-
 	
         [XmlElement]
         public bool WoundedReceiveTraining { get; set; } = false;
