@@ -52,7 +52,7 @@
   <!-- Whether upgradeable troops count toward group size during training. -->
   <UpgradeableReceiveTraining>true</UpgradeableReceiveTraining>
 
-  <!-- Whether upgradeable troops count toward group size during training. -->
+  <!-- Whether this mod displays potential errors it finds while running. -->
   <DebugMode>true</DebugMode>
 
 </TrainingTweak.Settings>
