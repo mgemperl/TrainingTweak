@@ -1,4 +1,5 @@
-﻿using ModLib;
+﻿using HarmonyLib;
+using ModLib;
 using System;
 using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
@@ -14,6 +15,9 @@ namespace TrainingTweak
     {
         public static readonly string ModuleFolderName = "TrainingTweak";
         public static readonly string ModName = "Training Tweak";
+        public const string HarmonyId = "mod.bannerlord.mareus.trainingtweak";
+
+        private Harmony _harmony;
 
         protected override void OnSubModuleLoad()
         {
@@ -45,6 +49,7 @@ namespace TrainingTweak
                 // Hook into ModLib mod configuration menu
                 SettingsDatabase.RegisterSettings(Settings.Instance);
             }
+
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -56,7 +61,16 @@ namespace TrainingTweak
 
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
+
+                _harmony = new Harmony("mod.bannerlord.mareus.trainingtweak");
+                _harmony.PatchAll();
             }
+        }
+
+        public override void OnGameEnd(Game game)
+        {
+            base.OnGameEnd(game);
+            _harmony.UnpatchAll(HarmonyId);
         }
     }
 }

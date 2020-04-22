@@ -30,6 +30,7 @@ namespace TrainingTweak.CampaignBehaviors
         {
             CampaignEvents.DailyTickPartyEvent.AddNonSerializedListener(
                 this, SafeHandleDailyTraining);
+
         }
 
         public override void SyncData(IDataStore dataStore)

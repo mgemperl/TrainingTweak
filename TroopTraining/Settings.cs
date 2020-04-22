@@ -13,6 +13,7 @@ namespace TrainingTweak
         private const string XpMultipliers = "Training Xp Multipliers";
         private const string TierLimits = "Tier Limits";
         private const string Debugging = "Debugging";
+        private const string FinancialSolutions = "Financial Solutions";
 
         public static Settings Instance
         {
@@ -114,6 +115,17 @@ namespace TrainingTweak
         [SettingProperty("Debug Mode", 
             "Whether this mod displays potential errors it finds while running.")]
         public bool DebugMode { get; set; } = true;
-        
+
+        [XmlElement]
+        [SettingProperty("Town Tax Income Multiplier", 0, 20,
+            "Multiplier for all tax income from towns.")]
+        [SettingPropertyGroup(FinancialSolutions)]
+        public float TownTaxIncomeMultiplier { get; set; } = 2.0f;
+
+        [XmlElement]
+        [SettingProperty("Village Tax Income Multiplier", 0, 20,
+            "Multiplier for all tax income from villages.")]
+        [SettingPropertyGroup(FinancialSolutions)]
+        public float VillageTaxIncomeMultiplier { get; set; } = 2.0f;
     }
 }
