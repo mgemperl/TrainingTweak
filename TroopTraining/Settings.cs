@@ -136,13 +136,13 @@ namespace TrainingTweak
 
         [XmlElement]
         [SettingProperty("Non-Player Town Tax Income Multiplier", 0, 20,
-            "Multiplier for all tax income from AI-owned towns.")]
+            "Multiplier for all tax income for AI-owned towns.")]
         [SettingPropertyGroup(FinancialSolutions)]
         public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 4.0f;
 
         [XmlElement]
         [SettingProperty("Non-Player Village Tax Income Multiplier", 0, 20,
-            "Multiplier for all tax income from AI-owned villages.")]
+            "Multiplier for all tax income for AI-owned villages.")]
         [SettingPropertyGroup(FinancialSolutions)]
         public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 4.0f;
     }
