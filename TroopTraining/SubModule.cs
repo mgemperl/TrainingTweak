@@ -96,7 +96,8 @@ namespace TrainingTweak
         {
             base.OnGameEnd(game);
 
-            if (Settings.Instance.EnableFinancialSolutions)
+            if (_harmony != null 
+                && Settings.Instance.EnableFinancialSolutions)
             {
                 _harmony.UnpatchAll(HarmonyId);
             }
