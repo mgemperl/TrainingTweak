@@ -117,15 +117,33 @@ namespace TrainingTweak
         public bool DebugMode { get; set; } = true;
 
         [XmlElement]
-        [SettingProperty("Town Tax Income Multiplier", 0, 20,
-            "Multiplier for all tax income from towns.")]
-        [SettingPropertyGroup(FinancialSolutions)]
-        public float TownTaxIncomeMultiplier { get; set; } = 2.0f;
+        [SettingProperty("Financial Solutions",
+            "Enable patches to help prevent lords from bankrupting themselves on high-tier troops.")]
+        [SettingPropertyGroup(FinancialSolutions, true)]
+        public bool EnableFinancialSolutions { get; set; } = false;
 
         [XmlElement]
-        [SettingProperty("Village Tax Income Multiplier", 0, 20,
-            "Multiplier for all tax income from villages.")]
+        [SettingProperty("Player Town Tax Income Multiplier", 0, 20,
+            "Multiplier for all tax income from player-owned towns.")]
         [SettingPropertyGroup(FinancialSolutions)]
-        public float VillageTaxIncomeMultiplier { get; set; } = 2.0f;
+        public float PlayerTownTaxIncomeMultiplier { get; set; } = 2.5f;
+
+        [XmlElement]
+        [SettingProperty("Player Village Tax Income Multiplier", 0, 20,
+            "Multiplier for all tax income from player-owned villages.")]
+        [SettingPropertyGroup(FinancialSolutions)]
+        public float PlayerVillageTaxIncomeMultiplier { get; set; } = 2.5f;
+
+        [XmlElement]
+        [SettingProperty("Non-Player Town Tax Income Multiplier", 0, 20,
+            "Multiplier for all tax income from AI-owned towns.")]
+        [SettingPropertyGroup(FinancialSolutions)]
+        public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 5.0f;
+
+        [XmlElement]
+        [SettingProperty("Non-Player Village Tax Income Multiplier", 0, 20,
+            "Multiplier for all tax income from AI-owned villages.")]
+        [SettingPropertyGroup(FinancialSolutions)]
+        public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 5.0f;
     }
 }

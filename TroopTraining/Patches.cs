@@ -1,23 +1,32 @@
 ﻿using HarmonyLib;
 using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TrainingTweak;
 
 public class Patches
 {
-	[HarmonyPatch(typeof(SettlementTaxModel), "CalculateTownTax")]
-	public static int CalculateTownTaxPostfix(ref int __result)
+	/// <summary>
+	/// Harmony postfix for town tax income.
+	/// </summary>
+	public static void CalculateTownTaxPostfix(Town town, ref int __result)
 	{
-		int multiplied = (int)Math.Ceiling(__result * 
-			Math.Max(0, Settings.Instance.TownTaxIncomeMultiplier));
-		return multiplied;
+		float multiplier = (town?.Settlement?.OwnerClan == Clan.PlayerClan)
+			? Settings.Instance.PlayerTownTaxIncomeMultiplier
+			: Settings.Instance.NonPlayerTownTaxIncomeMultiplier;
+
+		__result = (int)Math.Ceiling(__result * Math.Max(0, multiplier));
 	}
 
-	[HarmonyPatch(typeof(SettlementTaxModel), "CalculateVillageTaxFromIncome")]
-	public static int CalculateVillageTaxPostfix(ref int __result)
+	/// <summary>
+	/// Harmony postfix for village tax income
+	/// </summary>
+	public static void CalculateVillageTaxPostfix(Village village, ref int __result)
 	{
-		int multiplied = (int)Math.Ceiling(__result * 
-			Math.Max(0, Settings.Instance.VillageTaxIncomeMultiplier));
-		return multiplied;
+		float multiplier = (village?.Settlement?.OwnerClan == Clan.PlayerClan)
+			? Settings.Instance.PlayerVillageTaxIncomeMultiplier
+			: Settings.Instance.NonPlayerVillageTaxIncomeMultiplier;
+
+		__result = (int)Math.Ceiling(__result * Math.Max(0, multiplier));
 	}
 }
