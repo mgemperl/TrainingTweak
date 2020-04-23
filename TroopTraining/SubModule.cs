@@ -1,5 +1,6 @@
 ﻿using System;
 ﻿using HarmonyLib;
+using MBOptionScreen;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -9,7 +10,7 @@ using TrainingTweak.CampaignBehaviors;
 namespace TrainingTweak
 {
     // TODO: Add optional leadership skill training xp
-    public class SubModule : MBSubModuleBase
+    public class SubModule : MBOptionScreenSubModule
     {
         public static readonly string ModuleFolderName = "TrainingTweak";
         public static readonly string ModName = "Training Tweak";
