@@ -23,10 +23,14 @@ namespace TrainingTweak.CampaignBehaviors
         private static bool _disabled = false;
         private static HashSet<string> _reported = new HashSet<string>();
 
+        private const int NativeMaxRaiseTheMeekTier = 3;
+        private const int NativeMaxCompatTipsTier = 5;
+
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickPartyEvent.AddNonSerializedListener(
                 this, SafeHandleDailyTraining);
+
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -278,9 +282,13 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
                         .GetTroopPerksXp(DefaultPerks.Leadership.RaiseTheMeek);
-                    totalXp += ExecuteHeroDailyTraining(hero, party, 
-                        baseXpGain * multiplier, baseXpGain,
-                        Settings.Instance.RaiseTheMeekMaxTierTrained);
+                    totalXp += ExecuteHeroDailyTraining(
+                        hero: hero, 
+                        party: party, 
+                        baseXpGain: baseXpGain * multiplier, 
+                        nativeXpGain: baseXpGain,
+                        maxTierTrained: Settings.Instance.RaiseTheMeekMaxTierTrained,
+                        nativeMaxTierTrained: NativeMaxRaiseTheMeekTier);
                 }
 
                 // If hero has combat tips perk
@@ -288,9 +296,13 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
                         .GetTroopPerksXp(DefaultPerks.Leadership.CombatTips);
-                    totalXp += ExecuteHeroDailyTraining(hero, party, 
-                        baseXpGain * multiplier, baseXpGain,
-                        int.MaxValue);
+                    totalXp += ExecuteHeroDailyTraining(
+                        hero: hero, 
+                        party: party, 
+                        baseXpGain: baseXpGain * multiplier, 
+                        nativeXpGain: baseXpGain,
+                        maxTierTrained: int.MaxValue, 
+                        nativeMaxTierTrained: NativeMaxCompatTipsTier);
                     
                 }
 
@@ -299,9 +311,13 @@ namespace TrainingTweak.CampaignBehaviors
                     && !hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
                     baseXpGain = Settings.Instance.BaseTrainingXpGain;
-                    totalXp += ExecuteHeroDailyTraining(hero, party, 
-                        baseXpGain * multiplier, 0,
-                        Settings.Instance.BaseTrainingMaxTierTrained);
+                    totalXp += ExecuteHeroDailyTraining(
+                        hero: hero, 
+                        party: party, 
+                        baseXpGain: baseXpGain * multiplier, 
+                        nativeXpGain: 0,
+                        maxTierTrained: Settings.Instance.BaseTrainingMaxTierTrained, 
+                        nativeMaxTierTrained: 0);
                 }
             }
 
@@ -312,7 +328,7 @@ namespace TrainingTweak.CampaignBehaviors
         /// Apply hero's training onto their party.
         /// </summary>
         private static int ExecuteHeroDailyTraining(Hero hero, MobileParty party,
-            float baseXpGain, int nativeXpGain, int maxTierTrained)
+            float baseXpGain, int nativeXpGain, int maxTierTrained, int nativeMaxTierTrained)
         {
             // If configured not to do this training
             if (baseXpGain <= 0 || maxTierTrained <= 0)
@@ -351,19 +367,23 @@ namespace TrainingTweak.CampaignBehaviors
                         }
 
                         // Compute level difference and leadership skill multiplier
-                        float levelDiffLeadershipMult = 1.0f 
+                        float levelDiffAndLeadershipMult = 1.0f 
                             + Math.Max(0, hero.Level - curMember.Level)
                                 * (Settings.Instance.LevelDifferenceFactor / 100.0f)
                             + Math.Max(0, hero.GetSkillValue(DefaultSkills.Leadership))
                                 * (Settings.Instance.LeadershipSkillFactor / 100.0f);
 
-                        float xpPerTroop = levelDiffLeadershipMult * baseXpGain;
+                        // Compute xp to give to current group
+                        float xpPerTroop = levelDiffAndLeadershipMult * baseXpGain;
                         int xpForCurGroup = (int)Math.Round(
-                            (numInGroup - numNotTrained) * xpPerTroop)
-                            - nativeXpGain; // Subtract native perk xp gain
-                        // TODO: If user raised max tier trained for raise the meek,
-                        //       xp will still be subtracted even though vanilla didn't
-                        //       give it. Fix this.
+                            (numInGroup - numNotTrained) * xpPerTroop);
+
+                        // If group was given xp by Native
+                        if (curMember.Tier <= nativeMaxTierTrained)
+                        {
+                            // Subtract native perk xp gain
+                            xpForCurGroup -= nativeXpGain;
+                        }
 
                         // If positive xp gain
                         if (xpForCurGroup > 0)

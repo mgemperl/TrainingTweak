@@ -64,6 +64,20 @@ namespace TrainingTweak
 
         [XmlElement]
         public bool DebugMode { get; set; } = true;
-        
+
+        [XmlElement]
+        public bool EnableFinancialSolutions { get; set; } = true;
+
+        [XmlElement]
+        public float PlayerTownTaxIncomeMultiplier { get; set; } = 1.0f;
+
+        [XmlElement]
+        public float PlayerVillageTaxIncomeMultiplier { get; set; } = 1.0f;
+
+        [XmlElement]
+        public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 4.0f;
+
+        [XmlElement]
+        public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 4.0f;
     }
 }

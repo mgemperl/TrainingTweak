@@ -31,6 +31,25 @@
   <RaiseTheMeekMaxTierTrained>3</RaiseTheMeekMaxTierTrained>
 
   <!-- ////////////////////////////////////// -->
+  <!--           Financial Solutions          -->
+  <!-- ////////////////////////////////////// -->
+  
+  <!-- Enable patches to help prevent lords from bankrupting themselves on high-tier troops. -->
+  <EnableFinancialSolutions>true</EnableFinancialSolutions>
+
+  <!-- Multiplier for all tax income from player-owned towns and castles. -->
+  <PlayerTownTaxIncomeMultiplier>1.0</PlayerTownTaxIncomeMultiplier>
+
+  <!-- Multiplier for all tax income from player-owned villages. -->
+  <PlayerVillageTaxIncomeMultiplier>1.0</PlayerVillageTaxIncomeMultiplier>
+
+  <!-- Multiplier for all tax income for AI-owned towns and castles. -->
+  <NonPlayerTownTaxIncomeMultiplier>4.0</NonPlayerTownTaxIncomeMultiplier>
+
+  <!-- Multiplier for all tax income for AI-owned villages. -->
+  <NonPlayerVillageTaxIncomeMultiplier>4.0</NonPlayerVillageTaxIncomeMultiplier>
+
+  <!-- ////////////////////////////////////// -->
   <!--                   Misc                 -->
   <!-- ////////////////////////////////////// -->
 
