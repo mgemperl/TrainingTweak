@@ -12,7 +12,6 @@ namespace TrainingTweak
 
         private const string XpMultipliers = "Training Xp Multipliers";
         private const string TierLimits = "Tier Limits";
-        private const string Debugging = "Debugging";
         private const string FinancialSolutions = "Financial Solutions";
 
         public static Settings Instance
@@ -114,7 +113,7 @@ namespace TrainingTweak
         [XmlElement]
         [SettingProperty("Debug Mode", 
             "Whether this mod displays potential errors it finds while running.")]
-        public bool DebugMode { get; set; } = true;
+        public bool DebugMode { get; set; } = false;
 
         [XmlElement]
         [SettingProperty("Financial Solutions",
