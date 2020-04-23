@@ -63,7 +63,7 @@ namespace TrainingTweak
         public bool UpgradeableReceiveTraining { get; set; } = true;
 
         [XmlElement]
-        public bool DebugMode { get; set; } = true;
+        public bool DebugMode { get; set; } = false;
 
         [XmlElement]
         public bool EnableFinancialSolutions { get; set; } = true;

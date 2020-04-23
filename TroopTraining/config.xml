@@ -72,6 +72,6 @@
   <UpgradeableReceiveTraining>true</UpgradeableReceiveTraining>
 
   <!-- Whether this mod displays potential errors it finds while running. -->
-  <DebugMode>true</DebugMode>
+  <DebugMode>false</DebugMode>
 
 </TrainingTweak.Settings>
