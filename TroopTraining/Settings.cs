@@ -144,5 +144,23 @@ namespace TrainingTweak
             "Multiplier for all tax income for AI-owned villages.")]
         [SettingPropertyGroup(FinancialSolutions)]
         public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 4.0f;
+
+        [XmlElement]
+        [SettingProperty("Player Party Wage Multiplier", 0, 5,
+            "Multiplier for all party wages for parties in the player's clan.")]
+        [SettingPropertyGroup(FinancialSolutions)]
+        public float PlayerClanPartyWageMultiplier { get; set; } = 1.0f;
+
+        [XmlElement]
+        [SettingProperty("Non-Player Party Wage Multiplier", 0, 5,
+            "Multiplier for all party wages for parties not in the player's clan.")]
+        [SettingPropertyGroup(FinancialSolutions)]
+        public float NonPlayerClanPartyWageMultiplier { get; set; } = 1.0f;
+
+        [XmlElement]
+        [SettingProperty("Troop Upgrade Cost Multiplier", 0, 20,
+            "Multiplier for the upgrade cost of all troops.")]
+        [SettingPropertyGroup(FinancialSolutions)]
+        public float TroopUpgradeCostMultiplier { get; set; } = 1.0f;
     }
 }

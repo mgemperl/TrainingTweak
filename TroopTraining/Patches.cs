@@ -2,6 +2,7 @@
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
+using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
 using TrainingTweak;
 
 public class Patches
@@ -28,5 +29,26 @@ public class Patches
 			: Settings.Instance.NonPlayerVillageTaxIncomeMultiplier;
 
 		__result = (int)Math.Ceiling(__result * Math.Max(0, multiplier));
+	}
+
+	/// <summary>
+	/// Harmony postfix for total party wages.
+	/// </summary>
+	public static void PartyWagePostfix(MobileParty mobileParty, ref int __result)
+	{
+		float multiplier = (mobileParty.Party.Owner.Clan == Clan.PlayerClan)
+			? Settings.Instance.PlayerClanPartyWageMultiplier
+			: Settings.Instance.NonPlayerClanPartyWageMultiplier;
+
+		__result = (int)Math.Round(__result * Math.Max(0, multiplier));
+	}
+
+	/// <summary>
+	/// Postfix for troop upgrade costs.
+	/// </summary>
+	public static void UpgradeCostPostfix(ref int __result)
+	{
+		__result = (int)Math.Round(__result
+			* Math.Max(0, Settings.Instance.TroopUpgradeCostMultiplier));
 	}
 }
