@@ -75,9 +75,18 @@ namespace TrainingTweak
         public float PlayerVillageTaxIncomeMultiplier { get; set; } = 1.0f;
 
         [XmlElement]
-        public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 4.0f;
+        public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 3.0f;
 
         [XmlElement]
-        public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 4.0f;
+        public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 3.0f;
+
+        [XmlElement]
+        public float PlayerClanPartyWageMultiplier { get; set; } = 1.0f;
+
+        [XmlElement]
+        public float NonPlayerClanPartyWageMultiplier { get; set; } = 1.0f;
+
+        [XmlElement]
+        public float TroopUpgradeCostMultiplier { get; set; } = 1.0f;
     }
 }
