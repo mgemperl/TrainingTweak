@@ -2,7 +2,7 @@
 <Module>
 	<Name value="Training Tweak"/>
 	<Id value="TrainingTweak"/>
-	<Version value="v1.0.7"/>
+	<Version value="v1.0.8"/>
 	<DefaultModule value="false"/>
 	<SingleplayerModule value="true"/>
 	<MultiplayerModule value="false"/>
