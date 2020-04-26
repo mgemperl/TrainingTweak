@@ -8,6 +8,12 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TrainingTweak.CampaignBehaviors;
+using System.IO;
+using ModLib.GUI.ViewModels;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using System.Runtime.CompilerServices;
+using psai.Editor;
 
 namespace TrainingTweak
 {
@@ -23,6 +29,24 @@ namespace TrainingTweak
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
+
+            _harmony = new Harmony(HarmonyId);
+            PatchModlibLocalization();
+
+            // Try loading localization
+            try
+            {
+                string path = Path.Combine(BasePath.Name, "Modules",
+                    "TrainingTweak", "ModuleData", "Localization");
+                Strings.LoadStrings(path, TaleWorlds.MountAndBlade.Module
+                    .CurrentModule.GlobalTextManager);
+
+            }
+            catch (Exception exc)
+            {
+                Util.Warning("Training Tweak mod failed to load language file. " +
+                    $"Using en-US.\n\n{exc.Message}");
+            }
 
             bool settingsInitialized = false;
 
@@ -59,7 +83,6 @@ namespace TrainingTweak
             {
                 base.OnGameStart(game, gameStarterObject);
 
-                _harmony = new Harmony(HarmonyId);
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
             }
@@ -139,6 +162,41 @@ namespace TrainingTweak
                     postfix: new HarmonyMethod(postfix));
             }
         }
+        
+        private void PatchModlibLocalization()
+        {
+            var originalMethod = typeof(SettingsBase).GetMethod(
+                "GetSettingPropertyGroups", BindingFlags.NonPublic | BindingFlags.Instance);
+            var postfix = this.GetType().GetMethod("ModLibPatch");
+            PatchMethod(originalMethod, postfix);
+        }
+
+        public static void ModLibPatch(SettingsBase __instance, 
+            ref List<SettingPropertyGroup> __result)
+        {
+            // If this is my mod
+            if (__instance.ModName == SubModule.ModName)
+            {
+                foreach (var group in __result)
+                {
+                    var attr = group.GroupToggleSettingProperty?.SettingAttribute;
+                    group.GroupToggleSettingProperty?.SettingAttribute.GetType().GetProperty("HintText")
+                        .SetValue(attr, "TEST_GROUP_HINT");
+                    group.GroupToggleSettingProperty?.SettingAttribute.GetType().GetProperty("DisplayName")
+                        .SetValue(attr, "TEST__GROUP_DISPLAY_NAME");
+                    group.Attribute.GetType().GetProperty("GroupName")
+                        ?.SetValue(group.Attribute, "TEST_GROUP_NAME");
+
+                    foreach (var prop in group.SettingProperties)
+                    {
+                        prop.SettingAttribute.GetType().GetProperty("HintText")
+                            .SetValue(prop.SettingAttribute, "TEST_HINT");
+                        prop.SettingAttribute.GetType().GetProperty("DisplayName")
+                            .SetValue(prop.SettingAttribute, "TEST_DISPLAY_NAME");
+                    }
+                }
+            }
+        }
 
         public override void OnGameEnd(Game game)
         {
@@ -147,7 +205,6 @@ namespace TrainingTweak
             if (_harmony != null)
             {
                 _harmony.UnpatchAll(HarmonyId);
-                _harmony = null;
             }
         }
     }

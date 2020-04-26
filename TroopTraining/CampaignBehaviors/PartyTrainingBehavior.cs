@@ -9,17 +9,6 @@ namespace TrainingTweak.CampaignBehaviors
 {
     public class PartyTrainingBehavior : CampaignBehaviorBase
     {
-        private const string DebugHeader = 
-            "Training Tweak may have detected a corrupted game state: ";
-        string WarningDisclaimer = "Note: This was likely not caused by " +
-            "Training Tweak, it just detected a potential source of errors in the " +
-            "game state.";
-        string ErrorDisclaimer = "Note: This was not necessarily caused by " +
-            "Training Tweak, it just encountered an issue that prevented it " +
-            "from functioning properly.";
-        string DisableNote = "You may disable these debugging notices in the mod options " +
-            "menu by disabling Debug Mode.";
-
         private static bool _disabled = false;
         private static HashSet<string> _reported = new HashSet<string>();
 
@@ -49,9 +38,9 @@ namespace TrainingTweak.CampaignBehaviors
             catch (Exception exc)
             {
                 _disabled = true;
-                Util.Warning("Training Tweak has encountered an error and is " +
-                    "stopping.\n\nYou may continue playing without Training Tweak, " +
-                    $"but your game state may already be corrupted.\n\n{ErrorDisclaimer}",
+                Util.Warning(
+                    $"{Strings.FatalErrorMessage}\n\n" +
+                    $"{Strings.FatalErrorDisclaimer}",
                     exc: exc);
             }
         }
@@ -64,10 +53,10 @@ namespace TrainingTweak.CampaignBehaviors
                     && !_reported.Contains("null-party"))
                 {
                     _reported.Add("null-party");
-                    Util.DebugMessage($"{DebugHeader}\n\n" +
-                        $"Detected null party in the game state." +
-                        $"\n\n{WarningDisclaimer}" +
-                        $"\n\n{DisableNote}");
+                    Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
+                        $"{Strings.NullPartyDetected}" +
+                        $"\n\n{Strings.WarningDisclaimer}" +
+                        $"\n\n{Strings.DebugModeNote}");
                 }
                 return;
             }
@@ -82,11 +71,11 @@ namespace TrainingTweak.CampaignBehaviors
                     && !_reported.Contains($"{party.Name}-roster"))
                 {
                     _reported.Add($"{party.Name}-roster");
-                    Util.DebugMessage($"{DebugHeader}\n\n" +
-                        $"Detected null member roster for party:\n{party.Name} " +
-                        $"led by {party.Leader?.Name}" +
-                        $"\n\n{WarningDisclaimer}" +
-                        $"\n\n{DisableNote}");
+                    Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
+                        $"{Strings.NullMemberRosterDetected} {party.Name} " +
+                        $"{Strings.PartyLeaderHeader} {party.Leader?.Name}" +
+                        $"\n\n{Strings.WarningDisclaimer}" +
+                        $"\n\n{Strings.DebugModeNote}");
                 }
                 return;
             }
@@ -98,11 +87,11 @@ namespace TrainingTweak.CampaignBehaviors
                     && !_reported.Contains($"{party.Name}-character"))
                 {
                     _reported.Add($"{party.Name}-character");
-                    Util.DebugMessage($"{DebugHeader}\n\n" +
+                    Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
                         $"Detected null member character for party:\n{party.Name} " +
                         $"led by {party.Leader?.Name}" +
-                        $"\n\n{WarningDisclaimer}" +
-                        $"\n\n{DisableNote}");
+                        $"\n\n{Strings.WarningDisclaimer}" +
+                        $"\n\n{Strings.DebugModeNote}");
                 }
                 return;
             }
@@ -121,8 +110,10 @@ namespace TrainingTweak.CampaignBehaviors
                     if (totalXp > 0)
                     {
                         // Display training results to player
-                        InformationManager.DisplayMessage(new InformationMessage(
-                            $"Total xp gained from training: {totalXp}"));
+                        string xpGainedNotice = Strings.DailyTrainingMessage.Replace(
+                            Strings.XpPlaceholder, totalXp.ToString());
+                        InformationManager.DisplayMessage(
+                            new InformationMessage(xpGainedNotice));
 
                         // If there are troops ready to upgrade
                         if (!party.MemberRoster.Where(elem => elem.NumberReadyToUpgrade > 0)
@@ -130,7 +121,7 @@ namespace TrainingTweak.CampaignBehaviors
                         {
                             // Inform player
                             InformationManager.DisplayMessage(new InformationMessage(
-                                "Some troops are ready to upgrade."));
+                                $"{Strings.UpgradesAvailableMessage}"));
                         }
                     }
                 }
@@ -176,11 +167,11 @@ namespace TrainingTweak.CampaignBehaviors
                     && !_reported.Contains($"{party.Name}-town"))
                 {
                     _reported.Add($"{party.Name}-town");
-                    Util.DebugMessage($"{DebugHeader}\n\n" +
+                    Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
                         $"Detected null town for garrison:\n{party.Name} " +
                         $"in settlement {party.CurrentSettlement?.Name}" +
-                        $"\n\n{WarningDisclaimer}" +
-                        $"\n\n{DisableNote}");
+                        $"\n\n{Strings.WarningDisclaimer}" +
+                        $"\n\n{Strings.DebugModeNote}");
                 }
 
                 return;
@@ -246,13 +237,13 @@ namespace TrainingTweak.CampaignBehaviors
                         && !_reported.Contains($"{party.Name}-heroObj"))
                     {
                         _reported.Add($"{party.Name}-heroObj");
-                        Util.DebugMessage($"{DebugHeader}\n\n" +
+                        Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
                             $"Detected hero with null hero object in party:\n" +
                             $"{party.Name} led by {party.Leader?.Name}\n" +
                             $"Character with null hero object: " +
                             $"{member.Character.Name}" +
-                            $"\n\n{WarningDisclaimer}" +
-                            $"\n\n{DisableNote}");
+                            $"\n\n{Strings.WarningDisclaimer}" +
+                            $"\n\n{Strings.DebugModeNote}");
                     }
 
                     continue;
@@ -263,12 +254,12 @@ namespace TrainingTweak.CampaignBehaviors
                         && !_reported.Contains($"{party.Name}-heroBelong"))
                     {
                         _reported.Add($"{party.Name}-heroBelong");
-                        Util.DebugMessage($"{DebugHeader}\n\n" +
+                        Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
                             $"Hero doesn't consider itself a member of its party.\n" +
                             $"Party: {party.Name} led by {party.Leader?.Name}\n" +
                             $"Hero: {member.Character.Name}" +
-                            $"\n\n{WarningDisclaimer}" +
-                            $"\n\n{DisableNote}");
+                            $"\n\n{Strings.WarningDisclaimer}" +
+                            $"\n\n{Strings.DebugModeNote}");
                     }
 
                     // We can just ignore this issue ourselves, so no need to skip
