@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TrainingTweak.Settings>
+
+  <!-- ////////////////////////////////////// -->
+  <!--        Training XP Multipliers         -->
+  <!-- ////////////////////////////////////// -->
+
+  <!-- Multiplier for all xp this mod gives to the player's party. -->
+  <PlayerPartyTrainingXpMultiplier>0.75</PlayerPartyTrainingXpMultiplier>
+
+  <!-- Multiplier for all xp this mod gives to AI parties in the player's clan. -->
+  <PlayerClanPartyTrainingXpMultiplier>0.75</PlayerClanPartyTrainingXpMultiplier>
+
+  <!-- Multiplier for all xp this mod gives to garrisons of player-owned settlements. -->
+  <PlayerClanGarrisonTrainingXpMultiplier>1.0</PlayerClanGarrisonTrainingXpMultiplier>
+
+  <!-- Multiplier for all xp this mod gives to AI parties not in the player's clan. -->
+  <NonPlayerClanPartyTrainingXpMultiplier>0.75</NonPlayerClanPartyTrainingXpMultiplier>
+
+  <!-- Multiplier for all xp this mod gives to garrisons of settlements not owned by the player. -->
+  <NonPlayerClanGarrisonTrainingXpMultiplier>1.0</NonPlayerClanGarrisonTrainingXpMultiplier>
+
+  <!-- ////////////////////////////////////// -->
+  <!--              Tier Limits               -->
+  <!-- ////////////////////////////////////// -->
+
+  <!-- Max tier trained by a hero with neither training perk -->
+  <BaseTrainingMaxTierTrained>1</BaseTrainingMaxTierTrained>
+
+  <!-- Max tier trained by the Raise The Meek perk. -->
+  <RaiseTheMeekMaxTierTrained>3</RaiseTheMeekMaxTierTrained>
+
+  <!-- ////////////////////////////////////// -->
+  <!--           Financial Solutions          -->
+  <!-- ////////////////////////////////////// -->
+  
+  <!-- Enable patches to help prevent lords from bankrupting themselves on high-tier troops. -->
+  <EnableFinancialSolutions>true</EnableFinancialSolutions>
+
+  <!-- Multiplier for all tax income from player-owned towns and castles. -->
+  <PlayerTownTaxIncomeMultiplier>1.0</PlayerTownTaxIncomeMultiplier>
+
+  <!-- Multiplier for all tax income from player-owned villages. -->
+  <PlayerVillageTaxIncomeMultiplier>1.0</PlayerVillageTaxIncomeMultiplier>
+
+  <!-- Multiplier for all tax income for AI-owned towns and castles. -->
+  <NonPlayerTownTaxIncomeMultiplier>3.0</NonPlayerTownTaxIncomeMultiplier>
+
+  <!-- Multiplier for all tax income for AI-owned villages. -->
+  <NonPlayerVillageTaxIncomeMultiplier>3.0</NonPlayerVillageTaxIncomeMultiplier>
+
+  <!-- Multiplier for all party wages for parties in the player's clan. -->
+  <PlayerClanPartyWageMultiplier>1.0</PlayerClanPartyWageMultiplier>
+
+  <!-- Multiplier for all party wages for parties not in the player's clan. -->
+  <NonPlayerClanPartyWageMultiplier>1.0</NonPlayerClanPartyWageMultiplier>
+
+  <!-- Multiplier for the upgrade cost of all troops. -->
+  <TroopUpgradeCostMultiplier>1.0</TroopUpgradeCostMultiplier>
+
+  <!-- ////////////////////////////////////// -->
+  <!--                   Misc                 -->
+  <!-- ////////////////////////////////////// -->
+
+  <!-- Training xp per troop for a hero with neither training perk. -->
+  <BaseTrainingXpGain>5</BaseTrainingXpGain>
+
+  <!-- For every level the trainer is above the troop, training xp is increased by X percent.  -->
+  <LevelDifferenceFactor>6</LevelDifferenceFactor>
+
+  <!-- For each skill level in leadership, training xp is increased by X percent. -->
+  <LeadershipSkillFactor>0.4</LeadershipSkillFactor>
+
+  <!-- How much xp a trainer has to train troops to get 1 leadership xp. -->
+  <TrainingXpPerLeadershipXp>20.0</TrainingXpPerLeadershipXp>
+
+  <!-- Whether wounded troops count toward group size during training. -->
+  <WoundedReceiveTraining>false</WoundedReceiveTraining>
+
+  <!-- Whether upgradeable troops count toward group size during training. -->
+  <UpgradeableReceiveTraining>true</UpgradeableReceiveTraining>
+
+  <!-- Whether this mod displays potential errors it finds while running. -->
+  <DebugMode>false</DebugMode>
+
+</TrainingTweak.Settings>

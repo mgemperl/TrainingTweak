@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <strings>
+    <!-- For this entry, '[xp]' will be replaced with the amount of xp gained -->
+    <string id="TrainingTweak_DailyTrainingMessage" text="{=TTaaaa}Total xp gained from training: [xp]"/>
+    <string id="TrainingTweak_UpgradesAvailableMessage" text="Some troops are ready to upgrade."/>
+
+    <!-- Debugging Message Text -->
+    <string id="TrainingTweak_FatalErrorMessage" text="Training Tweak has encountered an error and is stopping. You may continue playing without Training Tweak, but your game state may already be corrupted."/>
+    <string id="TrainingTweak_FatalErrorDisclaimer" text="Note: This was not necessarily caused by Training Tweak, it just encountered an issue that prevented it from functioning properly."/>
+    <string id="TrainingTweak_WarningMessageHeader" text="Training Tweak may have detected a corrupted game state: "/>
+    <string id="TrainingTweak_WarningDisclaimer" text="Note: This was likely not caused by Training Tweak, it just detected a potential source of errors in the game state."/>
+    <string id="TrainingTweak_DebugModeNote" text="You may disable these debugging notices in the mod options menu by disabling Debug Mode."/>
+    <string id="TrainingTweak_NullPartyDetected" text="Detected null party in the game state."/>
+    <string id="TrainingTweak_NullMemberRosterDetected" text="Detected null member roster for party:"/>
+    <string id="TrainingTweak_NullCharacterDetected" text="Detected null member character for party:"/>
+    <string id="TrainingTweak_NullTownDetected" text="Detected null town for garrison:"/>
+    <string id="TrainingTweak_NullHeroDetected" text="Detected hero with null hero object in party:"/>
+    <string id="TrainingTweak_NullCharacter" text="Null Character: "/>
+    <string id="TrainingTweak_HeroNotInPartyDetected" text="Hero doesn't consider itself a member of its party."/>
+    <string id="TrainingTweak_PartyLeaderHeader" text="Party Leader:"/>
+    <string id="TrainingTweak_SettlementHeader" text="Settlement:"/>
+    <string id="TrainingTweak_HeroHeader" text="Hero:"/>
+  </strings>
+</base>
