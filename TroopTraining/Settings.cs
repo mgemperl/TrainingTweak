@@ -41,7 +41,7 @@ namespace TrainingTweak
             minValue: 0, maxValue: 20, requireRestart: false,
             hintText: "Multiplier for all xp this mod gives to garrisons of player-owned settlements.")]
         [SettingPropertyGroup(XpMultipliers)]
-        public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
+        public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 4.0f;
 
         [SettingProperty(displayName: "Non-Player Clan Party Training Xp Multiplier", 
             minValue: 0, maxValue: 20, requireRestart: false,
@@ -53,7 +53,7 @@ namespace TrainingTweak
             minValue: 0, maxValue: 20, requireRestart: false,
             hintText: "Multiplier for all xp this mod gives to garrisons of settlements not owned by the player.")]
         [SettingPropertyGroup(XpMultipliers)]
-        public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
+        public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 4.0f;
 
         [SettingProperty(displayName: "Raise The Meek Max Tier Trained", 
             minValue: 0, maxValue: 20, requireRestart: false,
