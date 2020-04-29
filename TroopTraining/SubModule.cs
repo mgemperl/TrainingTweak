@@ -45,8 +45,6 @@ namespace TrainingTweak
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
-            InformationManager.AddQuickInformation(
-                new TextObject("{=str_tt_upgrades_available_message}Test"));
             // If playing in the campaign game mode
             if (gameStarterObject is CampaignGameStarter)
             {
