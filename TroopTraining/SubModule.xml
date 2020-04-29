@@ -23,7 +23,16 @@
 				<Tag key="IsNoRenderModeElement" value="false" />
 			</Tags>
 		</SubModule>
-	</SubModules>
+    <SubModule>
+      <Name value="MBOptionScreen" />
+      <DLLName value="MBOptionScreen.v2.0.4.dll" />
+      <SubModuleClassType value="MBOptionScreen.MBOptionScreenSubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+  </SubModules>
 	
 	
 </Module>

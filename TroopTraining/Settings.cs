@@ -1,5 +1,6 @@
 ﻿using MBOptionScreen.Attributes;
 using MBOptionScreen.Attributes.v1;
+using MBOptionScreen.Attributes.v2;
 using MBOptionScreen.Settings;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,49 +12,24 @@ namespace TrainingTweak
     {
         public const string InstanceID = "TrainingTweak_v1";
 
-        private static Settings _instance = new Settings();
-
         private const string XpMultipliers = "Training Xp Multipliers";
         private const string TierLimits = "Tier Limits";
         private const string FinancialSolutions = "Financial Solutions";
         private const string GeneralSettings = "General";
 
-        public static Settings Instance
-        {
-            get
-            {
-                return _instance;
-            }
-
-            set
-            {
-                _instance = value;
-            }
-        }
-
         [XmlElement]
         public override string Id { get; set; } = InstanceID;
-
-        /*
-        public override List<SettingPropertyGroupDefinition> GetSettingPropertyGroups()
-        {
-            return new SettingPropertyGroupDefinition[]
-            {
-                new SettingPropertyGroupDefinition(XpMultipliers),
-                new SettingPropertyGroupDefinition(TierLimits),
-                new SettingPropertyGroupDefinition(GeneralSettings),
-                new SettingPropertyGroupDefinition(FinancialSolutions)
-            }.ToList();
-        }
-        */
 
         public override string ModuleFolderName => SubModule.ModuleFolderName;
         public override string ModName => SubModule.ModName;
 
+        
+
         //[SettingProperty("Player Party Training Xp Multiplier", 0, 20,
         //    hintText: "Multiplier for all xp this mod gives to the player's party.")]
-        [SettingProperty("{=TTaaaa}This is a test", minValue: 0, maxValue: 20)]
-        [SettingPropertyGroup(XpMultipliers)]
+        [SettingProperty(displayName: "{=str_tt_upgrades_available_message}This is a test", 
+            minValue: 0, maxValue: 20, hintText: "{=tzYtMHLX}Hint test")]
+        [SettingPropertyGroup("{=7ZhNilg8}")]
         public float PlayerPartyTrainingXpMultiplier { get; set; } = 0.75f;
 
         [SettingProperty("Player Clan Party Training Xp Multiplier", 0, 20,

@@ -1,11 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
   <strings>
     <!-- For this entry, '[xp]' will be replaced with the amount of xp gained -->
-    <string id="TrainingTweak_DailyTrainingMessage" text="{=TTaaaa}Total xp gained from training: [xp]"/>
-    <string id="TrainingTweak_UpgradesAvailableMessage" text="Some troops are ready to upgrade."/>
+    <string id="Df58cH4g" text="Total xp gained from training: [xp]"/>
 
-    <!-- Debugging Message Text -->
+    <string id="tzYtMHLX" text="Some troops are ready to upgrade."/>
+    <!--
+
     <string id="TrainingTweak_FatalErrorMessage" text="Training Tweak has encountered an error and is stopping. You may continue playing without Training Tweak, but your game state may already be corrupted."/>
     <string id="TrainingTweak_FatalErrorDisclaimer" text="Note: This was not necessarily caused by Training Tweak, it just encountered an issue that prevented it from functioning properly."/>
     <string id="TrainingTweak_WarningMessageHeader" text="Training Tweak may have detected a corrupted game state: "/>
@@ -21,5 +25,8 @@
     <string id="TrainingTweak_PartyLeaderHeader" text="Party Leader:"/>
     <string id="TrainingTweak_SettlementHeader" text="Settlement:"/>
     <string id="TrainingTweak_HeroHeader" text="Hero:"/>
+    -->
   </strings>
 </base>
+
+

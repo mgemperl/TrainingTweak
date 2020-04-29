@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Runtime.CompilerServices;
 using psai.Editor;
+using TaleWorlds.Localization;
 
 namespace TrainingTweak
 {
@@ -35,10 +36,21 @@ namespace TrainingTweak
             // Try loading localization
             try
             {
+                /*
                 string path = Path.Combine(BasePath.Name, "Modules",
                     "TrainingTweak", "ModuleData", "Localization");
                 Strings.LoadStrings(path, TaleWorlds.MountAndBlade.Module
                     .CurrentModule.GlobalTextManager);
+                    */
+                var textMan = TaleWorlds.MountAndBlade.Module.CurrentModule.GlobalTextManager;
+                textMan.LoadGameTexts(Path.Combine(BasePath.Name, "Modules", "TrainingTweak",
+                    "ModuleData", "module_strings.xml"));
+                var str = textMan.GetGameText("tzYtMHLX");
+                Strings.TextManager = textMan;
+
+
+
+
 
             }
             catch (Exception exc)
@@ -65,6 +77,8 @@ namespace TrainingTweak
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
+            InformationManager.AddQuickInformation(
+                new TextObject("{=str_tt_upgrades_available_message}Test"));
             // If playing in the campaign game mode
             if (gameStarterObject is CampaignGameStarter)
             {
