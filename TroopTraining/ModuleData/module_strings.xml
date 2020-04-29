@@ -3,26 +3,38 @@
   <strings>
     <!-- For this entry, '[xp]' will be replaced with the amount of xp gained -->
     <string id="str_tt_daily_training_message" 
-            text="{=Df58cH4g}Total xp gained from training: [xp]"/>
+            text="Total xp gained from training: [xp]"/>
     <string id="str_tt_upgrades_available_message" 
-            text="{=tzYtMHLX}Some troops are ready to upgrade."/>
-
-    <!--
-    <string id="str_tt_fatal_error_message" text="Training Tweak has encountered an error and is stopping. You may continue playing without Training Tweak, but your game state may already be corrupted."/>
-    <string id="str_tt_fatal_error_disclaimer" text="Note: This was not necessarily caused by Training Tweak, it just encountered an issue that prevented it from functioning properly."/>
-    <string id="str_tt_warning_message_header" text="Training Tweak may have detected a corrupted game state: "/>
-    <string id="str_tt_warning_disclaimer" text="Note: This was likely not caused by Training Tweak, it just detected a potential source of errors in the game state."/>
-    <string id="str_tt_debug_mode_note" text="You may disable these debugging notices in the mod options menu by disabling Debug Mode."/>
-    <string id="str_tt_null_party_detected" text="Detected null party in the game state."/>
-    <string id="str_tt_null_member_roster_detected" text="Detected null member roster for party:"/>
-    <string id="str_tt_null_character_detected" text="Detected null member character for party:"/>
-    <string id="str_tt_null_town_detected" text="Detected null town for garrison:"/>
-    <string id="TrainingTweak_NullHeroDetected" text="Detected hero with null hero object in party:"/>
-    <string id="TrainingTweak_NullCharacter" text="Null Character: "/>
-    <string id="TrainingTweak_HeroNotInPartyDetected" text="Hero doesn't consider itself a member of its party."/>
-    <string id="TrainingTweak_PartyLeaderHeader" text="Party Leader:"/>
-    <string id="TrainingTweak_SettlementHeader" text="Settlement:"/>
-    <string id="TrainingTweak_HeroHeader" text="Hero:"/>
-    -->
+            text="Some troops are ready to upgrade."/>
+    <string id="str_tt_fatal_error_message" 
+            text="Training Tweak has encountered an error and is stopping. You may continue playing without Training Tweak, but your game state may already be corrupted."/>
+    <string id="str_tt_fatal_error_disclaimer" 
+            text="Note: This was not necessarily caused by Training Tweak, it just encountered an issue that prevented it from functioning properly."/>
+    <string id="str_tt_warning_message_header" 
+            text="Training Tweak may have detected a corrupted game state."/>
+    <string id="str_tt_warning_disclaimer" 
+            text="Note: This was likely not caused by Training Tweak, it just detected a potential source of errors in the game state."/>
+    <string id="str_tt_debug_mode_note" 
+            text="You may disable these debugging notices in the mod options menu by disabling Debug Mode."/>
+    <string id="str_tt_null_party_detected" 
+            text="Detected null party in the game state."/>
+    <string id="str_tt_null_member_roster_detected" 
+            text="Detected null member roster for party"/>
+    <string id="str_tt_null_character_detected" 
+            text="Detected null member character for party"/>
+    <string id="str_tt_null_town_detected" 
+            text="Detected null town for garrison"/>
+    <string id="str_tt_null_hero_detected" 
+            text="Detected hero with null hero object in party"/>
+    <string id="str_tt_null_character" 
+            text="Null Character"/>
+    <string id="str_tt_hero_not_in_party_detected" 
+            text="Hero doesn't consider itself a member of its party"/>
+    <string id="str_tt_party_leader_header" 
+            text="Party Leader"/>
+    <string id="str_tt_settlement_header" 
+            text="Settlement"/>
+    <string id="str_hero_header" 
+            text="Hero"/>
   </strings>
 </base>

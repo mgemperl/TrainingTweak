@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TaleWorlds.Core;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
 namespace TrainingTweak
@@ -14,9 +15,10 @@ namespace TrainingTweak
     public static class Strings
     {
         public const string XpPlaceholder = "[xp]";
-        public static GameTextManager TextManager { get; set; }
 
-        public static void LoadStrings(string localizationFolderPath)
+        /*
+        public static void LoadStrings(string localizationFolderPath,
+            GameTextManager textManager)
         {
             List<string> fileNames = new List<string>();
 
@@ -56,7 +58,7 @@ namespace TrainingTweak
                 }
 
                 //strings = ReadLanguageFile(filePath);
-                TextManager.LoadGameTexts(filePath);
+                textManager.LoadGameTexts(filePath);
             }
         }
 
@@ -71,17 +73,24 @@ namespace TrainingTweak
 
             return userLanguage == fileLanguage;
         }
+        */
 
-        private static string SafeFetchString(string id)
+        private static string FetchString(string id, 
+            string backup = "")
         {
             string str;
-            try
+            TextObject text;
+
+            if (Module.CurrentModule.GlobalTextManager.TryGetText(
+                    id, null, out text))
             {
-                str = TextManager.FindText(id).ToString();
+                str = text.ToString();
             }
-            catch (Exception exc)
+            else
             {
-                str = $"MISSING_STRING[{id}]";
+                str = (backup.Length > 0)
+                    ? backup
+                    : $"MISSING_STRING[{id}]";
             }
 
             return str;
@@ -91,14 +100,16 @@ namespace TrainingTweak
         {
             get
             {
-                return SafeFetchString("str_tt_daily_training_message");
+                return FetchString("str_tt_daily_training_message",
+                    "TEST Total xp gained from training: [xp]");
             }
         }
         public static string UpgradesAvailableMessage 
         {
             get
             {
-                return TextManager.FindText("str_tt_upgrades_available_message").ToString();
+                return FetchString("str_tt_upgrades_available_message",
+                    "Some troops are ready to upgrade.");
             }
         }
 
@@ -106,105 +117,124 @@ namespace TrainingTweak
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_FatalErrorMessage").ToString();
+                return FetchString("str_tt_fatal_error_message",
+                    "Training Tweak has encountered an error and is stopping. You may " +
+                    "continue playing without Training Tweak, but your game state may " +
+                    "already be corrupted.");
             }
         }
         public static string FatalErrorDisclaimer
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_FatalErrorDisclaimer").ToString();
+                return FetchString("str_tt_fatal_error_disclaimer",
+                    "Note: This was not necessarily caused by Training Tweak, it just " +
+                    "encountered an issue that prevented it from functioning properly.");
             }
         }
         public static string WarningMessageHeader 
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_WarningMessageHeader").ToString();
+                return FetchString("str_tt_warning_message_header",
+                    "Training Tweak may have detected a corrupted game state.");
             }
         }
         public static string WarningDisclaimer 
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_WarningDisclaimer").ToString();
+                return FetchString("str_tt_warning_disclaimer",
+                    "Note: This was likely not caused by Training Tweak, it just " +
+                    "detected a potential source of errors in the game state.");
             }
         }
         public static string DebugModeNote 
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_DebugModeNote").ToString();
+                return FetchString("str_tt_debug_mode_note",
+                    "You may disable these debugging notices in the mod options menu " +
+                    "by disabling Debug Mode.");
             }
         }
         public static string NullPartyDetected
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_NullPartyDetected").ToString();
+                return FetchString("str_tt_null_party_detected",
+                    "Detected null party in the game state.");
             }
         }
         public static string NullMemberRosterDetected
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_NullMemberRosterDetected").ToString();
+                return FetchString("str_tt_null_member_roster_detected",
+                    "Detected null member roster for party");
             }
         }
         public static string NullCharacterDetected 
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_NullCharacterDetected").ToString();
+                return FetchString("str_tt_null_character_detected",
+                    "Detected null member character for party");
             }
         }
         public static string NullTownDetected 
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_NullTownDetected").ToString();
+                return FetchString("str_tt_null_town_detected",
+                    "Detected null town for garrison");
             }
         }
         public static string NullHeroDetected 
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_NullHeroDetected").ToString();
+                return FetchString("str_tt_null_hero_detected",
+                    "Detected hero with null hero object in party");
             }
         }
         public static string NullCharacter 
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_NullCharacter").ToString();
+                return FetchString("str_tt_null_character",
+                    "Null Character");
             }
         }
         public static string HeroNotInPartyDetected
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_HeroNotInPartyDetected").ToString();
+                return FetchString("str_tt_hero_not_in_party_detected",
+                    "Hero doesn't consider itself a member of its party");
             }
         }
         public static string PartyLeaderHeader
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_PartyLeaderHeader").ToString();
+                return FetchString("str_tt_party_leader_header",
+                    "Party Leader");
             }
         }
         public static string SettlementHeader
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_SettlementHeader").ToString();
+                return FetchString("str_tt_settlement_header",
+                    "Settlement");
             }
         }
         public static string HeroHeader 
         {
             get
             {
-                return TextManager.FindText("TrainingTweak_HeroHeader").ToString();
+                return FetchString("str_hero_header", "Hero");
             }
         }
     }

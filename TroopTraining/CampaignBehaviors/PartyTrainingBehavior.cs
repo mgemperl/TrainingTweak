@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 
@@ -72,8 +71,8 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     _reported.Add($"{party.Name}-roster");
                     Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
-                        $"{Strings.NullMemberRosterDetected} {party.Name} " +
-                        $"{Strings.PartyLeaderHeader} {party.Leader?.Name}" +
+                        $"{Strings.NullMemberRosterDetected}: {party.Name} " +
+                        $"\n{Strings.PartyLeaderHeader}: {party.Leader?.Name}" +
                         $"\n\n{Strings.WarningDisclaimer}" +
                         $"\n\n{Strings.DebugModeNote}");
                 }
@@ -88,8 +87,8 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     _reported.Add($"{party.Name}-character");
                     Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
-                        $"Detected null member character for party:\n{party.Name} " +
-                        $"led by {party.Leader?.Name}" +
+                        $"{Strings.NullCharacter}: {party.Name} " +
+                        $"\n{Strings.PartyLeaderHeader}: {party.Leader?.Name}" +
                         $"\n\n{Strings.WarningDisclaimer}" +
                         $"\n\n{Strings.DebugModeNote}");
                 }
@@ -168,14 +167,19 @@ namespace TrainingTweak.CampaignBehaviors
                 {
                     _reported.Add($"{party.Name}-town");
                     Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
-                        $"Detected null town for garrison:\n{party.Name} " +
-                        $"in settlement {party.CurrentSettlement?.Name}" +
+                        $"{Strings.NullTownDetected}: {party.Name} " +
+                        $"\n{Strings.SettlementHeader}: {party.CurrentSettlement?.Name}" +
                         $"\n\n{Strings.WarningDisclaimer}" +
                         $"\n\n{Strings.DebugModeNote}");
                 }
 
                 return;
             }
+
+            // Get max tier trainable
+            int maxTierTrained = Math.Min(
+                Settings.Instance.GarrisonTrainingMaxTierTrained,
+                Settings.Instance.AllTrainingMaxTierTrained);
 
             // Get base xp gain for this garrison
             Town town = party.CurrentSettlement.Town;
@@ -192,32 +196,36 @@ namespace TrainingTweak.CampaignBehaviors
                 // For each group in the garrison
                 for (int idx = 0; idx < members.Count; idx++)
                 {
-                    int numInGroup = members.GetElementNumber(idx);
-                    int numUpgradeable = members.GetElementCopyAtIndex(idx)
-                        .NumberReadyToUpgrade;
-
-                    // If there are troops in group to train
-                    if (numUpgradeable < numInGroup)
+                    // If of a tier configured to be trained
+                    if (members.GetCharacterAtIndex(idx).Tier <= maxTierTrained)
                     {
-                        int numNotTrained = 0;
-                        // Remove wounded from training if configured to
-                        if (!Settings.Instance.WoundedReceiveTraining)
-                        {
-                            numNotTrained = members.GetElementWoundedNumber(idx);
-                        }
-                        // Remove upgradeable from training if configured to
-                        if (!Settings.Instance.UpgradeableReceiveTraining)
-                        {
-                            // Allow wounded troops to be considered the upgradeable ones
-                            numNotTrained = Math.Max(numNotTrained, numUpgradeable);
-                        }
+                        int numInGroup = members.GetElementNumber(idx);
+                        int numUpgradeable = members.GetElementCopyAtIndex(idx)
+                            .NumberReadyToUpgrade;
 
-                        int xpForCurGroup = (int)Math.Ceiling(
-                            (numInGroup - numNotTrained) * xpPerTroop);
-                        // Add xp to current troop group
-                        if (xpForCurGroup > 0)
+                        // If there are troops in group to train
+                        if (numUpgradeable < numInGroup)
                         {
-                            members.AddXpToTroopAtIndex(xpForCurGroup, idx);
+                            int numNotTrained = 0;
+                            // Remove wounded from training if configured to
+                            if (!Settings.Instance.WoundedReceiveTraining)
+                            {
+                                numNotTrained = members.GetElementWoundedNumber(idx);
+                            }
+                            // Remove upgradeable from training if configured to
+                            if (!Settings.Instance.UpgradeableReceiveTraining)
+                            {
+                                // Allow wounded troops to be considered the upgradeable ones
+                                numNotTrained = Math.Max(numNotTrained, numUpgradeable);
+                            }
+
+                            int xpForCurGroup = (int)Math.Ceiling(
+                                (numInGroup - numNotTrained) * xpPerTroop);
+                            // Add xp to current troop group
+                            if (xpForCurGroup > 0)
+                            {
+                                members.AddXpToTroopAtIndex(xpForCurGroup, idx);
+                            }
                         }
                     }
                 }
@@ -238,10 +246,9 @@ namespace TrainingTweak.CampaignBehaviors
                     {
                         _reported.Add($"{party.Name}-heroObj");
                         Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
-                            $"Detected hero with null hero object in party:\n" +
-                            $"{party.Name} led by {party.Leader?.Name}\n" +
-                            $"Character with null hero object: " +
-                            $"{member.Character.Name}" +
+                            $"{Strings.NullHeroDetected}: {party.Name} " +
+                            $"\n{Strings.PartyLeaderHeader}: {party.Leader?.Name}" +
+                            $"\n{Strings.HeroHeader}: {member.Character.Name}" +
                             $"\n\n{Strings.WarningDisclaimer}" +
                             $"\n\n{Strings.DebugModeNote}");
                     }
@@ -255,9 +262,9 @@ namespace TrainingTweak.CampaignBehaviors
                     {
                         _reported.Add($"{party.Name}-heroBelong");
                         Util.DebugMessage($"{Strings.WarningMessageHeader}\n\n" +
-                            $"Hero doesn't consider itself a member of its party.\n" +
-                            $"Party: {party.Name} led by {party.Leader?.Name}\n" +
-                            $"Hero: {member.Character.Name}" +
+                            $"{Strings.HeroNotInPartyDetected}: {party.Name}" +
+                            $"\n{Strings.PartyLeaderHeader}: {party.Leader?.Name}" +
+                            $"\n{Strings.HeroHeader}: {member.Character.Name}" +
                             $"\n\n{Strings.WarningDisclaimer}" +
                             $"\n\n{Strings.DebugModeNote}");
                     }
@@ -278,7 +285,9 @@ namespace TrainingTweak.CampaignBehaviors
                         party: party, 
                         baseXpGain: baseXpGain * multiplier, 
                         nativeXpGain: baseXpGain,
-                        maxTierTrained: Settings.Instance.RaiseTheMeekMaxTierTrained,
+                        maxTierTrained: Math.Min(
+                            Settings.Instance.RaiseTheMeekMaxTierTrained,
+                            Settings.Instance.AllTrainingMaxTierTrained),
                         nativeMaxTierTrained: NativeMaxRaiseTheMeekTier);
                 }
 
@@ -292,13 +301,13 @@ namespace TrainingTweak.CampaignBehaviors
                         party: party, 
                         baseXpGain: baseXpGain * multiplier, 
                         nativeXpGain: baseXpGain,
-                        maxTierTrained: int.MaxValue, 
+                        maxTierTrained: Settings.Instance.AllTrainingMaxTierTrained, 
                         nativeMaxTierTrained: NativeMaxCompatTipsTier);
-                    
                 }
 
-                // If Hero has neither perk
-                if (!hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek)
+                // If base training enabled, and Hero has neither perk
+                if (Settings.Instance.EnableBaseTraining
+                    && !hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek)
                     && !hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
                     baseXpGain = Settings.Instance.BaseTrainingXpGain;
@@ -307,7 +316,9 @@ namespace TrainingTweak.CampaignBehaviors
                         party: party, 
                         baseXpGain: baseXpGain * multiplier, 
                         nativeXpGain: 0,
-                        maxTierTrained: Settings.Instance.BaseTrainingMaxTierTrained, 
+                        maxTierTrained: Math.Min(
+                            Settings.Instance.BaseTrainingMaxTierTrained, 
+                            Settings.Instance.AllTrainingMaxTierTrained),
                         nativeMaxTierTrained: 0);
                 }
             }

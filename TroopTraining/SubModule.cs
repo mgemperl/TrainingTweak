@@ -10,15 +10,11 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TrainingTweak.CampaignBehaviors;
 using System.IO;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Runtime.CompilerServices;
-using psai.Editor;
 using TaleWorlds.Localization;
 
 namespace TrainingTweak
 {
-    // TODO: Add optional leadership skill training xp
+    // TODO: Add tier limit for all training types (incl. garrisons)
     public class SubModule : MBSubModuleBase
     {
         public static readonly string ModuleFolderName = "TrainingTweak";
@@ -33,46 +29,18 @@ namespace TrainingTweak
 
             _harmony = new Harmony(HarmonyId);
 
-            // Try loading localization
+            // Try loading strings
             try
             {
-                /*
-                string path = Path.Combine(BasePath.Name, "Modules",
-                    "TrainingTweak", "ModuleData", "Localization");
-                Strings.LoadStrings(path, TaleWorlds.MountAndBlade.Module
-                    .CurrentModule.GlobalTextManager);
-                    */
                 var textMan = TaleWorlds.MountAndBlade.Module.CurrentModule.GlobalTextManager;
                 textMan.LoadGameTexts(Path.Combine(BasePath.Name, "Modules", "TrainingTweak",
                     "ModuleData", "module_strings.xml"));
-                var str = textMan.GetGameText("tzYtMHLX");
-                Strings.TextManager = textMan;
-
-
-
-
-
             }
             catch (Exception exc)
             {
-                Util.Warning("Training Tweak mod failed to load language file. " +
-                    $"Using en-US.\n\n{exc.Message}");
+                Util.Warning("Training Tweak mod failed to load string file." +
+                    "\n\n{exc.Message}");
             }
-
-
-            // Try loading settings file
-            /*
-            try
-            {
-                Settings.Instance = SettingsLoader.LoadSettings(
-                    $"{BasePath.Name}/Modules/TrainingTweak/config.xml");
-            }
-            catch (Exception exc)
-            {
-                Util.Warning("Training Tweak mod failed to load config file. " +
-                    $"Using default values.\n\n{exc.Message}");
-            }
-            */
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -93,9 +61,7 @@ namespace TrainingTweak
         {
             base.OnGameInitializationFinished(game);
 
-            // If configured to apply financial solutions harmony patches
             if (_harmony != null
-                && Settings.Instance.EnableFinancialSolutions
                 && Campaign.Current?.Models?.SettlementTaxModel != null
                 && Campaign.Current?.Models?.PartyWageModel != null)
             {
@@ -107,43 +73,32 @@ namespace TrainingTweak
                     MethodInfo postfix;
 
                     // Patch town taxes
-                    if (Settings.Instance.PlayerTownTaxIncomeMultiplier != 1.0f
-                        || Settings.Instance.NonPlayerTownTaxIncomeMultiplier != 1.0f)
-                    {
-                        originalMethod = taxModel.GetType().GetMethod("CalculateTownTax")
-                            ?.DeclaringType?.GetMethod("CalculateTownTax");
-                        postfix = typeof(Patches).GetMethod("CalculateTownTaxPostfix");
-                        PatchMethod(originalMethod, postfix);
-                    }
+                    originalMethod = taxModel.GetType().GetMethod("CalculateTownTax")
+                        ?.DeclaringType?.GetMethod("CalculateTownTax");
+                    postfix = typeof(HarmonyPatches.Patches)
+                        .GetMethod("CalculateTownTaxPostfix");
+                    PatchMethod(originalMethod, postfix);
 
                     // Patch village taxes
-                    if (Settings.Instance.PlayerVillageTaxIncomeMultiplier != 1.0f
-                        || Settings.Instance.NonPlayerVillageTaxIncomeMultiplier != 1.0f)
-                    {
-                        originalMethod = taxModel.GetType().GetMethod("CalculateVillageTaxFromIncome")
-                            ?.DeclaringType?.GetMethod("CalculateVillageTaxFromIncome");
-                        postfix = typeof(Patches).GetMethod("CalculateVillageTaxPostfix");
-                        PatchMethod(originalMethod, postfix);
-                    }
+                    originalMethod = taxModel.GetType().GetMethod("CalculateVillageTaxFromIncome")
+                        ?.DeclaringType?.GetMethod("CalculateVillageTaxFromIncome");
+                    postfix = typeof(HarmonyPatches.Patches)
+                        .GetMethod("CalculateVillageTaxPostfix");
+                    PatchMethod(originalMethod, postfix);
 
                     // Patch party wages
-                    if (Settings.Instance.PlayerClanPartyWageMultiplier != 1.0f
-                        || Settings.Instance.NonPlayerClanPartyWageMultiplier != 1.0f)
-                    {
-                        originalMethod = wageModel.GetType().GetMethod("GetTotalWage")
-                            ?.DeclaringType?.GetMethod("GetTotalWage");
-                        postfix = typeof(Patches).GetMethod("PartyWagePostfix");
-                        PatchMethod(originalMethod, postfix);
-                    }
+                    originalMethod = wageModel.GetType().GetMethod("GetTotalWage")
+                        ?.DeclaringType?.GetMethod("GetTotalWage");
+                    postfix = typeof(HarmonyPatches.Patches)
+                        .GetMethod("PartyWagePostfix");
+                    PatchMethod(originalMethod, postfix);
 
                     // Patch troop upgrade costs
-                    if (Settings.Instance.TroopUpgradeCostMultiplier != 1.0f)
-                    {
-                        originalMethod = wageModel.GetType().GetMethod("GetGoldCostForUpgrade")
-                            ?.DeclaringType?.GetMethod("GetGoldCostForUpgrade");
-                        postfix = typeof(Patches).GetMethod("UpgradeCostPostfix");
-                        PatchMethod(originalMethod, postfix);
-                    }
+                    originalMethod = wageModel.GetType().GetMethod("GetGoldCostForUpgrade")
+                        ?.DeclaringType?.GetMethod("GetGoldCostForUpgrade");
+                    postfix = typeof(HarmonyPatches.Patches)
+                        .GetMethod("UpgradeCostPostfix");
+                    PatchMethod(originalMethod, postfix);
                 }
                 catch (Exception exc)
                 {
