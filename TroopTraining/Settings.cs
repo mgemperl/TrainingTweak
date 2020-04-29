@@ -70,7 +70,8 @@ namespace TrainingTweak
 
         [SettingProperty(displayName: "All Training Max Tier Trained", 
             minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Max tier of troops that will be trained by this mod.")]
+            hintText: "Max tier of troops that will be trained by this mod. Overrides " +
+                      "other tier limit settings if lower than them.")]
         [SettingPropertyGroup(TierLimits)]
         public int AllTrainingMaxTierTrained { get; set; } = 20;
 
