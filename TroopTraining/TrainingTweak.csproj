@@ -252,19 +252,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CampaignBehaviors\PartyTrainingBehavior.cs" />
-    <Compile Include="Patches.cs" />
+    <Compile Include="HarmonyPatches\Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsLoader.cs" />
+    <Compile Include="Strings.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.xml" />
+    <Content Include="ModuleData\config.xml" />
+    <Content Include="ModuleData\module_strings.xml" />
     <Content Include="SubModule.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
