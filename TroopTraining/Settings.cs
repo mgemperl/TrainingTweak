@@ -25,7 +25,7 @@ namespace TrainingTweak
         public override string ModuleFolderName => SubModule.ModuleFolderName;
         public override string ModName => SubModule.ModName;
 
-        [SettingProperty(displayName: "Player Party Training Xp Multiplier", 
+        [SettingProperty(displayName: "Player Party Training Xp Multiplier",
             minValue: 0, maxValue: 20, requireRestart: false, 
             hintText: "Multiplier for all xp this mod gives to the player's party.")]
         [SettingPropertyGroup(XpMultipliers, order: 0)]
