@@ -142,19 +142,19 @@ namespace TrainingTweak
         public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 3.0f;
 
         [SettingProperty(displayName: "Player Party Wage Multiplier", 
-            minValue: 0, maxValue: 5, requireRestart: false,
+            minValue: 0, maxValue: 20, requireRestart: false,
             hintText: "Multiplier for all party wages for parties in the player's clan.")]
         [SettingPropertyGroup(FinancialSolutions)]
         public float PlayerClanPartyWageMultiplier { get; set; } = 1.0f;
 
         [SettingProperty(displayName: "Non-Player Party Wage Multiplier", 
-            minValue: 0, maxValue: 5, requireRestart: false,
+            minValue: 0, maxValue: 20, requireRestart: false,
             hintText: "Multiplier for all party wages for parties not in the player's clan.")]
         [SettingPropertyGroup(FinancialSolutions)]
         public float NonPlayerClanPartyWageMultiplier { get; set; } = 1.0f;
 
         [SettingProperty(displayName: "Troop Upgrade Cost Multiplier", 
-            minValue: 0, maxValue: 20, requireRestart: false,
+            minValue: 0, maxValue: 50, requireRestart: false,
             hintText: "Multiplier for the upgrade cost of all troops.")]
         [SettingPropertyGroup(FinancialSolutions)]
         public float TroopUpgradeCostMultiplier { get; set; } = 1.0f;

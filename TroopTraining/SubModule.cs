@@ -14,7 +14,6 @@ using TaleWorlds.Localization;
 
 namespace TrainingTweak
 {
-    // TODO: Add tier limit for all training types (incl. garrisons)
     public class SubModule : MBSubModuleBase
     {
         public static readonly string ModuleFolderName = "TrainingTweak";
