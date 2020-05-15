@@ -1,16 +1,12 @@
 ﻿using System;
 ﻿using HarmonyLib;
-using MBOptionScreen;
-using System;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TrainingTweak.CampaignBehaviors;
 using System.IO;
-using TaleWorlds.Localization;
 
 namespace TrainingTweak
 {
@@ -49,6 +45,20 @@ namespace TrainingTweak
             {
                 base.OnGameStart(game, gameStarterObject);
 
+                // Try loading config file
+                try
+                {
+                    Settings.Instance = SettingsLoader.LoadSettings(
+                        Path.Combine(BasePath.Name, "Modules", "TrainingTweak",
+                        "ModuleData", "config.xml"));
+                }
+                catch (Exception exc)
+                {
+                    Util.Warning("Training Tweak mod failed to load config file. " +
+                        $"Using default values.\n\n{exc.Message}");
+                }
+
+                _harmony = new Harmony(HarmonyId);
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
             }
