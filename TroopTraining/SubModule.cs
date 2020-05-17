@@ -99,6 +99,7 @@ namespace TrainingTweak
                 }
                 catch (Exception exc)
                 {
+                    // TODO: Move hard-coded string to Strings.cs and module data
                     Util.Warning("Training Tweak mod failed to apply " +
                         "Financial Solutions patches. Continuing without them.", exc);
                     _harmony.UnpatchAll(HarmonyId);

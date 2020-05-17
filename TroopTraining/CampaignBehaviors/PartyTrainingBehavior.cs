@@ -188,7 +188,7 @@ namespace TrainingTweak.CampaignBehaviors
                 * trainingModel.CalculateGarrisonXpBonusMultiplier(town)
                 * multiplier;
 
-            // If training this garrison, and garrison has member list
+            // If training this garrison
             if (xpPerTroop > 0)
             {
                 var members = party.MemberRoster;
@@ -403,9 +403,9 @@ namespace TrainingTweak.CampaignBehaviors
                 && totalXp > 0)
             {
                 // Give hero leadership xp
-                hero.AddSkillXp(DefaultSkills.Leadership,
-                    (int)Math.Ceiling((float)totalXp
-                        / Settings.Instance.TrainingXpPerLeadershipXp));
+                int leadershipXp = (int)Math.Ceiling(
+                    totalXp / Settings.Instance.TrainingXpPerLeadershipXp);
+                hero.AddSkillXp(DefaultSkills.Leadership, leadershipXp);
             }
 
             return totalXp;
