@@ -268,7 +268,6 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModuleData\config.xml" />
     <Content Include="ModuleData\module_strings.xml" />
     <Content Include="SubModule.xml" />
   </ItemGroup>
