@@ -45,19 +45,6 @@ namespace TrainingTweak
             {
                 base.OnGameStart(game, gameStarterObject);
 
-                // Try loading config file
-                try
-                {
-                    Settings.Instance = SettingsLoader.LoadSettings(
-                        Path.Combine(BasePath.Name, "Modules", "TrainingTweak",
-                        "ModuleData", "config.xml"));
-                }
-                catch (Exception exc)
-                {
-                    Util.Warning("Training Tweak mod failed to load config file. " +
-                        $"Using default values.\n\n{exc.Message}");
-                }
-
                 _harmony = new Harmony(HarmonyId);
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
