@@ -1,44 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
   <strings>
     <!-- For this entry, '[xp]' will be replaced with the amount of xp gained -->
-    <string id="str_tt_daily_training_message" 
-            text="{=4JRfwB3y}Total xp gained from training: [xp]"/>
-    <string id="str_tt_upgrades_available_message" 
-            text="{=LvP9QSda}Some troops are ready to upgrade."/>
-    <string id="str_tt_fatal_error_message" 
+    <string id="4JRfwB3y" 
+            text="Total xp gained from training: [xp]"/>
+    <string id="LvP9QSda" 
+            text="Some troops are ready to upgrade."/>
+    <string id="N8zbHJy6" 
             text="Training Tweak has encountered an error and is stopping. You may continue playing without Training Tweak, but your game state may already be corrupted."/>
-    <string id="str_tt_fatal_error_disclaimer" 
+    <string id="AhbPlAwZ" 
             text="Note: This was not necessarily caused by Training Tweak, it just encountered an issue that prevented it from functioning properly."/>
-    <string id="str_tt_warning_message_header" 
+    <string id="xDsgOvAU" 
             text="Training Tweak may have detected a corrupted game state."/>
-    <string id="str_tt_warning_disclaimer" 
+    <string id="nDH4hiqY" 
             text="Note: This was likely not caused by Training Tweak, it just detected a potential source of errors in the game state."/>
-    <string id="str_tt_debug_mode_note" 
+    <string id="K8LQh397" 
             text="You may disable these debugging notices in the mod options menu by disabling Debug Mode."/>
-    <string id="str_tt_null_party_detected" 
+    <string id="MTFU4ACW" 
             text="Detected null party in the game state."/>
-    <string id="str_tt_null_member_roster_detected" 
+    <string id="w5I7cJzP" 
             text="Detected null member roster for party"/>
-    <string id="str_tt_null_character_detected" 
+    <string id="8WaRp3fn" 
             text="Detected null member character for party"/>
-    <string id="str_tt_null_town_detected" 
+    <string id="nM0InAv4" 
             text="Detected null town for garrison"/>
-    <string id="str_tt_null_hero_detected" 
+    <string id="VREgdbYn" 
             text="Detected hero with null hero object in party"/>
-    <string id="str_tt_null_character" 
+    <string id="lyZSGQFj" 
             text="Null Character"/>
-    <string id="str_tt_hero_not_in_party_detected" 
+    <string id="Sacn543W" 
             text="Hero doesn't consider itself a member of its party"/>
-    <string id="str_tt_party_leader_header" 
+    <string id="1vnOIMFB" 
             text="Party Leader"/>
-    <string id="str_tt_settlement_header" 
+    <string id="tb8pCXJL" 
             text="Settlement"/>
-    <string id="str_tt_hero_header" 
+    <string id="cXx1Q6K4" 
             text="Hero"/>
-    <string id="str_tt_financial_solutions_failed"
+    <string id="ib8kqOeP"
             text="Training tweak mod failed to apply Financial Solutions patches. Continuing without them."/>
-    <string id="str_tt_config_file_failed"
+    <string id="jqF8TBBR"
             text="Training Tweak failed to load config file. Using default values."/>
   </strings>
 </base>

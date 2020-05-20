@@ -37,8 +37,8 @@ namespace TrainingTweak
             }
             catch (Exception exc)
             {
-                Util.Warning("Training Tweak mod failed to load string file." +
-                    "\n\n{exc.Message}");
+                Util.Warning("Training Tweak mod failed to load module_string file." +
+                    $"\n\n{exc.Message}");
             }
         }
 
@@ -99,9 +99,7 @@ namespace TrainingTweak
                 }
                 catch (Exception exc)
                 {
-                    // TODO: Move hard-coded string to Strings.cs and module data
-                    Util.Warning("Training Tweak mod failed to apply " +
-                        "Financial Solutions patches. Continuing without them.", exc);
+                    Util.Warning(Strings.FinancialSolutionsFailed, exc);
                     _harmony.UnpatchAll(HarmonyId);
                 }
             }

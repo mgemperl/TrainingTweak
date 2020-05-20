@@ -16,65 +16,6 @@ namespace TrainingTweak
     {
         public const string XpPlaceholder = "[xp]";
 
-        /*
-        public static void LoadStrings(string localizationFolderPath,
-            GameTextManager textManager)
-        {
-            List<string> fileNames = new List<string>();
-
-            if (Directory.Exists(localizationFolderPath))
-            {
-                fileNames = Directory.EnumerateFiles(localizationFolderPath, "*.xml")
-                    .Select(path => Path.GetFileName(path))
-                    .ToList();
-            }
-
-            // If language files exist
-            if (fileNames.Count > 0)
-            {
-                string filePath;
-                // If localization for user language and country is present
-                if (fileNames.Contains(CultureInfo.CurrentCulture.Name + ".xml"))
-                {
-                    filePath = Path.Combine(localizationFolderPath, fileNames
-                        .Find(fileName => fileName == CultureInfo.CurrentCulture.Name + ".xml"));
-                }
-                // If localization for user language is present
-                else if (!fileNames.Where(fileName => MatchesUserLanguage(fileName))
-                    .IsEmpty())
-                {
-                    filePath = Path.Combine(localizationFolderPath, fileNames
-                        .Find(fileName => MatchesUserLanguage(fileName)));
-                }
-                // If only one language is available
-                else if (fileNames.Count == 1)
-                {
-                    filePath = Path.Combine(localizationFolderPath, fileNames.First());
-                }
-                else
-                {
-                    // Use en-US
-                    filePath = Path.Combine(localizationFolderPath, "en-US.xml");
-                }
-
-                //strings = ReadLanguageFile(filePath);
-                textManager.LoadGameTexts(filePath);
-            }
-        }
-
-        private static bool MatchesUserLanguage(string fileName)
-        {
-            string[] splitCulture = CultureInfo.CurrentCulture.Name.Split('-');
-            string userLanguage = string.Join("", splitCulture.Take(splitCulture.Length - 1));
-
-            splitCulture = fileName.Split('-');
-            string fileLanguage = string.Join("", splitCulture.Take(
-                Math.Min(1, splitCulture.Length - 1)));
-
-            return userLanguage == fileLanguage;
-        }
-        */
-
         private static string FetchString(string id, 
             string backup = "")
         {
@@ -234,7 +175,26 @@ namespace TrainingTweak
         {
             get
             {
-                return FetchString("str_hero_header", "Hero");
+                return FetchString("str_tt_hero_header", "Hero");
+            }
+        }
+
+        public static string FinancialSolutionsFailed
+        {
+            get
+            {
+                return FetchString("str_tt_financial_solutions_failed",
+                    "Training tweak mod failed to apply Financial Solutions patches. " +
+                    "Continuing without them.");
+            }
+        }
+
+        public static string ConfigFileFailed
+        {
+            get
+            {
+                return FetchString("str_tt_config_file_failed",
+                    "Training Tweak failed to load config file. Using default values.");
             }
         }
     }
