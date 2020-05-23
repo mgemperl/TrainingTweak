@@ -1,6 +1,5 @@
 ﻿using System;
 ﻿using HarmonyLib;
-using MBOptionScreen;
 using System;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
@@ -11,6 +10,7 @@ using TaleWorlds.MountAndBlade;
 using TrainingTweak.CampaignBehaviors;
 using System.IO;
 using TaleWorlds.Localization;
+using MCM.Abstractions.FluentBuilder;
 
 namespace TrainingTweak
 {
@@ -40,6 +40,8 @@ namespace TrainingTweak
                 Util.Warning("Training Tweak mod failed to load module_string file." +
                     $"\n\n{exc.Message}");
             }
+
+            
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -51,12 +53,23 @@ namespace TrainingTweak
 
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
+
+                try
+                {
+                    Settings.Instance.BuildSettings();
+                }
+                catch (Exception exc)
+                {
+                    Util.Warning(Strings.SettingsRegistrationFailed, exc);
+                }
             }
         }
 
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
+
+            
 
             if (_harmony != null
                 && Campaign.Current?.Models?.SettlementTaxModel != null
@@ -70,31 +83,32 @@ namespace TrainingTweak
                     MethodInfo postfix;
 
                     // Patch town taxes
-                    originalMethod = taxModel.GetType().GetMethod("CalculateTownTax")
-                        ?.DeclaringType?.GetMethod("CalculateTownTax");
+                    originalMethod = taxModel.GetType().GetMethod(nameof(taxModel.CalculateTownTax))
+                        ?.DeclaringType?.GetMethod(nameof(taxModel.CalculateTownTax));
                     postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod("CalculateTownTaxPostfix");
+                        .GetMethod(nameof(HarmonyPatches.Patches.CalculateTownTaxPostfix));
                     PatchMethod(originalMethod, postfix);
 
                     // Patch village taxes
-                    originalMethod = taxModel.GetType().GetMethod("CalculateVillageTaxFromIncome")
-                        ?.DeclaringType?.GetMethod("CalculateVillageTaxFromIncome");
+                    originalMethod = taxModel.GetType()
+                        .GetMethod(nameof(taxModel.CalculateVillageTaxFromIncome))
+                        ?.DeclaringType?.GetMethod(nameof(taxModel.CalculateVillageTaxFromIncome));
                     postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod("CalculateVillageTaxPostfix");
+                        .GetMethod(nameof(HarmonyPatches.Patches.CalculateVillageTaxPostfix));
                     PatchMethod(originalMethod, postfix);
 
                     // Patch party wages
-                    originalMethod = wageModel.GetType().GetMethod("GetTotalWage")
-                        ?.DeclaringType?.GetMethod("GetTotalWage");
+                    originalMethod = wageModel.GetType().GetMethod(nameof(wageModel.GetTotalWage))
+                        ?.DeclaringType?.GetMethod(nameof(wageModel.GetTotalWage));
                     postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod("PartyWagePostfix");
+                        .GetMethod(nameof(HarmonyPatches.Patches.PartyWagePostfix));
                     PatchMethod(originalMethod, postfix);
 
                     // Patch troop upgrade costs
-                    originalMethod = wageModel.GetType().GetMethod("GetGoldCostForUpgrade")
-                        ?.DeclaringType?.GetMethod("GetGoldCostForUpgrade");
+                    originalMethod = wageModel.GetType().GetMethod(nameof(wageModel.GetGoldCostForUpgrade))
+                        ?.DeclaringType?.GetMethod(nameof(wageModel.GetGoldCostForUpgrade));
                     postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod("UpgradeCostPostfix");
+                        .GetMethod(nameof(HarmonyPatches.Patches.UpgradeCostPostfix));
                     PatchMethod(originalMethod, postfix);
                 }
                 catch (Exception exc)
@@ -123,6 +137,11 @@ namespace TrainingTweak
             {
                 _harmony.UnpatchAll(HarmonyId);
             }
+        }
+
+        protected override void OnSubModuleUnloaded()
+        {
+            Settings.Instance.Dispose();
         }
     }
 }
