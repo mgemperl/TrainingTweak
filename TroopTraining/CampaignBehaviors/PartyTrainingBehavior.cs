@@ -279,7 +279,7 @@ namespace TrainingTweak.CampaignBehaviors
                 if (hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek))
                 {
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
-                        .GetTroopPerksXp(DefaultPerks.Leadership.RaiseTheMeek);
+                        .GetPerkExperiencesForTroops(DefaultPerks.Leadership.RaiseTheMeek);
                     totalXp += ExecuteHeroDailyTraining(
                         hero: hero, 
                         party: party, 
@@ -295,7 +295,7 @@ namespace TrainingTweak.CampaignBehaviors
                 if (hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
                     baseXpGain = Campaign.Current.Models.PartyTrainingModel
-                        .GetTroopPerksXp(DefaultPerks.Leadership.CombatTips);
+                        .GetPerkExperiencesForTroops(DefaultPerks.Leadership.CombatTips);
                     totalXp += ExecuteHeroDailyTraining(
                         hero: hero, 
                         party: party, 

@@ -33,21 +33,35 @@ namespace TrainingTweak
         {
             try
             {
-                _settings.Unregister();
+                //_settings.Unregister();
             }
             catch (Exception exc)
             {
 
             }
         }
+
         // I used the fluent builder in order to support localization at runtime.
         // This is almost certainly not how settings should be implemented for localization.
         // I just couldn't figure out how to do it through Bannerlord's own localization system, myself.
         // I do not recommend imitating this.
 
-        float _testFloat = 0;
-        public void BuildSettings()
-        {
+float _testFloat = 0;
+public void BuildSettings()
+{
+    var builder = new DefaultSettingsBuilder("Test_v1", "Test Mod")
+        .SetFormat("json")
+        .SetFolderName(SubModule.ModuleFolderName)
+        .CreateGroup("Test Group", groupBuilder =>
+            groupBuilder.AddFloatingInteger("Test Name", 0f, 20f,
+                new ProxyRef<float>(() => _testFloat, (value) => _testFloat = value),
+                floatBuilder => floatBuilder
+                    .SetHintText("Test Hint")));
+
+    _settings = builder.BuildAsGlobal();
+    _settings.Register();
+}
+
             /*
             if (_settings != null)
             {
@@ -55,17 +69,6 @@ namespace TrainingTweak
                 _settings = null;
             }
             */
-
-            var builder = new DefaultSettingsBuilder(InstanceID, SubModule.ModName)
-                .SetFormat("json")
-                .SetFolderName(SubModule.ModuleFolderName)
-                .SetSubFolder("")
-                .CreateGroup(Strings.XpMultipliersSettingGroup, groupBuilder =>
-                    groupBuilder.AddFloatingInteger("Test Name", 0f, 20f,
-                        new ProxyRef<float>(() => _testFloat, (value) => _testFloat = value),
-                        floatBuilder => floatBuilder
-                            .SetRequireRestart(false)
-                            .SetHintText("Test Hint")));
 
 
             /*
@@ -111,11 +114,11 @@ namespace TrainingTweak
                         intBuilder => intBuilder
                             .SetRequireRestart(false)
                             .SetHintText(Strings.RaiseTheMeekTierHint)));
-                            */
 
             _settings = builder.BuildAsGlobal();
             _settings.Register();
         }
+                            */
 
         public float PlayerPartyTrainingXpMultiplier { get; set; } = 0.75f;
 

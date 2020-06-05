@@ -42,6 +42,16 @@ namespace TrainingTweak
             }
 
             
+
+
+        }
+
+        protected override void OnBeforeInitialModuleScreenSetAsRoot()
+        {
+            base.OnBeforeInitialModuleScreenSetAsRoot();
+            
+
+
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -54,22 +64,35 @@ namespace TrainingTweak
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
 
-                try
-                {
-                    Settings.Instance.BuildSettings();
-                }
-                catch (Exception exc)
-                {
-                    Util.Warning(Strings.SettingsRegistrationFailed, exc);
-                }
+                
             }
         }
+
+        public override void OnGameLoaded(Game game, object initializerObject)
+        {
+            base.OnGameLoaded(game, initializerObject);
+            Settings.Instance.BuildSettings();
+        }
+
+
+            /*
+            base.OnCampaignStart(game, starterObject);
+            try
+            {
+                Settings.Instance.BuildSettings();
+            }
+            catch (Exception exc)
+            {
+                Util.Warning(Strings.SettingsRegistrationFailed, exc);
+            }
+        }
+            */
 
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
 
-            
+           
 
             if (_harmony != null
                 && Campaign.Current?.Models?.SettlementTaxModel != null
