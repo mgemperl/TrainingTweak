@@ -41,17 +41,20 @@ namespace TrainingTweak
                     $"\n\n{exc.Message}");
             }
 
-            
-
-
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
-            
 
-
+            try
+            {
+                Settings.Instance.BuildSettings();
+            }
+            catch (Exception exc)
+            {
+                Util.Warning(Strings.SettingsRegistrationFailed, exc);
+            }
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -75,18 +78,7 @@ namespace TrainingTweak
         }
 
 
-            /*
-            base.OnCampaignStart(game, starterObject);
-            try
-            {
-                Settings.Instance.BuildSettings();
-            }
-            catch (Exception exc)
-            {
-                Util.Warning(Strings.SettingsRegistrationFailed, exc);
-            }
-        }
-            */
+            
 
         public override void OnGameInitializationFinished(Game game)
         {

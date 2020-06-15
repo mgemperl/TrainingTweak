@@ -12,7 +12,7 @@ namespace TrainingTweak
 {
     public class Settings : IDisposable
     {
-        public const string InstanceID = "TrainingTweak_v3";
+        public const string InstanceID = "TrainingTweak_v3_dev";
 
         private FluentGlobalSettings _settings;
         private static Settings _instance;
@@ -41,84 +41,74 @@ namespace TrainingTweak
             }
         }
 
-        // I used the fluent builder in order to support localization at runtime.
-        // This is almost certainly not how settings should be implemented for localization.
-        // I just couldn't figure out how to do it through Bannerlord's own localization system, myself.
-        // I do not recommend imitating this.
-
 float _testFloat = 0;
 public void BuildSettings()
 {
     var builder = new DefaultSettingsBuilder("Test_v1", "Test Mod")
         .SetFormat("json")
-        .SetFolderName(SubModule.ModuleFolderName)
+        .SetFolderName("Test Mod")
         .CreateGroup("Test Group", groupBuilder =>
-            groupBuilder.AddFloatingInteger("Test Name", 0f, 20f,
+            groupBuilder.AddFloatingInteger("tf_00", "Test Name", 0f, 20f,
                 new ProxyRef<float>(() => _testFloat, (value) => _testFloat = value),
-                floatBuilder => floatBuilder
+                builder => builder  
                     .SetHintText("Test Hint")));
 
     _settings = builder.BuildAsGlobal();
     _settings.Register();
 }
 
-            /*
-            if (_settings != null)
-            {
-                _settings.Unregister();
-                _settings = null;
-            }
-            */
-
 
             /*
             var builder = new DefaultSettingsBuilder(InstanceID, SubModule.ModName)
-                .SetFormat("json")
-                .SetFolderName(SubModule.ModuleFolderName)
-                .SetSubFolder("")
-                .CreateGroup(Strings.XpMultipliersSettingGroup, groupBuilder =>
-                    groupBuilder.AddFloatingInteger(Strings.PlayerPartyTrainingMultDisplay, 0f, 20f,
-                        new PropertyRef(typeof(Settings).GetProperty(
-                            nameof(PlayerPartyTrainingXpMultiplier)), this),
-                        floatBuilder => floatBuilder
-                            .SetRequireRestart(false)
-                            .SetHintText(Strings.PlayerPartyTrainingMultHint))
-                    .AddFloatingInteger(Strings.PlayerClanPartyTrainingMultDisplay, 0f, 20f,
-                        new PropertyRef(typeof(Settings).GetProperty(
-                            nameof(PlayerClanPartyTrainingXpMultiplier)), this),
-                        floatBuilder => floatBuilder
-                            .SetRequireRestart(false)
-                            .SetHintText(Strings.PlayerClanPartyTrainingMultHint))
-                    .AddFloatingInteger(Strings.PlayerClanGarrisonTrainingMultDisplay, 0f, 20f,
-                        new PropertyRef(typeof(Settings).GetProperty(
-                            nameof(PlayerClanGarrisonTrainingXpMultiplier)), this),
-                        floatBuilder => floatBuilder
-                            .SetRequireRestart(false)
-                            .SetHintText(Strings.PlayerClanGarrisonTrainingMultHint))
-                    .AddFloatingInteger(Strings.NonPlayerClanPartyTrainingMultDisplay, 0f, 20f,
-                        new PropertyRef(typeof(Settings).GetProperty(
-                            nameof(NonPlayerClanPartyTrainingXpMultiplier)), this),
-                        floatBuilder => floatBuilder
-                            .SetRequireRestart(false)
-                            .SetHintText(Strings.NonPlayerClanPartyTrainingMultHint))
-                    .AddFloatingInteger(Strings.NonPlayerClanGarrisonTrainingMultDisplay, 0f, 20f,
-                        new PropertyRef(typeof(Settings).GetProperty(
-                            nameof(NonPlayerClanGarrisonTrainingXpMultiplier)), this),
-                        floatBuilder => floatBuilder
-                            .SetRequireRestart(false)
-                            .SetHintText(Strings.NonPlayerClanGarrisonTrainingMultHint)))
-                .CreateGroup(Strings.TierLimitsSettingGroup, groupBuilder =>
-                    groupBuilder.AddInteger(Strings.RaiseTheMeekTierDisplay, 0, 20,
-                        new PropertyRef(typeof(Settings).GetProperty(
-                            nameof(RaiseTheMeekMaxTierTrained)), this),
-                        intBuilder => intBuilder
-                            .SetRequireRestart(false)
-                            .SetHintText(Strings.RaiseTheMeekTierHint)));
+                .SetFormat("xml")
+                .SetFolderName(SubModule.ModuleFolderName);
+
+            // Create xp multipliers group
+            builder.CreateGroup(Strings.XpMultipliersSettingGroup, groupBuilder =>
+                groupBuilder.AddFloatingInteger(Strings.PlayerPartyTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerPartyTrainingXpMultiplier)), this),
+                    floatBuilder => floatBuilder
+                        .SetRequireRestart(false)
+                        .SetHintText(Strings.PlayerPartyTrainingMultHint))
+                .AddFloatingInteger(Strings.PlayerClanPartyTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerClanPartyTrainingXpMultiplier)), this),
+                    floatBuilder => floatBuilder
+                        .SetRequireRestart(false)
+                        .SetHintText(Strings.PlayerClanPartyTrainingMultHint))
+                .AddFloatingInteger(Strings.PlayerClanGarrisonTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerClanGarrisonTrainingXpMultiplier)), this),
+                    floatBuilder => floatBuilder
+                        .SetRequireRestart(false)
+                        .SetHintText(Strings.PlayerClanGarrisonTrainingMultHint))
+                .AddFloatingInteger(Strings.NonPlayerClanPartyTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(NonPlayerClanPartyTrainingXpMultiplier)), this),
+                    floatBuilder => floatBuilder
+                        .SetRequireRestart(false)
+                        .SetHintText(Strings.NonPlayerClanPartyTrainingMultHint))
+                .AddFloatingInteger(Strings.NonPlayerClanGarrisonTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(NonPlayerClanGarrisonTrainingXpMultiplier)), this),
+                    floatBuilder => floatBuilder
+                        .SetRequireRestart(false)
+                        .SetHintText(Strings.NonPlayerClanGarrisonTrainingMultHint)));
+
+            // Create tier limits group
+            builder.CreateGroup(Strings.TierLimitsSettingGroup, groupBuilder =>
+                groupBuilder.AddInteger(Strings.RaiseTheMeekTierDisplay, 0, 20,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(RaiseTheMeekMaxTierTrained)), this),
+                    intBuilder => intBuilder
+                        .SetRequireRestart(false)
+                        .SetHintText(Strings.RaiseTheMeekTierHint)));
 
             _settings = builder.BuildAsGlobal();
             _settings.Register();
         }
-                            */
+            */
 
         public float PlayerPartyTrainingXpMultiplier { get; set; } = 0.75f;
 
@@ -154,7 +144,7 @@ public void BuildSettings()
                       "other tier limit settings if lower than them.")]
         [SettingPropertyGroup(TierLimits)]
         */
-        public int AllTrainingMaxTierTrained { get; set; } = 20;
+        public int ComatTipsMaxTierTrained { get; set; } = 20;
 
         /*
         [SettingProperty(displayName: "Level Difference Factor", 

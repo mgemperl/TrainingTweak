@@ -176,10 +176,6 @@ namespace TrainingTweak.CampaignBehaviors
                 return;
             }
 
-            // Get max tier trainable
-            int maxTierTrained = Math.Min(
-                Settings.Instance.GarrisonTrainingMaxTierTrained,
-                Settings.Instance.AllTrainingMaxTierTrained);
 
             // Get base xp gain for this garrison
             Town town = party.CurrentSettlement.Town;
@@ -197,7 +193,8 @@ namespace TrainingTweak.CampaignBehaviors
                 for (int idx = 0; idx < members.Count; idx++)
                 {
                     // If of a tier configured to be trained
-                    if (members.GetCharacterAtIndex(idx).Tier <= maxTierTrained)
+                    if (members.GetCharacterAtIndex(idx).Tier 
+                        <= Settings.Instance.GarrisonTrainingMaxTierTrained)
                     {
                         int numInGroup = members.GetElementNumber(idx);
                         int numUpgradeable = members.GetElementCopyAtIndex(idx)
@@ -285,9 +282,7 @@ namespace TrainingTweak.CampaignBehaviors
                         party: party, 
                         baseXpGain: baseXpGain * multiplier, 
                         nativeXpGain: baseXpGain,
-                        maxTierTrained: Math.Min(
-                            Settings.Instance.RaiseTheMeekMaxTierTrained,
-                            Settings.Instance.AllTrainingMaxTierTrained),
+                        maxTierTrained: Settings.Instance.RaiseTheMeekMaxTierTrained,
                         nativeMaxTierTrained: NativeMaxRaiseTheMeekTier);
                 }
 
@@ -301,7 +296,7 @@ namespace TrainingTweak.CampaignBehaviors
                         party: party, 
                         baseXpGain: baseXpGain * multiplier, 
                         nativeXpGain: baseXpGain,
-                        maxTierTrained: Settings.Instance.AllTrainingMaxTierTrained, 
+                        maxTierTrained: Settings.Instance.ComatTipsMaxTierTrained, 
                         nativeMaxTierTrained: NativeMaxCompatTipsTier);
                 }
 
@@ -316,9 +311,7 @@ namespace TrainingTweak.CampaignBehaviors
                         party: party, 
                         baseXpGain: baseXpGain * multiplier, 
                         nativeXpGain: 0,
-                        maxTierTrained: Math.Min(
-                            Settings.Instance.BaseTrainingMaxTierTrained, 
-                            Settings.Instance.AllTrainingMaxTierTrained),
+                        maxTierTrained: Settings.Instance.BaseTrainingMaxTierTrained, 
                         nativeMaxTierTrained: 0);
                 }
             }
