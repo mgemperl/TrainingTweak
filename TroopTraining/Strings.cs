@@ -46,8 +46,6 @@ namespace TrainingTweak
             "str_tt_tier_limits_group", "Tier Limits");
         public static string GeneralSettingsGroup => FetchString(
             "str_tt_general_group", "General");
-        public static string SettingsGroup => FetchString(
-            "str_tt_general_group", "General");
 
         public static string AISubgroup => FetchString(
             "str_tt_ai_subgroup", "AI");
@@ -66,25 +64,25 @@ namespace TrainingTweak
         public static string RaiseTheMeekXpAmountHint => FetchString(
             "str_tt_raise_the_meek_xp_amount_hint",
             "Daily Xp gain from Raise The Meek before multipliers are applied. " +
-            "Native default is 30.");
+            "Native value is 30.");
         public static string CombatTipsXpAmountDisplay => FetchString(
             "str_tt_combat_tips_xp_amount_display", "Combat Tips Base Xp");
         public static string CombatTipsXpAmountHint => FetchString(
             "str_tt_combat_tips_xp_amount_hint",
             "Daily Xp gain from Combat Tips before multipliers are applied. " +
-            "Native default is 15.");
+            "Native value is 15.");
         public static string RaiseTheMeekMaxTierTrainedDisplay => FetchString(
             "str_tt_raise_the_meek_tier_display",
             "Raise The Meek Max Tier Trained");
         public static string RaiseTheMeekMaxTierTrainedHint => FetchString(
             "str_tt_raise_the_meek_tier_hint",
-            "Max tier of troops in parties that will be trained by the 'Raise The Meek' perk.");
+            "Max tier of troops in parties that will be trained by the 'Raise The Meek' perk. Native value is 3.");
         public static string CombatTipsMaxTierTrainedDisplay => FetchString(
             "str_tt_combat_tips_tier_display",
             "Combat Tips Max Tier Trained");
         public static string CombatTipsMaxTierTrainedHint => FetchString(
             "str_tt_combat_tips_tier_hint",
-            "Max tier of troops in parties that will be trained by the 'Combat Tips' perk");
+            "Max tier of troops in parties that will be trained by the 'Combat Tips' perk. Native value is the max possible troop tier.");
         public static string PlayerPartyTrainingMultDisplay => FetchString(
             "str_tt_player_party_training_mult_display",
             "Player Party Training Xp Multiplier");
@@ -159,7 +157,7 @@ namespace TrainingTweak
             "str_tt_garrison_group", "Garrison Training Override");
         public static string EnableGarrisonTrainingOverrideHint => FetchString(
             "str_tt_enable_garrison_training_override_hint", 
-            "Enable basic training by heroes with neither training perk.");
+            "Enable tweaks to native garrison training.");
         public static string LevelOneTrainingFieldXpAmountDisplay => FetchString(
             "str_tt_level_one_training_field_xp_amount_display",
             "Level One Training Field Xp Gain");
@@ -167,7 +165,7 @@ namespace TrainingTweak
             "str_tt_level_one_training_field_xp_amount_hint",
             "Garrison Xp gain from a level 1 training field. " +
             "Level 2 will be double this amount, level 3 will be triple, and so on. " +
-            "Native default is 1 (which is ridiculous).");
+            "Native value is 1 (which is ridiculous).");
         public static string GarrisonMaxTierTrainedDisplay => FetchString(
             "str_tt_garrison_max_tier_trained_display",
             "Garrison Max Tier Trained");
@@ -256,11 +254,10 @@ namespace TrainingTweak
         public static string EnableDebugModeHint => FetchString(
             "str_tt_enable_debug_mode_hint",
             "Whether this mod displays potential errors it finds while running.");
-        public static string FatalErrorMessage => FetchString(
-            "str_tt_fatal_error_message",
-            "Training Tweak has encountered an error and is stopping. You may " +
-            "continue playing without Training Tweak, but your game state may " +
-            "already be corrupted.");
+        public static string TrainingOverrideFatalErrorMessage => FetchString(
+            "str_tt_perk_override_fatal_error_message",
+            "Training Tweak's training features have encountered an error and are stopping, " +
+            "but you may continue playing without them. Re-enabling native training.");
         public static string FatalErrorDisclaimer => FetchString(
             "str_tt_fatal_error_disclaimer",
             "Note: This was not necessarily caused by Training Tweak, it just " +
@@ -306,16 +303,21 @@ namespace TrainingTweak
         public static string HeroHeader  => FetchString(
             "str_tt_hero_header", 
             "Hero");
-        public static string FinancialSolutionsFailed => FetchString(
-            "str_tt_financial_solutions_failed",
-            "Training tweak mod failed to apply Financial Solutions patches. " +
-            "Continuing without them.");
+        public static string FinancialSolutionsPatchFailed => FetchString(
+            "str_tt_financial_solutions_patches_failed",
+            "Training Tweak mod's Financial Solutions patches have failed. " +
+            "Continuing with Financial Solutions disabled.");
+        public static string DisableNativeTrainingPatchFailed => FetchString(
+            "str_tt_disable_native_training_failed",
+            "Training Tweak mod failed to disable native training. Native training " +
+            "and Training Tweak's training will both run in parallel, likely resulting in " +
+            "excessive xp gain.");
         public static string ConfigFileFailed => FetchString(
             "str_tt_config_file_failed",
             "Training Tweak failed to load config file. Using default settings.");
         public static string SettingsRegistrationFailed => FetchString(
             "str_tt_settings_registration_failed",
             "Training Tweak failed to register settings with MCM, so its " +
-            "mod options menu will not appear. Using default settings.");
+            "mod options page will not appear. Using default settings.");
     }
 }

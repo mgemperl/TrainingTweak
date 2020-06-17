@@ -41,19 +41,20 @@ namespace TrainingTweak
             }
             catch (Exception exc)
             {
-                Util.Warning("Training Tweak mod failed to load module_string file." +
+                Util.Warning("Training Tweak mod failed to load " +
+                    "module_strings.xml language file. Using English." +
                     $"\n\n{exc.Message}");
             }
-
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
 
+            // Register settings with MCM
             try
             {
-                Settings.Instance.BuildSettings();
+                Settings.Instance.RegisterSettings();
             }
             catch (Exception exc)
             {
@@ -70,38 +71,32 @@ namespace TrainingTweak
 
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
-
-                
             }
         }
 
         public override void OnGameLoaded(Game game, object initializerObject)
         {
             base.OnGameLoaded(game, initializerObject);
-            Settings.Instance.BuildSettings();
+            Settings.Instance.RegisterSettings();
         }
-
-
-            
 
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
 
-           
-
             if (_harmony != null
                 && Campaign.Current?.Models?.SettlementTaxModel != null
-                && Campaign.Current?.Models?.PartyWageModel != null)
+                && Campaign.Current?.Models?.PartyWageModel != null
+                && Campaign.Current?.Models?.PartyTrainingModel != null
+                && Campaign.Current?.Models?.DailyTroopXpBonusModel != null)
             {
+                MethodInfo originalMethod;
+                MethodInfo postfix;
+
                 try
                 {
-                    SettlementTaxModel taxModel = Campaign.Current.Models.SettlementTaxModel;
-                    PartyWageModel wageModel = Campaign.Current.Models.PartyWageModel;
-                    MethodInfo originalMethod;
-                    MethodInfo postfix;
-
                     // Patch town taxes
+                    SettlementTaxModel taxModel = Campaign.Current.Models.SettlementTaxModel;
                     originalMethod = taxModel.GetType().GetMethod(nameof(taxModel.CalculateTownTax))
                         ?.DeclaringType?.GetMethod(nameof(taxModel.CalculateTownTax));
                     postfix = typeof(HarmonyPatches.Patches)
@@ -116,7 +111,9 @@ namespace TrainingTweak
                         .GetMethod(nameof(HarmonyPatches.Patches.CalculateVillageTaxPostfix));
                     PatchMethod(originalMethod, postfix);
 
+
                     // Patch party wages
+                    PartyWageModel wageModel = Campaign.Current.Models.PartyWageModel;
                     originalMethod = wageModel.GetType().GetMethod(nameof(wageModel.GetTotalWage))
                         ?.DeclaringType?.GetMethod(nameof(wageModel.GetTotalWage));
                     postfix = typeof(HarmonyPatches.Patches)
@@ -129,22 +126,57 @@ namespace TrainingTweak
                     postfix = typeof(HarmonyPatches.Patches)
                         .GetMethod(nameof(HarmonyPatches.Patches.UpgradeCostPostfix));
                     PatchMethod(originalMethod, postfix);
+
                 }
                 catch (Exception exc)
                 {
-                    Util.Warning(Strings.FinancialSolutionsFailed, exc);
-                    _harmony.UnpatchAll(HarmonyId);
+                    Util.Warning(Strings.FinancialSolutionsPatchFailed, exc);
+                    _harmony.UnpatchAll();
                 }
+
+                try
+                {
+                    // Patch perk xp gain
+                    PartyTrainingModel partyTrainingModel = Campaign.Current.Models.PartyTrainingModel;
+                    originalMethod = partyTrainingModel.GetType()
+                        .GetMethod(nameof(partyTrainingModel.GetPerkExperiencesForTroops))
+                            ?.DeclaringType?.GetMethod(
+                                nameof(partyTrainingModel.GetPerkExperiencesForTroops));
+                    postfix = typeof(HarmonyPatches.Patches)
+                        .GetMethod(nameof(HarmonyPatches.Patches.GetPerkExperiencesForTroopsPostfix));
+                    PatchMethod(originalMethod, postfix);
+
+                    // Patch garrison xp gain
+                    DailyTroopXpBonusModel garrisonTrainingModel =
+                        Campaign.Current.Models.DailyTroopXpBonusModel;
+                    originalMethod = garrisonTrainingModel.GetType()
+                        .GetMethod(nameof(garrisonTrainingModel.CalculateDailyTroopXpBonus))
+                            ?.DeclaringType?.GetMethod(
+                                nameof(garrisonTrainingModel.CalculateDailyTroopXpBonus));
+                    postfix = typeof(HarmonyPatches.Patches)
+                        .GetMethod(nameof(HarmonyPatches.Patches.CalculateDailyTroopXpBonusPostfix));
+                    PatchMethod(originalMethod, postfix);
+                }
+                catch (Exception exc)
+                {
+                    Util.Warning(Strings.DisableNativeTrainingPatchFailed, exc);
+                }
+                
             }
         }
 
         private void PatchMethod(MethodInfo original, MethodInfo postfix)
         {
-            if (original != null && _harmony != null)
+            if (original != null)
             {
                 _harmony.Patch(
                     original: original,
                     postfix: new HarmonyMethod(postfix));
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    $"Original method not found for patch: {postfix.Name}");
             }
         }
         
@@ -154,7 +186,7 @@ namespace TrainingTweak
 
             if (_harmony != null)
             {
-                _harmony.UnpatchAll(HarmonyId);
+                //_harmony.UnpatchAll(HarmonyId);
             }
         }
 

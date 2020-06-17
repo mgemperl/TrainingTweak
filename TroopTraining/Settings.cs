@@ -13,6 +13,7 @@ namespace TrainingTweak
     public class Settings : IDisposable
     {
         public const string InstanceID = "TrainingTweak_v3_dev";
+        //public const string InstanceID = "TestMod_v3_dev";
 
         private FluentGlobalSettings _settings;
         private static Settings _instance;
@@ -29,34 +30,64 @@ namespace TrainingTweak
             }
         }
 
-        public void Dispose()
+        // Training Perk Settings
+        public bool EnableTrainingPerkOverrides { get; set; } = true;
+        public int RaiseTheMeekXpAmount { get; set; } = 24;
+        public int CombatTipsXpAmount { get; set; } = 12;
+        public int RaiseTheMeekMaxTierTrained { get; set; } = 3;
+        public int ComatTipsMaxTierTrained { get; set; } = 20;
+        public float PlayerPartyTrainingXpMultiplier { get; set; } = 1f;
+        public float PlayerClanPartyTrainingXpMultiplier { get; set; } = 1f;
+        public float NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 1f;
+        public float LevelDifferenceFactor { get; set; } = 6;
+        public float LeadershipSkillFactor { get; set; } = 0.4f;
+        public float TrainingXpPerLeadershipXp { get; set; } = 10.0f;
+        public bool WoundedReceiveTraining { get; set; } = false;
+        public bool UpgradeableReceiveTraining { get; set; } = true;
+
+        // Base Training Settings
+        public bool EnableBaseTraining { get; set; } = true;
+        public int BaseTrainingXpAmount { get; set; } = 4;
+        public int BaseTrainingMaxTierTrained { get; set; } = 1;
+
+        // Garrison Settings 
+        public bool EnableGarrisonTraining { get; set; } = true;
+        public int LevelOneTrainingFieldXpAmount { get; set; } = 4;
+        public int GarrisonTrainingMaxTierTrained { get; set; } = 20;
+        public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
+        public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
+
+        // Financial Solutions Settings
+        public bool EnableFinancialSolutions { get; set; } = true;
+        public float PlayerTownTaxIncomeMultiplier { get; set; } = 2.0f;
+        public float PlayerVillageTaxIncomeMultiplier { get; set; } = 2.0f;
+        public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 2.0f;
+        public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 2.0f;
+        public float PlayerClanPartyWageMultiplier { get; set; } = 1.0f;
+        public float NonPlayerClanPartyWageMultiplier { get; set; } = 1.0f;
+        public float TroopUpgradeCostMultiplier { get; set; } = 1.0f;
+
+        // Debug
+        public bool DebugMode { get; set; } = false;
+
+        float _testFloat = 0;
+        bool _testToggle = true;
+        public void RegisterSettings()
         {
-            try
-            {
-                //_settings.Unregister();
-            }
-            catch (Exception exc)
-            {
-
-            }
-        }
-
-float _testFloat = 0;
-public void BuildSettings()
-{
             /*
-    var builder = new DefaultSettingsBuilder("Test_v1", "Test Mod")
-        .SetFormat("json")
-        .SetFolderName("Test Mod")
-        .CreateGroup("Test Group", groupBuilder =>
-            groupBuilder.AddFloatingInteger("tf_00", "Test Name", 0f, 20f,
-                new ProxyRef<float>(() => _testFloat, (value) => _testFloat = value),
-                builder => builder  
-                    .SetHintText("Test Hint")));
+            var builder = new DefaultSettingsBuilder("Test_v1", "Test Mod")
+                .SetFormat("json")
+                .SetFolderName("Test Mod");
 
-    _settings = builder.BuildAsGlobal();
-    _settings.Register();
-}
+            builder.CreateGroup("Test Group Toggle", groupBuilder => groupBuilder
+                .SetIsMainToggle(true)
+                .AddFloatingInteger("float_id", "Float Display Name", 0f, 20f,
+                    new ProxyRef<float>(() => _testFloat, (value) => _testFloat = value),
+                    builder => builder.SetHintText("Float Hint")));
+
+            _settings = builder.BuildAsGlobal();
+            _settings.Register();
+        }
             */
 
 
@@ -64,6 +95,7 @@ public void BuildSettings()
             var builder = new DefaultSettingsBuilder(InstanceID, SubModule.ModName)
                 .SetFormat("xml")
                 .SetFolderName(SubModule.ModuleFolderName);
+
 
             // Training Perk Overrides Group
             builder.CreateGroup($"{Strings.TrainingPerkGroup}",
@@ -413,45 +445,16 @@ public void BuildSettings()
             _settings.Register();
         }
 
-        // Training Perk Settings
-        public bool EnableTrainingPerkOverrides { get; set; } = true;
-        public int RaiseTheMeekXpAmount { get; set; } = 24;
-        public int CombatTipsXpAmount { get; set; } = 12;
-        public int RaiseTheMeekMaxTierTrained { get; set; } = 3;
-        public int ComatTipsMaxTierTrained { get; set; } = 20;
-        public float PlayerPartyTrainingXpMultiplier { get; set; } = 1f;
-        public float PlayerClanPartyTrainingXpMultiplier { get; set; } = 1f;
-        public float NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 1f;
-        public float LevelDifferenceFactor { get; set; } = 6;
-        public float LeadershipSkillFactor { get; set; } = 0.4f;
-        public float TrainingXpPerLeadershipXp { get; set; } = 10.0f;
-        public bool WoundedReceiveTraining { get; set; } = false;
-        public bool UpgradeableReceiveTraining { get; set; } = true;
+        public void Dispose()
+        {
+            try
+            {
+                //_settings.Unregister();
+            }
+            catch (Exception exc)
+            {
 
-        // Base Training Settings
-        public bool EnableBaseTraining { get; set; } = true;
-        public int BaseTrainingXpAmount { get; set; } = 5;
-        public int BaseTrainingMaxTierTrained { get; set; } = 1;
-
-        // Garrison Settings 
-        public bool EnableGarrisonTraining { get; set; } = true;
-        public int LevelOneTrainingFieldXpAmount { get; set; } = 4;
-        public int GarrisonTrainingMaxTierTrained { get; set; } = 20;
-        public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
-        public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
-
-        // Financial Solutions Settings
-        public bool EnableFinancialSolutions { get; set; } = true;
-        public float PlayerTownTaxIncomeMultiplier { get; set; } = 1.0f;
-        public float PlayerVillageTaxIncomeMultiplier { get; set; } = 1.0f;
-        public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 3.0f;
-        public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 3.0f;
-        public float PlayerClanPartyWageMultiplier { get; set; } = 1.0f;
-        public float NonPlayerClanPartyWageMultiplier { get; set; } = 1.0f;
-        public float TroopUpgradeCostMultiplier { get; set; } = 1.0f;
-
-        // Debug
-        public bool DebugMode { get; set; } = false;
-
+            }
+        }
     }
 }
