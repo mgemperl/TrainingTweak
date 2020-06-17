@@ -1,16 +1,12 @@
 ﻿using System;
 ﻿using HarmonyLib;
-using System;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TrainingTweak.CampaignBehaviors;
 using System.IO;
-using TaleWorlds.Localization;
-using MCM.Abstractions.FluentBuilder;
 
 namespace TrainingTweak
 {
@@ -47,27 +43,24 @@ namespace TrainingTweak
             }
         }
 
-        protected override void OnBeforeInitialModuleScreenSetAsRoot()
-        {
-            base.OnBeforeInitialModuleScreenSetAsRoot();
-
-            // Register settings with MCM
-            try
-            {
-                Settings.Instance.RegisterSettings();
-            }
-            catch (Exception exc)
-            {
-                Util.Warning(Strings.SettingsRegistrationFailed, exc);
-            }
-        }
-
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             // If playing in the campaign game mode
             if (gameStarterObject is CampaignGameStarter)
             {
                 base.OnGameStart(game, gameStarterObject);
+
+                // Try loading config file
+                try
+                {
+                    Settings.Instance = SettingsLoader.LoadSettings(
+                        Path.Combine(BasePath.Name, "Modules", "TrainingTweak",
+                        "ModuleData", "config.xml"));
+                }
+                catch (Exception exc)
+                {
+                    Util.Warning(Strings.ConfigFileFailed, exc);
+                }
 
                 var gameStarter = (CampaignGameStarter)gameStarterObject;
                 gameStarter.AddBehavior(new PartyTrainingBehavior());
@@ -77,7 +70,6 @@ namespace TrainingTweak
         public override void OnGameLoaded(Game game, object initializerObject)
         {
             base.OnGameLoaded(game, initializerObject);
-            Settings.Instance.RegisterSettings();
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -188,11 +180,6 @@ namespace TrainingTweak
             {
                 //_harmony.UnpatchAll(HarmonyId);
             }
-        }
-
-        protected override void OnSubModuleUnloaded()
-        {
-            Settings.Instance.Dispose();
         }
     }
 }
