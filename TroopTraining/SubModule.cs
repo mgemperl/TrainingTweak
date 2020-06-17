@@ -22,6 +22,10 @@ namespace TrainingTweak
 
         private Harmony _harmony;
 
+        // TODO: Update module_strings.xml 
+        // TODO: Update training behavior to use mod-internal perk and training field xp amounts
+        // TODO: Implement harmony patch to set perk and training field xp amounts to 0
+
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();

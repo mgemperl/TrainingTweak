@@ -305,7 +305,7 @@ namespace TrainingTweak.CampaignBehaviors
                     && !hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek)
                     && !hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
-                    baseXpGain = Settings.Instance.BaseTrainingXpGain;
+                    baseXpGain = Settings.Instance.BaseTrainingXpAmount;
                     totalXp += ExecuteHeroDailyTraining(
                         hero: hero, 
                         party: party, 

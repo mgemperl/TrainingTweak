@@ -37,19 +37,54 @@ namespace TrainingTweak
             return str;
         }
 
-        // Settings group names
-        public static string XpMultipliersSettingGroup => FetchString(
-            "str_tt_xp_multipliers_group", "Training Xp Multipliers");
-        public static string TierLimitsSettingGroup => FetchString(
+        // General settings group names
+        public static string TrainingPerkXpGain => FetchString(
+            "str_tt_training_perks_xp_gain_group", "Perk Xp Gain");
+        public static string XpMultipliersSettingsGroup => FetchString(
+            "str_tt_xp_multipliers_group", "Xp Multipliers");
+        public static string TierLimitsSettingsGroup => FetchString(
             "str_tt_tier_limits_group", "Tier Limits");
-        public static string FinancialSolutionsSettingGroup => FetchString(
-            "str_tt_financial_solutions_group", "Financial Solutions");
-        public static string BaseTrainingSettingGroup => FetchString(
-            "str_tt_base_training_group", "Basic Training");
-        public static string GeneralSettingGroup => FetchString(
+        public static string GeneralSettingsGroup => FetchString(
+            "str_tt_general_group", "General");
+        public static string SettingsGroup => FetchString(
             "str_tt_general_group", "General");
 
-        // Xp Multipliers
+        public static string AISubgroup => FetchString(
+            "str_tt_ai_subgroup", "AI");
+        public static string PlayerSubgroup => FetchString(
+            "str_tt_player_subgroup", "Player");
+
+
+        // Training Perk Settings
+        public static string TrainingPerkGroup => FetchString(
+            "str_tt_training_perks_group", "Training Perk Overrides");
+        public static string EnableTrainingPerkOverridesHint => FetchString(
+            "str_tt_enable_training_perk_overrides_hint",
+            "Enable tweaks to the native training perks.");
+        public static string RaiseTheMeekXpAmountDisplay => FetchString(
+            "str_tt_raise_the_meek_xp_amount_display", "Raise The Meek Base Xp");
+        public static string RaiseTheMeekXpAmountHint => FetchString(
+            "str_tt_raise_the_meek_xp_amount_hint",
+            "Daily Xp gain from Raise The Meek before multipliers are applied. " +
+            "Native default is 30.");
+        public static string CombatTipsXpAmountDisplay => FetchString(
+            "str_tt_combat_tips_xp_amount_display", "Combat Tips Base Xp");
+        public static string CombatTipsXpAmountHint => FetchString(
+            "str_tt_combat_tips_xp_amount_hint",
+            "Daily Xp gain from Combat Tips before multipliers are applied. " +
+            "Native default is 15.");
+        public static string RaiseTheMeekMaxTierTrainedDisplay => FetchString(
+            "str_tt_raise_the_meek_tier_display",
+            "Raise The Meek Max Tier Trained");
+        public static string RaiseTheMeekMaxTierTrainedHint => FetchString(
+            "str_tt_raise_the_meek_tier_hint",
+            "Max tier of troops in parties that will be trained by the 'Raise The Meek' perk.");
+        public static string CombatTipsMaxTierTrainedDisplay => FetchString(
+            "str_tt_combat_tips_tier_display",
+            "Combat Tips Max Tier Trained");
+        public static string CombatTipsMaxTierTrainedHint => FetchString(
+            "str_tt_combat_tips_tier_hint",
+            "Max tier of troops in parties that will be trained by the 'Combat Tips' perk");
         public static string PlayerPartyTrainingMultDisplay => FetchString(
             "str_tt_player_party_training_mult_display",
             "Player Party Training Xp Multiplier");
@@ -62,18 +97,89 @@ namespace TrainingTweak
         public static string PlayerClanPartyTrainingMultHint => FetchString(
             "str_tt_player_clan_party_training_mult_hint",
             "Multiplier for all xp this mod gives to AI parties in the player's clan.");
-        public static string PlayerClanGarrisonTrainingMultDisplay => FetchString(
-            "str_tt_player_clan_garrison_training_mult_display",
-            "Player Clan Garrison Training Xp Multiplier");
-        public static string PlayerClanGarrisonTrainingMultHint => FetchString(
-            "str_tt_player_clan_garrison_training_mult_hint",
-            "Multiplier for all xp this mod gives to garrisons of player-owned settlements.");
         public static string NonPlayerClanPartyTrainingMultDisplay => FetchString(
             "str_tt_non_player_clan_party_training_mult_display",
             "Non-Player Clan Party Training Xp Multiplier");
         public static string NonPlayerClanPartyTrainingMultHint => FetchString(
             "str_tt_non_player_clan_party_training_mult_hint",
             "Multiplier for all xp this mod gives to AI parties not in the player's clan.");
+        public static string LevelDifferenceFactorDisplay => FetchString(
+            "str_tt_level_difference_factor_display",
+            "Level Difference Factor");
+        public static string LevelDifferenceFactorHint => FetchString(
+            "str_tt_level_difference_factor_hint",
+            "For every level the trainer is above the troop, training xp is increased by X percent.");
+        public static string LeadershipSkillFactorDisplay => FetchString(
+            "str_tt_leadership_skill_factor_display",
+            "Leadership Skill Factor");
+        public static string LeadershipSkillFactorHint => FetchString(
+            "str_tt_leadership_skill_factor_hint",
+            "For each skill level in leadership, training xp is increased by X percent.");
+        public static string TrainingXpPerLeadershipXpDisplay => FetchString(
+            "str_tt_training_xp_per_leadership_xp_display",
+            "Training Xp Per Leadership Xp");
+        public static string TrainingXpPerLeadershipXpHint => FetchString(
+            "str_tt_training_xp_per_leadership_xp_hint",
+            "How much xp a trainer has to train troops to get 1 leadership xp.");
+        public static string WoundedReceiveTrainingDisplay => FetchString(
+            "str_tt_wounded_receive_training_display",
+            "Wounded Receive Training");
+        public static string WoundedReceiveTrainingHint => FetchString(
+            "str_tt_wounded_receive_training_hint",
+            "Whether wounded troops count toward group size during training.");
+        public static string UpgradeableReceiveTrainingDisplay => FetchString(
+            "str_tt_upgradeable_receive_training_display",
+            "Upgradeable Receive Training");
+        public static string UpgradeableReceiveTrainingHint => FetchString(
+            "str_tt_upgradeable_receive_training_hint",
+            "Whether upgradeable troops count toward group size during training.");
+
+        // Basic Training Settings
+        public static string BaseTrainingSettingsGroup => FetchString(
+            "str_tt_base_training_group", "Basic Training");
+        public static string EnableBaseTrainingHint => FetchString(
+            "str_tt_enable_base_training_hint", 
+            "Allow heroes with neither training perk to perform basic training.");
+        public static string BaseTrainingXpAmountDisplay => FetchString(
+            "str_tt_base_training_xp_amount_display", "Basic Training Xp Gain");
+        public static string BaseTrainingXpAmountHint => FetchString(
+            "str_tt_base_training_xp_amount_hint", 
+            "Daily Xp gain from training by heroes with neither training perk.");
+        public static string BaseTrainingTierDisplay => FetchString(
+            "str_tt_base_training_tier_display",
+            "Basic Training Max Tier Trained");
+        public static string BaseTrainingTierHint => FetchString(
+            "str_tt_base_training_tier_hint",
+            "Max tier of troops in parties that will be trained by heroes with " +
+            "neither training perk.");
+
+
+        // Garrison Training Settings
+        public static string GarrisonGroup => FetchString(
+            "str_tt_garrison_group", "Garrison Training Override");
+        public static string EnableGarrisonTrainingOverrideHint => FetchString(
+            "str_tt_enable_garrison_training_override_hint", 
+            "Enable basic training by heroes with neither training perk.");
+        public static string LevelOneTrainingFieldXpAmountDisplay => FetchString(
+            "str_tt_level_one_training_field_xp_amount_display",
+            "Level One Training Field Xp Gain");
+        public static string LevelOneTrainingFieldXpAmountHint => FetchString(
+            "str_tt_level_one_training_field_xp_amount_hint",
+            "Garrison Xp gain from a level 1 training field. " +
+            "Level 2 will be double this amount, level 3 will be triple, and so on. " +
+            "Native default is 1 (which is ridiculous).");
+        public static string GarrisonMaxTierTrainedDisplay => FetchString(
+            "str_tt_garrison_max_tier_trained_display",
+            "Garrison Max Tier Trained");
+        public static string GarrisionMaxTierTrainedHint => FetchString(
+            "str_tt_garrison_max_tier_trained_hint",
+            "Max tier of troops in garrisons that will be trained by this mod.");
+        public static string PlayerClanGarrisonTrainingMultDisplay => FetchString(
+            "str_tt_player_clan_garrison_training_mult_display",
+            "Player Clan Garrison Training Xp Multiplier");
+        public static string PlayerClanGarrisonTrainingMultHint => FetchString(
+            "str_tt_player_clan_garrison_training_mult_hint",
+            "Multiplier for all xp this mod gives to garrisons of player-owned settlements.");
         public static string NonPlayerClanGarrisonTrainingMultDisplay => FetchString(
             "str_tt_non_player_clan_garrison_training_mult_display",
             "Non-Player Clan Garrison Training Xp Multiplier");
@@ -81,14 +187,58 @@ namespace TrainingTweak
             "str_tt_non_player_clan_garrison_training_mult_hint",
             "Multiplier for all xp this mod gives to garrisons of settlements not owned by the player.");
 
-        // Tier Limits
-        public static string RaiseTheMeekTierDisplay => FetchString(
-            "str_tt_raise_the_meek_tier_display",
-            "Raise The Meek Max Tier Trained");
-        public static string RaiseTheMeekTierHint => FetchString(
-            "str_tt_raise_the_meek_tier_hint",
-            "Max tier of troops in parties that will be trained by the 'Raise The Meek' perk.");
 
+        // Financial Solutions Settings
+        public static string FinancialSolutionsSettingGroup => FetchString(
+            "str_tt_financial_solutions_group", "Financial Solutions");
+        public static string EnableFinancialSolutionsHint => FetchString(
+            "str_tt_enable_financial_solutions_hint",
+            "Enable patches to help prevent lords from bankrupting themselves on high-tier troops.");
+        public static string TroopUpgradeCostMultiplierDisplay => FetchString(
+            "str_tt_troop_upgrade_cost_mult_display",
+            "Troop Upgrade Cost Multiplier");
+        public static string TroopUpgradeCostMultiplierHint => FetchString(
+            "str_tt_troop_upgrade_cost_mult_hint",
+            "Multiplier for the upgrade cost of all troops.");
+        public static string PlayerTownTaxIncomeMultiplierDisplay => FetchString(
+            "str_tt_player_town_income_mult_display",
+            "Player Town Tax Income Multiplier");
+        public static string PlayerTownTaxIncomeMultiplierHint => FetchString(
+            "str_tt_player_town_income_mult_hint",
+            "Multiplier for all tax income from player-owned towns and castles.");
+        public static string PlayerVillageTaxIncomeMultiplierDisplay => FetchString(
+            "str_tt_player_village_income_mult_display",
+            "Player Village Tax Income Multiplier");
+        public static string PlayerVillageTaxIncomeMultiplierHint => FetchString(
+            "str_tt_player_village_income_mult_hint",
+            "Multiplier for all tax income from player-owned villages. " +
+            "Note: This takes a few days to take effect.");
+        public static string NonPlayerTownTaxIncomeMultiplierDisplay => FetchString(
+            "str_tt_ai_town_income_mult_display",
+            "Non-Player Town Tax Income Multiplier");
+        public static string NonPlayerTownTaxIncomeMultiplierHint => FetchString(
+            "str_tt_ai_town_income_mult_hint",
+            "Multiplier for all tax income from AI-owned towns and castles.");
+        public static string NonPlayerVillageTaxIncomeMultiplierDisplay => FetchString(
+            "str_tt_ai_village_income_mult_display",
+            "Non-Player Village Tax Income Multiplier");
+        public static string NonPlayerVillageTaxIncomeMultiplierHint => FetchString(
+            "str_tt_ai_village_income_mult_hint",
+            "Multiplier for all tax income from AI-owned villages. " +
+            "Note: This takes a few days to take effect.");
+        public static string PlayerClanPartyWageMultiplierDisplay => FetchString(
+            "str_tt_player_clan_party_wage_mult_display",
+            "Player Clan Party Wage Multiplier");
+        public static string PlayerClanPartyWageMultiplierHint => FetchString(
+            "str_tt_player_clan_party_wage_mult_hint",
+            "Multiplier for all party wages for parties in the player's clan.");
+        public static string NonPlayerClanPartyWageMultiplierDisplay => FetchString(
+            "str_tt_ai_clan_party_wage_mult_display",
+            "Non-Player Clan Party Wage Multiplier");
+        public static string NonPlayerClanPartyWageMultiplierHint => FetchString(
+            "str_tt_ai_clan_party_wage_mult_hint",
+            "Multiplier for all party wages for parties not in the player's clan.");
+        
         // In-Game strings
         public static string DailyTrainingMessage => FetchString(
             "str_tt_daily_training_message", 
@@ -98,6 +248,14 @@ namespace TrainingTweak
             "Some troops are ready to upgrade.");
 
         // Debug and error messages
+        public static string DebugSettingGroup => FetchString(
+            "str_tt_debug_group", "Debug");
+        public static string EnableDebugModeDisplay => FetchString(
+            "str_tt_enable_debug_mode_display",
+            "Enable Debug Mode");
+        public static string EnableDebugModeHint => FetchString(
+            "str_tt_enable_debug_mode_hint",
+            "Whether this mod displays potential errors it finds while running.");
         public static string FatalErrorMessage => FetchString(
             "str_tt_fatal_error_message",
             "Training Tweak has encountered an error and is stopping. You may " +

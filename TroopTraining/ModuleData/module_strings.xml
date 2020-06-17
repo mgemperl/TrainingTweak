@@ -5,11 +5,11 @@
     <!-- Mod Options Menu Strings -->
 
     <!-- In-Game Strings -->
-    <!-- For the 'str_tt_daily_training_message' string, '[xp]' will be replaced with the amount of xp gained -->
+    <!-- '[xp]' will be replaced with the amount of xp gained -->
     <string id="str_tt_daily_training_message" 
-            text="{=4JRfwB3y}Total xp gained from training: [xp]"/>
+            text="Total xp gained from training: [xp]"/>
     <string id="str_tt_upgrades_available_message" 
-            text="{=LvP9QSda}Some troops are ready to upgrade."/>
+            text="Some troops are ready to upgrade."/>
     <!-- Error And Debug Strings -->
     <string id="str_tt_fatal_error_message" 
             text="Training Tweak has encountered an error and is stopping. You may continue playing without Training Tweak, but your game state may already be corrupted."/>

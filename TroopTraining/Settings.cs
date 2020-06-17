@@ -44,6 +44,7 @@ namespace TrainingTweak
 float _testFloat = 0;
 public void BuildSettings()
 {
+            /*
     var builder = new DefaultSettingsBuilder("Test_v1", "Test Mod")
         .SetFormat("json")
         .SetFolderName("Test Mod")
@@ -56,231 +57,401 @@ public void BuildSettings()
     _settings = builder.BuildAsGlobal();
     _settings.Register();
 }
+            */
 
 
-            /*
+            int order = 0;
             var builder = new DefaultSettingsBuilder(InstanceID, SubModule.ModName)
                 .SetFormat("xml")
                 .SetFolderName(SubModule.ModuleFolderName);
 
-            // Create xp multipliers group
-            builder.CreateGroup(Strings.XpMultipliersSettingGroup, groupBuilder =>
-                groupBuilder.AddFloatingInteger(Strings.PlayerPartyTrainingMultDisplay, 0f, 20f,
+            // Training Perk Overrides Group
+            builder.CreateGroup($"{Strings.TrainingPerkGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .SetIsMainToggle(true)
+                .AddBool(nameof(EnableTrainingPerkOverrides),
+                    Strings.TrainingPerkGroup,
                     new PropertyRef(typeof(Settings).GetProperty(
-                        nameof(PlayerPartyTrainingXpMultiplier)), this),
-                    floatBuilder => floatBuilder
+                        nameof(EnableTrainingPerkOverrides)), this),
+                    builder => builder
                         .SetRequireRestart(false)
-                        .SetHintText(Strings.PlayerPartyTrainingMultHint))
-                .AddFloatingInteger(Strings.PlayerClanPartyTrainingMultDisplay, 0f, 20f,
-                    new PropertyRef(typeof(Settings).GetProperty(
-                        nameof(PlayerClanPartyTrainingXpMultiplier)), this),
-                    floatBuilder => floatBuilder
-                        .SetRequireRestart(false)
-                        .SetHintText(Strings.PlayerClanPartyTrainingMultHint))
-                .AddFloatingInteger(Strings.PlayerClanGarrisonTrainingMultDisplay, 0f, 20f,
-                    new PropertyRef(typeof(Settings).GetProperty(
-                        nameof(PlayerClanGarrisonTrainingXpMultiplier)), this),
-                    floatBuilder => floatBuilder
-                        .SetRequireRestart(false)
-                        .SetHintText(Strings.PlayerClanGarrisonTrainingMultHint))
-                .AddFloatingInteger(Strings.NonPlayerClanPartyTrainingMultDisplay, 0f, 20f,
-                    new PropertyRef(typeof(Settings).GetProperty(
-                        nameof(NonPlayerClanPartyTrainingXpMultiplier)), this),
-                    floatBuilder => floatBuilder
-                        .SetRequireRestart(false)
-                        .SetHintText(Strings.NonPlayerClanPartyTrainingMultHint))
-                .AddFloatingInteger(Strings.NonPlayerClanGarrisonTrainingMultDisplay, 0f, 20f,
-                    new PropertyRef(typeof(Settings).GetProperty(
-                        nameof(NonPlayerClanGarrisonTrainingXpMultiplier)), this),
-                    floatBuilder => floatBuilder
-                        .SetRequireRestart(false)
-                        .SetHintText(Strings.NonPlayerClanGarrisonTrainingMultHint)));
+                        .SetOrder(order++)
+                        .SetHintText(Strings.EnableTrainingPerkOverridesHint))
+                );
 
-            // Create tier limits group
-            builder.CreateGroup(Strings.TierLimitsSettingGroup, groupBuilder =>
-                groupBuilder.AddInteger(Strings.RaiseTheMeekTierDisplay, 0, 20,
+            // Training Perk xp amounts
+            builder.CreateGroup($"{Strings.TrainingPerkGroup}/{Strings.TrainingPerkXpGain}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddInteger(nameof(RaiseTheMeekXpAmount),
+                    Strings.RaiseTheMeekXpAmountDisplay, 0, 100,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(RaiseTheMeekXpAmount)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.RaiseTheMeekXpAmountHint))
+                .AddInteger(nameof(CombatTipsXpAmount),
+                    Strings.CombatTipsXpAmountDisplay, 0, 100,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(CombatTipsXpAmount)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.CombatTipsXpAmountHint))
+                );
+
+            // Training Perk tier limits
+            builder.CreateGroup($"{Strings.TrainingPerkGroup}/{Strings.TierLimitsSettingsGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddInteger(nameof(RaiseTheMeekMaxTierTrained),
+                    Strings.RaiseTheMeekMaxTierTrainedDisplay, 0, 20,
                     new PropertyRef(typeof(Settings).GetProperty(
                         nameof(RaiseTheMeekMaxTierTrained)), this),
                     intBuilder => intBuilder
                         .SetRequireRestart(false)
-                        .SetHintText(Strings.RaiseTheMeekTierHint)));
+                        .SetOrder(order++)
+                        .SetHintText(Strings.RaiseTheMeekMaxTierTrainedHint))
+                .AddInteger(nameof(ComatTipsMaxTierTrained),
+                    Strings.CombatTipsMaxTierTrainedDisplay, 0, 20,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(ComatTipsMaxTierTrained)), this),
+                    intBuilder => intBuilder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.CombatTipsMaxTierTrainedHint))
+                );
 
+            // Training Perk xp multipliers 
+            builder.CreateGroup($"{Strings.TrainingPerkGroup}" +
+                    $"/{Strings.XpMultipliersSettingsGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddFloatingInteger(nameof(PlayerPartyTrainingXpMultiplier),
+                    Strings.PlayerPartyTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerPartyTrainingXpMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.PlayerPartyTrainingMultHint)
+                        .AddValueFormat("#0%"))
+                .AddFloatingInteger(nameof(PlayerClanPartyTrainingXpMultiplier),
+                    Strings.PlayerClanPartyTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerClanPartyTrainingXpMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.PlayerClanPartyTrainingMultHint)
+                        .AddValueFormat("#0%"))
+                .AddFloatingInteger(nameof(NonPlayerClanPartyTrainingXpMultiplier),
+                    Strings.NonPlayerClanPartyTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(NonPlayerClanPartyTrainingXpMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.NonPlayerClanPartyTrainingMultHint)
+                        .AddValueFormat("#0%"))
+                );
+
+            // Training Perk General
+            builder.CreateGroup($"{Strings.TrainingPerkGroup}" +
+                    $"/{Strings.GeneralSettingsGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddFloatingInteger(nameof(LevelDifferenceFactor),
+                    Strings.LevelDifferenceFactorDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(LevelDifferenceFactor)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.LevelDifferenceFactorHint))
+                .AddFloatingInteger(nameof(LeadershipSkillFactor),
+                    Strings.LeadershipSkillFactorDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(LeadershipSkillFactor)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.LeadershipSkillFactorHint))
+                .AddFloatingInteger(nameof(TrainingXpPerLeadershipXp),
+                    Strings.TrainingXpPerLeadershipXpDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(TrainingXpPerLeadershipXp)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.TrainingXpPerLeadershipXpHint))
+                .AddBool(nameof(WoundedReceiveTraining),
+                    Strings.WoundedReceiveTrainingDisplay,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(WoundedReceiveTraining)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.WoundedReceiveTrainingHint))
+                .AddBool(nameof(UpgradeableReceiveTraining),
+                    Strings.UpgradeableReceiveTrainingDisplay,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(UpgradeableReceiveTraining)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.UpgradeableReceiveTrainingHint))
+                );
+
+            // Base Training Settings
+            builder.CreateGroup($"{Strings.BaseTrainingSettingsGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .SetIsMainToggle(true)
+                .AddBool(nameof(EnableBaseTraining),
+                    Strings.BaseTrainingSettingsGroup,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(EnableBaseTraining)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.EnableBaseTrainingHint))
+                );
+
+            builder.CreateGroup($"{Strings.BaseTrainingSettingsGroup}/" +
+                $"{Strings.GeneralSettingsGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddInteger(nameof(BaseTrainingXpAmount),
+                    Strings.BaseTrainingXpAmountDisplay, 0, 100,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(BaseTrainingXpAmount)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.BaseTrainingXpAmountHint))
+                .AddInteger(nameof(BaseTrainingMaxTierTrained),
+                    Strings.BaseTrainingTierDisplay, 0, 20,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(BaseTrainingMaxTierTrained)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.BaseTrainingTierHint))
+                );
+
+
+            // Garrison Training Overrides
+            builder.CreateGroup($"{Strings.GarrisonGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .SetIsMainToggle(true)
+                .AddBool(nameof(EnableGarrisonTraining),
+                    Strings.GarrisonGroup,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(EnableGarrisonTraining)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.EnableGarrisonTrainingOverrideHint))
+                );
+
+            builder.CreateGroup($"{Strings.GarrisonGroup}/" +
+                $"{Strings.GeneralSettingsGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddInteger(nameof(LevelOneTrainingFieldXpAmount),
+                    Strings.LevelOneTrainingFieldXpAmountDisplay, 0, 100,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(LevelOneTrainingFieldXpAmount)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.LevelOneTrainingFieldXpAmountHint))
+                .AddInteger(nameof(GarrisonTrainingMaxTierTrained),
+                    Strings.GarrisonMaxTierTrainedDisplay, 0, 20,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(GarrisonTrainingMaxTierTrained)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.GarrisionMaxTierTrainedHint))
+                .AddFloatingInteger(nameof(PlayerClanGarrisonTrainingXpMultiplier),
+                    Strings.PlayerClanGarrisonTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerClanGarrisonTrainingXpMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.PlayerClanGarrisonTrainingMultHint)
+                        .AddValueFormat("#0%"))
+                .AddFloatingInteger(nameof(NonPlayerClanGarrisonTrainingXpMultiplier),
+                    Strings.NonPlayerClanGarrisonTrainingMultDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(NonPlayerClanGarrisonTrainingXpMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.NonPlayerClanGarrisonTrainingMultHint)
+                        .AddValueFormat("#0%"))
+                );
+
+            // Financial Solutions Settings
+            builder.CreateGroup($"{Strings.FinancialSolutionsSettingGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .SetIsMainToggle(true)
+                .AddBool(nameof(EnableFinancialSolutions),
+                    Strings.FinancialSolutionsSettingGroup,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(EnableFinancialSolutions)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.EnableFinancialSolutionsHint))
+                );
+
+            builder.CreateGroup($"{Strings.FinancialSolutionsSettingGroup}" +
+                    $"/{Strings.GeneralSettingsGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddFloatingInteger(nameof(TroopUpgradeCostMultiplier),
+                    Strings.TroopUpgradeCostMultiplierDisplay, 0f, 50f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(TroopUpgradeCostMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.TroopUpgradeCostMultiplierHint)
+                        .AddValueFormat("#0%"))
+                );
+
+            builder.CreateGroup($"{Strings.FinancialSolutionsSettingGroup}" +
+                    $"/{Strings.PlayerSubgroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddFloatingInteger(nameof(PlayerTownTaxIncomeMultiplier),
+                    Strings.PlayerTownTaxIncomeMultiplierDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerTownTaxIncomeMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.PlayerTownTaxIncomeMultiplierHint)
+                        .AddValueFormat("#0%"))
+                .AddFloatingInteger(nameof(PlayerVillageTaxIncomeMultiplier),
+                    Strings.PlayerVillageTaxIncomeMultiplierDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerVillageTaxIncomeMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.PlayerVillageTaxIncomeMultiplierHint)
+                        .AddValueFormat("#0%"))
+                .AddFloatingInteger(nameof(PlayerClanPartyWageMultiplier),
+                    Strings.PlayerClanPartyWageMultiplierDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(PlayerClanPartyWageMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.PlayerClanPartyWageMultiplierHint)
+                        .AddValueFormat("#0%"))
+                );
+
+            builder.CreateGroup($"{Strings.FinancialSolutionsSettingGroup}" +
+                    $"/{Strings.AISubgroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddFloatingInteger(nameof(NonPlayerTownTaxIncomeMultiplier),
+                    Strings.NonPlayerTownTaxIncomeMultiplierDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(NonPlayerTownTaxIncomeMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.NonPlayerTownTaxIncomeMultiplierHint)
+                        .AddValueFormat("#0%"))
+                .AddFloatingInteger(nameof(NonPlayerVillageTaxIncomeMultiplier),
+                    Strings.NonPlayerVillageTaxIncomeMultiplierDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(NonPlayerVillageTaxIncomeMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.NonPlayerVillageTaxIncomeMultiplierHint)
+                        .AddValueFormat("#0%"))
+                .AddFloatingInteger(nameof(NonPlayerClanPartyWageMultiplier),
+                    Strings.NonPlayerClanPartyWageMultiplierDisplay, 0f, 20f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(NonPlayerClanPartyWageMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.NonPlayerClanPartyWageMultiplierHint)
+                        .AddValueFormat("#0%"))
+                );
+
+            // Debug stuff
+            builder.CreateGroup($"{Strings.DebugSettingGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddBool(nameof(DebugMode),
+                    Strings.EnableDebugModeDisplay,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(DebugMode)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.EnableDebugModeHint))
+                );
+
+            // Build and register the settings
             _settings = builder.BuildAsGlobal();
             _settings.Register();
         }
-            */
 
-        public float PlayerPartyTrainingXpMultiplier { get; set; } = 0.75f;
-
-        public float PlayerClanPartyTrainingXpMultiplier { get; set; } = 0.75f;
-
-        public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 4.0f;
-
-        public float NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 0.75f;
-
-        public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 4.0f;
-
-        /*
-        [SettingProperty(displayName: "Raise The Meek Max Tier Trained", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Max tier of troops in parties that will be trained by the " +
-                      "'Raise The Meek' perk.")]
-        [SettingPropertyGroup(TierLimits, order: 1)]
-        */
+        // Training Perk Settings
+        public bool EnableTrainingPerkOverrides { get; set; } = true;
+        public int RaiseTheMeekXpAmount { get; set; } = 24;
+        public int CombatTipsXpAmount { get; set; } = 12;
         public int RaiseTheMeekMaxTierTrained { get; set; } = 3;
-
-        /*
-        [SettingProperty(displayName: "Garrison Max Tier Trained", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Max tier of troops in garrisons that will be trained by this mod.")]
-        [SettingPropertyGroup(TierLimits)]
-        */
-        public int GarrisonTrainingMaxTierTrained { get; set; } = 20;
-
-        /*
-        [SettingProperty(displayName: "All Training Max Tier Trained", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Max tier of troops that will be trained by this mod. Overrides " +
-                      "other tier limit settings if lower than them.")]
-        [SettingPropertyGroup(TierLimits)]
-        */
         public int ComatTipsMaxTierTrained { get; set; } = 20;
-
-        /*
-        [SettingProperty(displayName: "Level Difference Factor", 
-            minValue: 0, maxValue: 25, requireRestart: false,
-            hintText: "For every level the trainer is above the troop, training xp is increased by X percent.")]
-        [SettingPropertyGroup(GeneralSettings, order: 2)]
-        */
+        public float PlayerPartyTrainingXpMultiplier { get; set; } = 1f;
+        public float PlayerClanPartyTrainingXpMultiplier { get; set; } = 1f;
+        public float NonPlayerClanPartyTrainingXpMultiplier { get; set; } = 1f;
         public float LevelDifferenceFactor { get; set; } = 6;
-
-        /*
-        [SettingProperty(displayName: "Leadership Skill Factor", 
-            minValue: 0, maxValue: 5, requireRestart: false,
-            hintText:"For each skill level in leadership, training xp is increased by X percent.")]
-        [SettingPropertyGroup(GeneralSettings)]
-        */
         public float LeadershipSkillFactor { get; set; } = 0.4f;
-
-        /*
-        [SettingProperty(displayName: "Training Xp Per Leadership Xp", 
-            minValue: 0, maxValue: 100, requireRestart: false,
-            hintText: "How much xp a trainer has to train troops to get 1 leadership xp.")]
-        [SettingPropertyGroup(GeneralSettings)]
-        */
         public float TrainingXpPerLeadershipXp { get; set; } = 10.0f;
-
-        /*
-        [SettingProperty(displayName: "Wounded Receive Training",
-            requireRestart: false,
-            hintText: "Whether wounded troops count toward group size during training.")]
-        [SettingPropertyGroup(GeneralSettings)]
-        */
         public bool WoundedReceiveTraining { get; set; } = false;
-
-        /*
-        [SettingProperty(displayName: "Upgradeable Receive Training",
-            requireRestart: false,
-            hintText: "Whether upgradeable troops count toward group size during training.")]
-        [SettingPropertyGroup(GeneralSettings)]
-        */
         public bool UpgradeableReceiveTraining { get; set; } = true;
 
-        /*
-        [SettingProperty(displayName: "Debug Mode", 
-            requireRestart: false,
-            hintText: "Whether this mod displays potential errors it finds while running.")]
-        [SettingPropertyGroup(GeneralSettings)]
-        */
-        public bool DebugMode { get; set; } = false;
+        // Base Training Settings
+        public bool EnableBaseTraining { get; set; } = true;
+        public int BaseTrainingXpAmount { get; set; } = 5;
+        public int BaseTrainingMaxTierTrained { get; set; } = 1;
 
-        /*
-        [SettingProperty(displayName: FinancialSolutions,
-            requireRestart: false,
-            hintText: "Enable patches to help prevent lords from bankrupting themselves on high-tier troops.")]
-        [SettingPropertyGroup(FinancialSolutions, isMainToggle: true, order: 4)]
-        */
+        // Garrison Settings 
+        public bool EnableGarrisonTraining { get; set; } = true;
+        public int LevelOneTrainingFieldXpAmount { get; set; } = 4;
+        public int GarrisonTrainingMaxTierTrained { get; set; } = 20;
+        public float PlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
+        public float NonPlayerClanGarrisonTrainingXpMultiplier { get; set; } = 1.0f;
+
+        // Financial Solutions Settings
         public bool EnableFinancialSolutions { get; set; } = true;
-
-        /*
-        [SettingProperty(displayName: "Player Town Tax Income Multiplier", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Multiplier for all tax income from player-owned towns and castles.")]
-        [SettingPropertyGroup(FinancialSolutions)]
-        */
         public float PlayerTownTaxIncomeMultiplier { get; set; } = 1.0f;
-
-        /*
-        [SettingProperty(displayName: "Player Village Tax Income Multiplier", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Multiplier for all tax income from player-owned villages.")]
-        [SettingPropertyGroup(FinancialSolutions)]
-        */
         public float PlayerVillageTaxIncomeMultiplier { get; set; } = 1.0f;
-
-        /*
-        [SettingProperty(displayName: "Non-Player Town Tax Income Multiplier", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Multiplier for all tax income for AI-owned towns and castles.")]
-        [SettingPropertyGroup(FinancialSolutions)]
-        */
         public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 3.0f;
-
-        /*
-        [SettingProperty(displayName: "Non-Player Village Tax Income Multiplier", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Multiplier for all tax income for AI-owned villages.")]
-        [SettingPropertyGroup(FinancialSolutions)]
-        */
         public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 3.0f;
-
-        /*
-        [SettingProperty(displayName: "Player Party Wage Multiplier", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Multiplier for all party wages for parties in the player's clan.")]
-        [SettingPropertyGroup(FinancialSolutions)]
-        */
         public float PlayerClanPartyWageMultiplier { get; set; } = 1.0f;
-
-        /*
-        [SettingProperty(displayName: "Non-Player Party Wage Multiplier", 
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Multiplier for all party wages for parties not in the player's clan.")]
-        [SettingPropertyGroup(FinancialSolutions)]
-        */
         public float NonPlayerClanPartyWageMultiplier { get; set; } = 1.0f;
-
-        /*
-        [SettingProperty(displayName: "Troop Upgrade Cost Multiplier", 
-            minValue: 0, maxValue: 50, requireRestart: false,
-            hintText: "Multiplier for the upgrade cost of all troops.")]
-        [SettingPropertyGroup(FinancialSolutions)]
-        */
         public float TroopUpgradeCostMultiplier { get; set; } = 1.0f;
 
-        /*
-        [SettingProperty(displayName: BaseTraining,
-            requireRestart: false,
-            hintText: "Allow heroes with neither training perk to train troops.")]
-        [SettingPropertyGroup(BaseTraining, isMainToggle: true, order: 3)]
-        */
-        public bool EnableBaseTraining { get; set; } = true;
-
-        /*
-        [SettingProperty(displayName: "Basic Training Xp Gain",
-            minValue: 0, maxValue: 10, requireRestart: false,
-            hintText: "Xp per troop when trained by a hero without either training perk.")]
-        [SettingPropertyGroup(BaseTraining)]
-        */
-        public int BaseTrainingXpGain { get; set; } = 5;
-
-        /*
-        [SettingProperty(displayName: "Basic Training Max Tier Trained",
-            minValue: 0, maxValue: 20, requireRestart: false,
-            hintText: "Max tier trained by a hero without either training perk.")]
-        [SettingPropertyGroup(BaseTraining)]
-        */
-        public int BaseTrainingMaxTierTrained { get; set; } = 1;
+        // Debug
+        public bool DebugMode { get; set; } = false;
 
     }
 }
