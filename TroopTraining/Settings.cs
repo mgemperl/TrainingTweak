@@ -1,12 +1,7 @@
-﻿using MCM.Abstractions.Attributes.v2;
-using MCM.Abstractions.FluentBuilder.Implementation;
+﻿using MCM.Abstractions.FluentBuilder.Implementation;
 using MCM.Abstractions.Ref;
 using MCM.Abstractions.Settings.Base.Global;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Xml.Serialization;
 
 namespace TrainingTweak
 {
@@ -61,8 +56,8 @@ namespace TrainingTweak
         public bool EnableFinancialSolutions { get; set; } = true;
         public float PlayerTownTaxIncomeMultiplier { get; set; } = 2.0f;
         public float PlayerVillageTaxIncomeMultiplier { get; set; } = 2.0f;
-        public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 2.0f;
-        public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 2.0f;
+        public float NonPlayerTownTaxIncomeMultiplier { get; set; } = 2.5f;
+        public float NonPlayerVillageTaxIncomeMultiplier { get; set; } = 2.5f;
         public float PlayerClanPartyWageMultiplier { get; set; } = 1.0f;
         public float NonPlayerClanPartyWageMultiplier { get; set; } = 1.0f;
         public float TroopUpgradeCostMultiplier { get; set; } = 1.0f;
@@ -252,8 +247,8 @@ namespace TrainingTweak
                         .SetHintText(Strings.EnableBaseTrainingHint))
                 );
 
-            builder.CreateGroup($"{Strings.BaseTrainingSettingsGroup}/" +
-                $"{Strings.GeneralSettingsGroup}",
+            builder.CreateGroup($"{Strings.BaseTrainingSettingsGroup}" +
+                $"/{Strings.GeneralSettingsGroup}",
                 groupBuilder => groupBuilder
                 .SetGroupOrder(order++)
                 .AddInteger(nameof(BaseTrainingXpAmount),
@@ -346,21 +341,6 @@ namespace TrainingTweak
                 );
 
             builder.CreateGroup($"{Strings.FinancialSolutionsSettingGroup}" +
-                    $"/{Strings.GeneralSettingsGroup}",
-                groupBuilder => groupBuilder
-                .SetGroupOrder(order++)
-                .AddFloatingInteger(nameof(TroopUpgradeCostMultiplier),
-                    Strings.TroopUpgradeCostMultiplierDisplay, 0f, 50f,
-                    new PropertyRef(typeof(Settings).GetProperty(
-                        nameof(TroopUpgradeCostMultiplier)), this),
-                    builder => builder
-                        .SetRequireRestart(false)
-                        .SetOrder(order++)
-                        .SetHintText(Strings.TroopUpgradeCostMultiplierHint)
-                        .AddValueFormat("#0%"))
-                );
-
-            builder.CreateGroup($"{Strings.FinancialSolutionsSettingGroup}" +
                     $"/{Strings.PlayerSubgroup}",
                 groupBuilder => groupBuilder
                 .SetGroupOrder(order++)
@@ -423,6 +403,21 @@ namespace TrainingTweak
                         .SetRequireRestart(false)
                         .SetOrder(order++)
                         .SetHintText(Strings.NonPlayerClanPartyWageMultiplierHint)
+                        .AddValueFormat("#0%"))
+                );
+
+            builder.CreateGroup($"{Strings.FinancialSolutionsSettingGroup}" +
+                    $"/{Strings.GeneralSettingsGroup}",
+                groupBuilder => groupBuilder
+                .SetGroupOrder(order++)
+                .AddFloatingInteger(nameof(TroopUpgradeCostMultiplier),
+                    Strings.TroopUpgradeCostMultiplierDisplay, 0f, 50f,
+                    new PropertyRef(typeof(Settings).GetProperty(
+                        nameof(TroopUpgradeCostMultiplier)), this),
+                    builder => builder
+                        .SetRequireRestart(false)
+                        .SetOrder(order++)
+                        .SetHintText(Strings.TroopUpgradeCostMultiplierHint)
                         .AddValueFormat("#0%"))
                 );
 

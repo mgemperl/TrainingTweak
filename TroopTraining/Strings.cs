@@ -255,7 +255,7 @@ namespace TrainingTweak
             "str_tt_enable_debug_mode_hint",
             "Whether this mod displays potential errors it finds while running.");
         public static string TrainingOverrideFatalErrorMessage => FetchString(
-            "str_tt_perk_override_fatal_error_message",
+            "str_tt_training_fatal_error_message",
             "Training Tweak's training features have encountered an error and are stopping, " +
             "but you may continue playing without them. Re-enabling native training.");
         public static string FatalErrorDisclaimer => FetchString(

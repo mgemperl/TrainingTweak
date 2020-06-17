@@ -11,14 +11,10 @@ namespace TrainingTweak.CampaignBehaviors
         private static bool _trainingDisabled = false;
         private static HashSet<string> _reported = new HashSet<string>();
 
-        private const int NativeMaxRaiseTheMeekTier = 3;
-        private const int NativeMaxCompatTipsTier = 5;
-
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickPartyEvent.AddNonSerializedListener(
                 this, SafeHandleDailyTraining);
-
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -98,8 +94,10 @@ namespace TrainingTweak.CampaignBehaviors
                 return;
             }
 
-            // If it is the player's party
-            if (Settings.Instance.EnableTrainingPerkOverrides && party.IsMainParty)
+            // If it is the player's party, and configured to train parties
+            if ((Settings.Instance.EnableTrainingPerkOverrides 
+                    || Settings.Instance.EnableBaseTraining)
+                && party.IsMainParty)
             {
                 // If configured to train player party
                 if (Settings.Instance.PlayerPartyTrainingXpMultiplier > 0)
@@ -128,9 +126,11 @@ namespace TrainingTweak.CampaignBehaviors
                     }
                 }
             }
-            // Otherwise, if it is a lord party or a player-owned caravan
-            else if (Settings.Instance.EnableTrainingPerkOverrides
-                && (party.IsLordParty || (party.IsCaravan && party.Party?.Owner == Hero.MainHero)))
+            // Otherwise, if it is a lord party or a player-owned caravan, 
+            //            and configured to train parties
+            else if ((Settings.Instance.EnableTrainingPerkOverrides 
+                    || Settings.Instance.EnableBaseTraining)
+                && party.IsLordParty || (party.IsCaravan && party.Party?.Owner == Hero.MainHero))
             {
                 // Get multiplier for this party
                 float multiplier = (party.Party?.Owner == Hero.MainHero)
@@ -277,8 +277,9 @@ namespace TrainingTweak.CampaignBehaviors
 
                 Hero hero = member.Character.HeroObject;
 
-                // If hero has raise the meek perk
-                if (hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek))
+                // If hero has raise the meek perk, and perks are overridden
+                if (Settings.Instance.EnableTrainingPerkOverrides
+                    && hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek))
                 {
                     totalXp += ExecuteHeroDailyTraining(
                         hero: hero,
@@ -287,8 +288,9 @@ namespace TrainingTweak.CampaignBehaviors
                         maxTierTrained: Settings.Instance.RaiseTheMeekMaxTierTrained);
                 }
 
-                // If hero has combat tips perk
-                if (hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
+                // If hero has combat tips perk, and perks are overridden
+                if (Settings.Instance.EnableTrainingPerkOverrides
+                    && hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
                     totalXp += ExecuteHeroDailyTraining(
                         hero: hero, 
