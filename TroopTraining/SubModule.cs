@@ -1,16 +1,12 @@
 ﻿using System;
 ﻿using HarmonyLib;
-using System;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TrainingTweak.CampaignBehaviors;
 using System.IO;
-using TaleWorlds.Localization;
-using MCM.Abstractions.FluentBuilder;
 
 namespace TrainingTweak
 {
@@ -77,7 +73,6 @@ namespace TrainingTweak
         public override void OnGameLoaded(Game game, object initializerObject)
         {
             base.OnGameLoaded(game, initializerObject);
-            Settings.Instance.RegisterSettings();
         }
 
         public override void OnGameInitializationFinished(Game game)

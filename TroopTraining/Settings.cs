@@ -7,8 +7,7 @@ namespace TrainingTweak
 {
     public class Settings : IDisposable
     {
-        public const string InstanceID = "TrainingTweak_v3_dev";
-        //public const string InstanceID = "TestMod_v3_dev";
+        public const string InstanceID = "TrainingTweak_v3";
 
         private FluentGlobalSettings _settings;
         private static Settings _instance;

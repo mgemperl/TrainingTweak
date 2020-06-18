@@ -1,9 +1,5 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
-using TrainingTweak;
 
 namespace TrainingTweak.HarmonyPatches
 {
