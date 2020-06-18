@@ -8,17 +8,13 @@ namespace TrainingTweak.CampaignBehaviors
 {
     public class PartyTrainingBehavior : CampaignBehaviorBase
     {
-        private static bool _disabled = false;
+        private static bool _trainingDisabled = false;
         private static HashSet<string> _reported = new HashSet<string>();
-
-        private const int NativeMaxRaiseTheMeekTier = 3;
-        private const int NativeMaxCompatTipsTier = 5;
 
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickPartyEvent.AddNonSerializedListener(
                 this, SafeHandleDailyTraining);
-
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -29,16 +25,19 @@ namespace TrainingTweak.CampaignBehaviors
         {
             try
             {
-                if (!_disabled)
+                if (!_trainingDisabled)
                 {
                     HandleDailyTraining(party);
                 }
             }
             catch (Exception exc)
             {
-                _disabled = true;
+                _trainingDisabled = true;
+                Settings.Instance.EnableGarrisonTraining = false;
+                Settings.Instance.EnableTrainingPerkOverrides = false;
+                Settings.Instance.EnableBaseTraining = false;
                 Util.Warning(
-                    $"{Strings.FatalErrorMessage}\n\n" +
+                    $"{Strings.TrainingOverrideFatalErrorMessage}\n\n" +
                     $"{Strings.FatalErrorDisclaimer}",
                     exc: exc);
             }
@@ -95,8 +94,10 @@ namespace TrainingTweak.CampaignBehaviors
                 return;
             }
 
-            // If it is the player's party
-            if (party.IsMainParty)
+            // If it is the player's party, and configured to train parties
+            if ((Settings.Instance.EnableTrainingPerkOverrides 
+                    || Settings.Instance.EnableBaseTraining)
+                && party.IsMainParty)
             {
                 // If configured to train player party
                 if (Settings.Instance.PlayerPartyTrainingXpMultiplier > 0)
@@ -125,8 +126,11 @@ namespace TrainingTweak.CampaignBehaviors
                     }
                 }
             }
-            // Otherwise, if it is a lord party or a player-owned caravan
-            else if (party.IsLordParty || (party.IsCaravan && party.Party?.Owner == Hero.MainHero))
+            // Otherwise, if it is a lord party or a player-owned caravan, 
+            //            and configured to train parties
+            else if ((Settings.Instance.EnableTrainingPerkOverrides 
+                    || Settings.Instance.EnableBaseTraining)
+                && party.IsLordParty || (party.IsCaravan && party.Party?.Owner == Hero.MainHero))
             {
                 // Get multiplier for this party
                 float multiplier = (party.Party?.Owner == Hero.MainHero)
@@ -141,7 +145,7 @@ namespace TrainingTweak.CampaignBehaviors
                 }
             }
             // Otherwise, if it is a garrison
-            else if (party.IsGarrison)
+            else if (Settings.Instance.EnableGarrisonTraining && party.IsGarrison)
             {
                 // Get multiplier for this garrison
                 float multiplier = (party.Party?.Owner == Hero.MainHero)
@@ -176,19 +180,17 @@ namespace TrainingTweak.CampaignBehaviors
                 return;
             }
 
-            // Get max tier trainable
-            int maxTierTrained = Math.Min(
-                Settings.Instance.GarrisonTrainingMaxTierTrained,
-                Settings.Instance.AllTrainingMaxTierTrained);
-
             // Get base xp gain for this garrison
-            Town town = party.CurrentSettlement.Town;
-            var trainingModel = Campaign.Current.Models.DailyTroopXpBonusModel;
-            float xpPerTroop = trainingModel.CalculateDailyTroopXpBonus(town)
-                * trainingModel.CalculateGarrisonXpBonusMultiplier(town)
+            int trainingFieldLevel = party.CurrentSettlement.Town.Buildings
+                .Find(buil => buil.BuildingType == DefaultBuildingTypes.CastleTrainingFields
+                    || buil.BuildingType == DefaultBuildingTypes.SettlementTrainingFields)
+                ?.CurrentLevel ?? 0;
+
+            float xpPerTroop = trainingFieldLevel
+                * Settings.Instance.LevelOneTrainingFieldXpAmount
                 * multiplier;
 
-            // If training this garrison, and garrison has member list
+            // If training this garrison
             if (xpPerTroop > 0)
             {
                 var members = party.MemberRoster;
@@ -197,7 +199,8 @@ namespace TrainingTweak.CampaignBehaviors
                 for (int idx = 0; idx < members.Count; idx++)
                 {
                     // If of a tier configured to be trained
-                    if (members.GetCharacterAtIndex(idx).Tier <= maxTierTrained)
+                    if (members.GetCharacterAtIndex(idx).Tier 
+                        <= Settings.Instance.GarrisonTrainingMaxTierTrained)
                     {
                         int numInGroup = members.GetElementNumber(idx);
                         int numUpgradeable = members.GetElementCopyAtIndex(idx)
@@ -273,36 +276,27 @@ namespace TrainingTweak.CampaignBehaviors
                 }
 
                 Hero hero = member.Character.HeroObject;
-                int baseXpGain;
 
-                // If hero has raise the meek perk
-                if (hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek))
+                // If hero has raise the meek perk, and perks are overridden
+                if (Settings.Instance.EnableTrainingPerkOverrides
+                    && hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek))
                 {
-                    baseXpGain = Campaign.Current.Models.PartyTrainingModel
-                        .GetTroopPerksXp(DefaultPerks.Leadership.RaiseTheMeek);
                     totalXp += ExecuteHeroDailyTraining(
-                        hero: hero, 
-                        party: party, 
-                        baseXpGain: baseXpGain * multiplier, 
-                        nativeXpGain: baseXpGain,
-                        maxTierTrained: Math.Min(
-                            Settings.Instance.RaiseTheMeekMaxTierTrained,
-                            Settings.Instance.AllTrainingMaxTierTrained),
-                        nativeMaxTierTrained: NativeMaxRaiseTheMeekTier);
+                        hero: hero,
+                        party: party,
+                        baseXpGain: Settings.Instance.RaiseTheMeekXpAmount * multiplier,
+                        maxTierTrained: Settings.Instance.RaiseTheMeekMaxTierTrained);
                 }
 
-                // If hero has combat tips perk
-                if (hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
+                // If hero has combat tips perk, and perks are overridden
+                if (Settings.Instance.EnableTrainingPerkOverrides
+                    && hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
-                    baseXpGain = Campaign.Current.Models.PartyTrainingModel
-                        .GetTroopPerksXp(DefaultPerks.Leadership.CombatTips);
                     totalXp += ExecuteHeroDailyTraining(
                         hero: hero, 
                         party: party, 
-                        baseXpGain: baseXpGain * multiplier, 
-                        nativeXpGain: baseXpGain,
-                        maxTierTrained: Settings.Instance.AllTrainingMaxTierTrained, 
-                        nativeMaxTierTrained: NativeMaxCompatTipsTier);
+                        baseXpGain: Settings.Instance.CombatTipsXpAmount * multiplier, 
+                        maxTierTrained: Settings.Instance.ComatTipsMaxTierTrained);
                 }
 
                 // If base training enabled, and Hero has neither perk
@@ -310,16 +304,11 @@ namespace TrainingTweak.CampaignBehaviors
                     && !hero.GetPerkValue(DefaultPerks.Leadership.RaiseTheMeek)
                     && !hero.GetPerkValue(DefaultPerks.Leadership.CombatTips))
                 {
-                    baseXpGain = Settings.Instance.BaseTrainingXpGain;
                     totalXp += ExecuteHeroDailyTraining(
                         hero: hero, 
                         party: party, 
-                        baseXpGain: baseXpGain * multiplier, 
-                        nativeXpGain: 0,
-                        maxTierTrained: Math.Min(
-                            Settings.Instance.BaseTrainingMaxTierTrained, 
-                            Settings.Instance.AllTrainingMaxTierTrained),
-                        nativeMaxTierTrained: 0);
+                        baseXpGain: Settings.Instance.BaseTrainingXpAmount * multiplier, 
+                        maxTierTrained: Settings.Instance.BaseTrainingMaxTierTrained);
                 }
             }
 
@@ -330,7 +319,7 @@ namespace TrainingTweak.CampaignBehaviors
         /// Apply hero's training onto their party.
         /// </summary>
         private static int ExecuteHeroDailyTraining(Hero hero, MobileParty party,
-            float baseXpGain, int nativeXpGain, int maxTierTrained, int nativeMaxTierTrained)
+            float baseXpGain, int maxTierTrained)
         {
             // If configured not to do this training
             if (baseXpGain <= 0 || maxTierTrained <= 0)
@@ -380,13 +369,6 @@ namespace TrainingTweak.CampaignBehaviors
                         int xpForCurGroup = (int)Math.Round(
                             (numInGroup - numNotTrained) * xpPerTroop);
 
-                        // If group was given xp by Native
-                        if (curMember.Tier <= nativeMaxTierTrained)
-                        {
-                            // Subtract native perk xp gain
-                            xpForCurGroup -= nativeXpGain;
-                        }
-
                         // If positive xp gain
                         if (xpForCurGroup > 0)
                         {
@@ -403,9 +385,9 @@ namespace TrainingTweak.CampaignBehaviors
                 && totalXp > 0)
             {
                 // Give hero leadership xp
-                hero.AddSkillXp(DefaultSkills.Leadership,
-                    (int)Math.Ceiling((float)totalXp
-                        / Settings.Instance.TrainingXpPerLeadershipXp));
+                int leadershipXp = (int)Math.Ceiling(
+                    totalXp / Settings.Instance.TrainingXpPerLeadershipXp);
+                hero.AddSkillXp(DefaultSkills.Leadership, leadershipXp);
             }
 
             return totalXp;

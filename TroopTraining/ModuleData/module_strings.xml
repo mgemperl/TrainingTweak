@@ -1,13 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
   <strings>
-    <!-- For this entry, '[xp]' will be replaced with the amount of xp gained -->
+    <!-- In-Game Strings -->
+    <!-- '[xp]' will be replaced with the amount of xp gained -->
     <string id="str_tt_daily_training_message" 
             text="Total xp gained from training: [xp]"/>
     <string id="str_tt_upgrades_available_message" 
             text="Some troops are ready to upgrade."/>
-    <string id="str_tt_fatal_error_message" 
-            text="Training Tweak has encountered an error and is stopping. You may continue playing without Training Tweak, but your game state may already be corrupted."/>
+
+    <!-- Error And Debug Strings -->
+    <string id="str_tt_training_fatal_error_message" 
+            text="Training Tweak's training features have encountered an error and are stopping, but you may continue playing without them. Re-enabling native training."/>
     <string id="str_tt_fatal_error_disclaimer" 
             text="Note: This was not necessarily caused by Training Tweak, it just encountered an issue that prevented it from functioning properly."/>
     <string id="str_tt_warning_message_header" 
@@ -34,7 +37,15 @@
             text="Party Leader"/>
     <string id="str_tt_settlement_header" 
             text="Settlement"/>
-    <string id="str_hero_header" 
+    <string id="str_tt_hero_header" 
             text="Hero"/>
+    <string id="str_tt_financial_solutions_patches_failed"
+            text="Training Tweak mod's Financial Solutions patches have failed. Continuing with Financial Solutions disabled."/>
+    <string id="str_tt_disable_native_training_failed"
+            text="Training Tweak mod failed to disable native training. Native training and Training Tweak's training will both run in parallel, likely resulting in excessive xp gain."/>
+    <string id="str_tt_config_file_failed"
+            text="Training Tweak failed to load config file. Using default settings."/>
+    <string id="str_tt_settings_registration_failed"
+            text="Training Tweak failed to register settings with MCM, so its mod options page will not appear. Using default settings."/>
   </strings>
 </base>

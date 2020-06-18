@@ -2,43 +2,34 @@
 <TrainingTweak.Settings>
 
   <!-- ////////////////////////////////////// -->
-  <!--        Training XP Multipliers         -->
+  <!--        Training Perk Settings          -->
   <!-- ////////////////////////////////////// -->
 
-  <!-- Multiplier for all xp this mod gives to the player's party. -->
-  <PlayerPartyTrainingXpMultiplier>0.75</PlayerPartyTrainingXpMultiplier>
+  <!-- Enable tweaks to the native training perks. -->
+  <EnableTrainingPerkOverrides>true</EnableTrainingPerkOverrides>
 
-  <!-- Multiplier for all xp this mod gives to AI parties in the player's clan. -->
-  <PlayerClanPartyTrainingXpMultiplier>0.75</PlayerClanPartyTrainingXpMultiplier>
+  <!-- Daily Xp gain from Raise The Meek before multipliers are applied. Native value is 30. -->
+  <RaiseTheMeekXpAmount>24</RaiseTheMeekXpAmount>
 
-  <!-- Multiplier for all xp this mod gives to garrisons of player-owned settlements. -->
-  <PlayerClanGarrisonTrainingXpMultiplier>4.0</PlayerClanGarrisonTrainingXpMultiplier>
+  <!-- Daily Xp gain from Combat Tips before multipliers are applied. Native value is 15. -->
+  <CombatTipsXpAmount>12</CombatTipsXpAmount>
 
-  <!-- Multiplier for all xp this mod gives to AI parties not in the player's clan. -->
-  <NonPlayerClanPartyTrainingXpMultiplier>0.75</NonPlayerClanPartyTrainingXpMultiplier>
-
-  <!-- Multiplier for all xp this mod gives to garrisons of settlements not owned by the player. -->
-  <NonPlayerClanGarrisonTrainingXpMultiplier>4.0</NonPlayerClanGarrisonTrainingXpMultiplier>
-
-  <!-- ////////////////////////////////////// -->
-  <!--              Tier Limits               -->
-  <!-- ////////////////////////////////////// -->
-
-  <!-- Max tier trained by the Raise The Meek perk. -->
+  <!-- Max tier of troops in parties that will be trained by the 'Raise The Meek' perk. Native value is 3. -->
   <RaiseTheMeekMaxTierTrained>3</RaiseTheMeekMaxTierTrained>
 
-  <!-- Max tier of troops in garrisons that will be trained by this mod. -->
-  <GarrisonTrainingMaxTierTrained >20</GarrisonTrainingMaxTierTrained >
+  <!-- Max tier of troops in parties that will be trained by the 'Combat Tips' perk. Native value is the max possible troop tier. -->
+  <ComatTipsMaxTierTrained>20</ComatTipsMaxTierTrained>
+  
+  <!-- Multiplier for all xp this mod gives to the player's party. -->
+  <PlayerPartyTrainingXpMultiplier>1.0</PlayerPartyTrainingXpMultiplier>
 
-  <!-- Max tier of troops that will be trained by this mod. Overrides
-       other tier limit settings if lower than them. -->
-  <AllTrainingMaxTierTrained >20</AllTrainingMaxTierTrained >
+  <!-- Multiplier for all xp this mod gives to AI parties in the player's clan. -->
+  <PlayerClanPartyTrainingXpMultiplier>1.0</PlayerClanPartyTrainingXpMultiplier>
 
-  <!-- ////////////////////////////////////// -->
-  <!--                 General                -->
-  <!-- ////////////////////////////////////// -->
+  <!-- Multiplier for all xp this mod gives to AI parties not in the player's clan. -->
+  <NonPlayerClanPartyTrainingXpMultiplier>1.0</NonPlayerClanPartyTrainingXpMultiplier>
 
-  <!-- For every level the trainer is above the troop, training xp is increased by X percent.  -->
+  <!-- For every level the trainer is above the troop, training xp is increased by X percent. -->
   <LevelDifferenceFactor>6</LevelDifferenceFactor>
 
   <!-- For each skill level in leadership, training xp is increased by X percent. -->
@@ -53,21 +44,40 @@
   <!-- Whether upgradeable troops count toward group size during training. -->
   <UpgradeableReceiveTraining>true</UpgradeableReceiveTraining>
 
-  <!-- Whether this mod displays potential errors it finds while running. -->
-  <DebugMode>false</DebugMode>
 
   <!-- ////////////////////////////////////// -->
   <!--             Basic Training             -->
   <!-- ////////////////////////////////////// -->
 
-  <!-- Allow heroes with neither training perk to train troops. -->
+  <!-- Allow heroes with neither training perk to perform basic training. -->
   <EnableBaseTraining>true</EnableBaseTraining >
 
-  <!-- Training xp per troop for a hero with neither training perk. -->
-  <BaseTrainingXpGain>5</BaseTrainingXpGain>
+  <!-- Daily Xp gain from training by heroes with neither training perk. -->
+  <BaseTrainingXpAmount>4</BaseTrainingXpAmount>
 
-  <!-- Max tier trained by a hero with neither training perk -->
+  <!-- Max tier of troops in parties that will be trained by heroes with neither training perk. -->
   <BaseTrainingMaxTierTrained>1</BaseTrainingMaxTierTrained>
+
+
+  <!-- ////////////////////////////////////// -->
+  <!--            Garrison Training           -->
+  <!-- ////////////////////////////////////// -->
+
+  <!-- Enable tweaks to native garrison training. -->
+  <EnableGarrisonTraining>true</EnableGarrisonTraining>
+
+  <!-- Garrison Xp gain from a level 1 training field. Level 2 will be double this amount, level 3 will be triple, and so on. Native value is 1 (which is ridiculous). -->
+  <LevelOneTrainingFieldXpAmount>4</LevelOneTrainingFieldXpAmount>
+
+  <!-- Max tier of troops in garrisons that will be trained by this mod. -->
+  <GarrisonTrainingMaxTierTrained >20</GarrisonTrainingMaxTierTrained >
+
+  <!-- Multiplier for all xp this mod gives to garrisons of player-owned settlements. -->
+  <PlayerClanGarrisonTrainingXpMultiplier>1.0</PlayerClanGarrisonTrainingXpMultiplier>
+
+  <!-- Multiplier for all xp this mod gives to garrisons of settlements not owned by the player. -->
+  <NonPlayerClanGarrisonTrainingXpMultiplier>1.0</NonPlayerClanGarrisonTrainingXpMultiplier>
+
 
   <!-- ////////////////////////////////////// -->
   <!--           Financial Solutions          -->
@@ -77,16 +87,16 @@
   <EnableFinancialSolutions>true</EnableFinancialSolutions>
 
   <!-- Multiplier for all tax income from player-owned towns and castles. -->
-  <PlayerTownTaxIncomeMultiplier>1.0</PlayerTownTaxIncomeMultiplier>
+  <PlayerTownTaxIncomeMultiplier>2.0</PlayerTownTaxIncomeMultiplier>
 
-  <!-- Multiplier for all tax income from player-owned villages. -->
-  <PlayerVillageTaxIncomeMultiplier>1.0</PlayerVillageTaxIncomeMultiplier>
+  <!-- Multiplier for all tax income from player-owned villages. Note: This takes a few days to take effect. -->
+  <PlayerVillageTaxIncomeMultiplier>2.0</PlayerVillageTaxIncomeMultiplier>
 
-  <!-- Multiplier for all tax income for AI-owned towns and castles. -->
-  <NonPlayerTownTaxIncomeMultiplier>3.0</NonPlayerTownTaxIncomeMultiplier>
+  <!-- Multiplier for all tax income from AI-owned towns and castles. -->
+  <NonPlayerTownTaxIncomeMultiplier>2.5</NonPlayerTownTaxIncomeMultiplier>
 
-  <!-- Multiplier for all tax income for AI-owned villages. -->
-  <NonPlayerVillageTaxIncomeMultiplier>3.0</NonPlayerVillageTaxIncomeMultiplier>
+  <!-- Multiplier for all tax income from AI-owned villages. Note: This takes a few days to take effect. -->
+  <NonPlayerVillageTaxIncomeMultiplier>2.5</NonPlayerVillageTaxIncomeMultiplier>
 
   <!-- Multiplier for all party wages for parties in the player's clan. -->
   <PlayerClanPartyWageMultiplier>1.0</PlayerClanPartyWageMultiplier>
@@ -96,5 +106,13 @@
 
   <!-- Multiplier for the upgrade cost of all troops. -->
   <TroopUpgradeCostMultiplier>1.0</TroopUpgradeCostMultiplier>
+
+
+  <!-- ////////////////////////////////////// -->
+  <!--                 Debug                  -->
+  <!-- ////////////////////////////////////// -->
+
+  <!-- Whether this mod displays potential errors it finds while running. -->
+  <DebugMode>false</DebugMode>
 
 </TrainingTweak.Settings>
