@@ -78,6 +78,8 @@ namespace TrainingTweak
                 && Campaign.Current?.Models?.PartyTrainingModel != null
                 && Campaign.Current?.Models?.DailyTroopXpBonusModel != null)
             {
+                
+
                 MethodInfo originalMethod;
                 MethodInfo postfix;
 
@@ -118,6 +120,7 @@ namespace TrainingTweak
                 }
                 catch (Exception exc)
                 {
+                    Settings.Instance.EnableFinancialSolutions = false;
                     Util.Warning(Strings.FinancialSolutionsPatchFailed, exc);
                     _harmony.UnpatchAll();
                 }
@@ -174,7 +177,13 @@ namespace TrainingTweak
 
             if (_harmony != null)
             {
-                //_harmony.UnpatchAll(HarmonyId);
+                try
+                {
+                    _harmony.UnpatchAll(HarmonyId);
+                }
+                catch (Exception exc)
+                {
+                }
             }
         }
     }

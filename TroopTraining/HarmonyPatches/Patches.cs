@@ -29,6 +29,7 @@ namespace TrainingTweak.HarmonyPatches
                 catch (Exception exc)
                 {
                     _financialSolutionsDisabled = true;
+                    Settings.Instance.EnableFinancialSolutions = false;
                     Util.Warning(
                         $"{Strings.FinancialSolutionsPatchFailed}\n\n" +
                         $"{Strings.FatalErrorDisclaimer}",
@@ -58,6 +59,7 @@ namespace TrainingTweak.HarmonyPatches
                 catch (Exception exc)
                 {
                     _financialSolutionsDisabled = true;
+                    Settings.Instance.EnableFinancialSolutions = false;
                     Util.Warning(
                         $"{Strings.FinancialSolutionsPatchFailed}\n\n" +
                         $"{Strings.FatalErrorDisclaimer}",
@@ -87,6 +89,7 @@ namespace TrainingTweak.HarmonyPatches
                 catch (Exception exc)
                 {
                     _financialSolutionsDisabled = true;
+                    Settings.Instance.EnableFinancialSolutions = false;
                     Util.Warning(
                         $"{Strings.FinancialSolutionsPatchFailed}\n\n" +
                         $"{Strings.FatalErrorDisclaimer}",
@@ -113,6 +116,7 @@ namespace TrainingTweak.HarmonyPatches
                 catch (Exception exc)
                 {
                     _financialSolutionsDisabled = true;
+                    Settings.Instance.EnableFinancialSolutions = false;
                     Util.Warning(
                         $"{Strings.FinancialSolutionsPatchFailed}\n\n" +
                         $"{Strings.FatalErrorDisclaimer}",

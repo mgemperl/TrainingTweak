@@ -17,7 +17,7 @@ namespace TrainingTweak
         public const string XpPlaceholder = "[xp]";
 
         private static string FetchString(string id, 
-            string backup = "")
+            string backup = null)
         {
             string str;
             TextObject text;
@@ -29,9 +29,7 @@ namespace TrainingTweak
             }
             else
             {
-                str = (backup.Length > 0)
-                    ? backup
-                    : $"MISSING_STRING[{id}]";
+                str = backup ?? $"MISSING_STRING[{id}]";
             }
 
             return str;
