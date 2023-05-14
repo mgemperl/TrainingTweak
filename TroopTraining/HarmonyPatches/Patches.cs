@@ -1,5 +1,8 @@
 ﻿using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Localization;
 
 namespace TrainingTweak.HarmonyPatches
 {
@@ -128,16 +131,13 @@ namespace TrainingTweak.HarmonyPatches
         /// <summary>
         /// Postfix for disabling native party training
         /// </summary>
-        public static void GetPerkExperiencesForTroopsPostfix(
-            PerkObject perk, ref int __result)
+        public static void GetPerkExperiencePostfix(ref int __result)
         {
             if (!_disableNativeTrainingDisabled)
             {
                 try
                 {
-                    if (Settings.Instance.EnableTrainingPerkOverrides
-                        && (perk == DefaultPerks.Leadership.RaiseTheMeek
-                            || perk == DefaultPerks.Leadership.CombatTips))
+                    if (Settings.Instance.EnableTrainingPerkOverrides)
                     {
                         __result = 0;
                     }
@@ -178,6 +178,22 @@ namespace TrainingTweak.HarmonyPatches
 
                 }
             }
+        }
+
+        public static void PerkDescriptionPatch(
+            ref TextObject __result)
+        {
+            __result = new TextObject("TEST");
+            /*
+            if (__instance == DefaultPerks.Leadership.RaiseTheMeek)
+            {
+                __result = new TextObject("RAISE_THE_MEEK_TEST");
+            }
+            else if (__instance == DefaultPerks.Leadership.CombatTips)
+            {
+                __result = new TextObject("COMBAT_TIPS_TEST");
+            }
+            */
         }
     } 
 }

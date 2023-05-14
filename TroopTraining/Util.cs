@@ -15,16 +15,6 @@ namespace TrainingTweak
             MessageBox.Show($"{message}{excString}");
         }
 
-        public static void DebugMessage(string message, Exception exc = null)
-        {
-            if (Settings.Instance.DebugMode)
-            {
-                Warning(message, exc);
-            }
-
-            // TODO: Should probably log something somewhere somehow
-        }
-         
         public static string FlattenException(Exception exc)
         {
             StringBuilder builder = new StringBuilder();

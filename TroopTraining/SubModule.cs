@@ -1,5 +1,5 @@
 ﻿using System;
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -7,6 +7,10 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TrainingTweak.CampaignBehaviors;
 using System.IO;
+using Helpers;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TrainingTweak.Settings;
 
 namespace TrainingTweak
 {
@@ -27,9 +31,11 @@ namespace TrainingTweak
             // Try loading strings
             try
             {
+                /*
                 var textMan = TaleWorlds.MountAndBlade.Module.CurrentModule.GlobalTextManager;
-                textMan.LoadGameTexts(Path.Combine(BasePath.Name, "Modules", "TrainingTweak",
+                textMan.loa(Path.Combine(BasePath.Name, "Modules", "TrainingTweak",
                     "ModuleData", "module_strings.xml"));
+                    */
             }
             catch (Exception exc)
             {
@@ -46,7 +52,7 @@ namespace TrainingTweak
             // Register settings with MCM
             try
             {
-                Settings.Instance.RegisterSettings();
+                ModSettings.Instance.RegisterSettings();
             }
             catch (Exception exc)
             {
@@ -57,23 +63,15 @@ namespace TrainingTweak
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             // If playing in the campaign game mode
-            if (gameStarterObject is CampaignGameStarter)
-            {
-                base.OnGameStart(game, gameStarterObject);
-
-                var gameStarter = (CampaignGameStarter)gameStarterObject;
-                gameStarter.AddBehavior(new PartyTrainingBehavior());
-            }
-        }
-
-        public override void OnGameLoaded(Game game, object initializerObject)
-        {
-            base.OnGameLoaded(game, initializerObject);
+            if (gameStarterObject is not CampaignGameStarter gameStarter) return;
+            
+            base.OnGameStart(game, gameStarter);
         }
 
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
+            if (game.GameType is not Campaign) return;
 
             if (_harmony != null
                 && Campaign.Current?.Models?.SettlementTaxModel != null
@@ -81,8 +79,6 @@ namespace TrainingTweak
                 && Campaign.Current?.Models?.PartyTrainingModel != null
                 && Campaign.Current?.Models?.DailyTroopXpBonusModel != null)
             {
-                
-
                 MethodInfo originalMethod;
                 MethodInfo postfix;
 
@@ -113,8 +109,11 @@ namespace TrainingTweak
                         .GetMethod(nameof(HarmonyPatches.Patches.PartyWagePostfix));
                     PatchMethod(originalMethod, postfix);
 
+                    var trainModel = Campaign.Current.Models.PartyTrainingModel;
+                    
                     // Patch troop upgrade costs
-                    originalMethod = wageModel.GetType().GetMethod(nameof(wageModel.GetGoldCostForUpgrade))
+                    var upgradeModel = Campaign.Current.Models.PartyTroopUpgradeModel;
+                    originalMethod = wageModel.GetType().GetMethod(nameof(upgradeModel.GetGoldCostForUpgrade))
                         ?.DeclaringType?.GetMethod(nameof(wageModel.GetGoldCostForUpgrade));
                     postfix = typeof(HarmonyPatches.Patches)
                         .GetMethod(nameof(HarmonyPatches.Patches.UpgradeCostPostfix));
@@ -133,11 +132,11 @@ namespace TrainingTweak
                     // Patch perk xp gain
                     PartyTrainingModel partyTrainingModel = Campaign.Current.Models.PartyTrainingModel;
                     originalMethod = partyTrainingModel.GetType()
-                        .GetMethod(nameof(partyTrainingModel.GetPerkExperiencesForTroops))
+                        .GetMethod(nameof(partyTrainingModel.GetHourlyUpgradeXpFromTraining))
                             ?.DeclaringType?.GetMethod(
-                                nameof(partyTrainingModel.GetPerkExperiencesForTroops));
+                                nameof(partyTrainingModel.GetHourlyUpgradeXpFromTraining));
                     postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod(nameof(HarmonyPatches.Patches.GetPerkExperiencesForTroopsPostfix));
+                        .GetMethod(nameof(HarmonyPatches.Patches.GetPerkExperiencePostfix));
                     PatchMethod(originalMethod, postfix);
 
                     // Patch garrison xp gain
@@ -155,7 +154,21 @@ namespace TrainingTweak
                 {
                     Util.Warning(Strings.DisableNativeTrainingPatchFailed, exc);
                 }
-                
+
+                try
+                {
+                    originalMethod = DefaultPerks.Leadership.RaiseTheMeek.GetType()
+                        .GetMethod(nameof(DefaultPerks.Leadership.RaiseTheMeek.Description))
+                            ?.DeclaringType?.GetMethod(
+                                nameof(DefaultPerks.Leadership.RaiseTheMeek.Description));
+                    postfix = typeof(HarmonyPatches.Patches)
+                        .GetMethod(nameof(HarmonyPatches.Patches.PerkDescriptionPatch));
+                    PatchMethod(originalMethod, postfix);
+                }
+                catch (Exception exc)
+                {
+                    Util.Warning("Failed to patch perk descriptions.", exc);
+                }
             }
         }
 
@@ -192,7 +205,7 @@ namespace TrainingTweak
 
         protected override void OnSubModuleUnloaded()
         {
-            Settings.Instance.Dispose();
+            ModSettings.Instance.Dispose();
         }
     }
 }
