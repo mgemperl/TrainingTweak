@@ -58,7 +58,7 @@ public class ModSettings : IDisposable
             .AddFinancialSolutionsPlayerSettingsSubGroup(Financial, order++)
             .AddFinancialSolutionsAISettingsSubGroup(Financial, order++)
             .AddFinancialSolutionsGeneralSettingsSubGroup(Financial, order++);
-      
+
         _settings = settingsBuilder.BuildAsGlobal();
         _settings.Register();
     }

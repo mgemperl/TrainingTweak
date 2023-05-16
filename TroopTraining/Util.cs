@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using TaleWorlds.Library;
 
 namespace TrainingTweak
 {
     public static class Util
     {
-        public static void Warning(string message, Exception exc = null)
+        public static void Warning(string message, Exception? exc = null)
         {
-            string excString = (exc == null) ? "" : $"\n\n{FlattenException(exc)}";
-            MessageBox.Show($"{message}{excString}");
+            string excString = exc == null 
+                ? string.Empty 
+                : $"\n\n{FlattenException(exc)}";
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"{message}{excString}", Color.FromVector3(new Vec3(255, 0, 0))));
         }
 
         public static string FlattenException(Exception exc)

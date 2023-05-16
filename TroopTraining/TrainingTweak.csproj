@@ -13,7 +13,7 @@
     <LangVersion>latest</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <Nullable>true</Nullable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +67,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics.Vectors">
+      <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -253,11 +256,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CampaignBehaviors\PartyTrainingBehavior.cs" />
+    <Compile Include="HarmonyPatches\Base\HarmonyPatch.cs" />
+    <Compile Include="HarmonyPatches\Base\HarmonyPostfix.cs" />
+    <Compile Include="HarmonyPatches\Base\HarmonyPrefix.cs" />
     <Compile Include="HarmonyPatches\TroopTrainingPatch.cs" />
-    <Compile Include="HarmonyPatches\HarmonyPatch.cs" />
     <Compile Include="HarmonyPatches\PartyWagePatch.cs" />
-    <Compile Include="HarmonyPatches\Patches.cs" />
     <Compile Include="HarmonyPatches\TownTaxesPatch.cs" />
     <Compile Include="HarmonyPatches\TroopUpgradeCostPatch.cs" />
     <Compile Include="HarmonyPatches\VillageTaxesPatch.cs" />

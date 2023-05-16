@@ -1,33 +1,34 @@
 ﻿using System;
 using System.Reflection;
 using HarmonyLib;
-using JetBrains.Annotations;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Engine;
 using TaleWorlds.Localization;
 using TrainingTweak.Settings;
+using HarmonyPostfix = TrainingTweak.HarmonyPatches.Base.HarmonyPostfix;
 
 namespace TrainingTweak.HarmonyPatches;
 
-public class PartyWagePatch : HarmonyPatch
+public class PartyWagePatch : HarmonyPostfix
 {
    private static bool Faulted { get; set; }
    private static FinancialSettings Settings => ModSettings.Instance.Financial;
    
-   protected override MethodInfo OriginalMethod => WageModel
+   protected override MethodInfo? OriginalMethod => WageModel
       ?.GetType().GetMethod(nameof(WageModel.GetTotalWage))
       ?.DeclaringType?.GetMethod(nameof(WageModel.GetTotalWage));
 
-   protected override MethodInfo Postfix => 
+   protected override MethodInfo? Patch => 
       GetType().GetMethod(nameof(PartyWagePostfix));
    
-   [CanBeNull]
-   private PartyWageModel WageModel => Campaign.Current.Models.PartyWageModel;
+   private PartyWageModel? WageModel => Campaign.Current.Models.PartyWageModel;
    
    public PartyWagePatch(Harmony harmony) : base(harmony) { }
    
-   public static void PartyWagePostfix(MobileParty mobileParty, ref ExplainedNumber __result)
+   public static void PartyWagePostfix(MobileParty mobileParty, 
+      ref ExplainedNumber __result)
    {
       if (Faulted) return;
       

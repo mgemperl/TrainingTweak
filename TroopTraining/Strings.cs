@@ -305,11 +305,11 @@ namespace TrainingTweak
             "str_tt_financial_solutions_patches_failed",
             "Training Tweak mod's Financial Solutions patches have failed. " +
             "Continuing with Financial Solutions disabled.");
-        public static string DisableNativeTrainingPatchFailed => FetchString(
+
+        public static string TrainingPatchFailed => FetchString(
             "str_tt_disable_native_training_failed",
-            "Training Tweak mod failed to disable native training. Native training " +
-            "and Training Tweak's training will both run in parallel, likely resulting in " +
-            "excessive xp gain.");
+            "Training Tweak mod failed to apply training patch. Falling back to " +
+            "native training.");
         public static string ConfigFileFailed => FetchString(
             "str_tt_config_file_failed",
             "Training Tweak failed to load config file. Using default settings.");

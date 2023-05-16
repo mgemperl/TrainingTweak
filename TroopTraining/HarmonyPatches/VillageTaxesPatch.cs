@@ -4,18 +4,21 @@ using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Settlements;
+using TrainingTweak.Settings;
+using HarmonyPostfix = TrainingTweak.HarmonyPatches.Base.HarmonyPostfix;
 
 namespace TrainingTweak.HarmonyPatches;
 
-public class VillageTaxesPatch : HarmonyPatch
+public class VillageTaxesPatch : HarmonyPostfix
 {
    private static bool Faulted { get; set; }
+   private static FinancialSettings Settings => ModSettings.Instance.Financial;
    
    protected override MethodInfo OriginalMethod => TaxModel.GetType()
       .GetMethod(nameof(TaxModel.CalculateVillageTaxFromIncome))
       ?.DeclaringType?.GetMethod(nameof(TaxModel.CalculateVillageTaxFromIncome));
 
-   protected override MethodInfo Postfix =>
+   protected override MethodInfo Patch =>
       GetType().GetMethod(nameof(CalculateVillageTaxPostfix));
    
    private SettlementTaxModel TaxModel => Campaign.Current.Models.SettlementTaxModel;
@@ -28,18 +31,18 @@ public class VillageTaxesPatch : HarmonyPatch
       
       try
       {
-         if (!Settings.Instance.EnableFinancialSolutions) return;
+         if (!Settings.EnableFinancialSolutions) return;
          
          float multiplier = (village?.Settlement?.OwnerClan == Clan.PlayerClan)
-            ? Settings.Instance.PlayerVillageTaxIncomeMultiplier
-            : Settings.Instance.NonPlayerVillageTaxIncomeMultiplier;
+            ? Settings.PlayerVillageTaxIncomeMultiplier
+            : Settings.NonPlayerVillageTaxIncomeMultiplier;
 
          __result = (int)Math.Ceiling(__result * Math.Max(0, multiplier));
       }
       catch (Exception exc)
       {
          Faulted = true;
-         Settings.Instance.EnableFinancialSolutions = false;
+         Settings.EnableFinancialSolutions = false;
          Util.Warning(
             $"{Strings.FinancialSolutionsPatchFailed}\n\n" +
             $"{Strings.FatalErrorDisclaimer}",

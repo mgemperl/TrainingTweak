@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using HarmonyLib;
-using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using TrainingTweak.CampaignBehaviors;
-using System.IO;
-using Helpers;
-using TaleWorlds.CampaignSystem.CharacterDevelopment;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TrainingTweak.HarmonyPatches;
 using TrainingTweak.Settings;
+using HarmonyPatch = TrainingTweak.HarmonyPatches.Base.HarmonyPatch;
 
 namespace TrainingTweak
 {
@@ -43,6 +41,9 @@ namespace TrainingTweak
                     "module_strings.xml language file. Using English." +
                     $"\n\n{exc.Message}");
             }
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                "Training Tweak loaded", Color.White));
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -71,136 +72,32 @@ namespace TrainingTweak
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
-            if (game.GameType is not Campaign) return;
+            if (game.GameType is not Campaign) 
+                return;
 
-            if (_harmony != null
-                && Campaign.Current?.Models?.SettlementTaxModel != null
-                && Campaign.Current?.Models?.PartyWageModel != null
-                && Campaign.Current?.Models?.PartyTrainingModel != null
-                && Campaign.Current?.Models?.DailyTroopXpBonusModel != null)
+            var patches = new List<HarmonyPatch>
             {
-                MethodInfo originalMethod;
-                MethodInfo postfix;
+                new TroopTrainingPatch(_harmony),
+                new TroopUpgradeCostPatch(_harmony),
+                new PartyWagePatch(_harmony),
+                new TownTaxesPatch(_harmony),
+                new VillageTaxesPatch(_harmony)
+            };
 
-                try
-                {
-                    // Patch town taxes
-                    SettlementTaxModel taxModel = Campaign.Current.Models.SettlementTaxModel;
-                    originalMethod = taxModel.GetType().GetMethod(nameof(taxModel.CalculateTownTax))
-                        ?.DeclaringType?.GetMethod(nameof(taxModel.CalculateTownTax));
-                    postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod(nameof(HarmonyPatches.Patches.CalculateTownTaxPostfix));
-                    PatchMethod(originalMethod, postfix);
-
-                    // Patch village taxes
-                    originalMethod = taxModel.GetType()
-                        .GetMethod(nameof(taxModel.CalculateVillageTaxFromIncome))
-                        ?.DeclaringType?.GetMethod(nameof(taxModel.CalculateVillageTaxFromIncome));
-                    postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod(nameof(HarmonyPatches.Patches.CalculateVillageTaxPostfix));
-                    PatchMethod(originalMethod, postfix);
-
-
-                    // Patch party wages
-                    PartyWageModel wageModel = Campaign.Current.Models.PartyWageModel;
-                    originalMethod = wageModel.GetType().GetMethod(nameof(wageModel.GetTotalWage))
-                        ?.DeclaringType?.GetMethod(nameof(wageModel.GetTotalWage));
-                    postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod(nameof(HarmonyPatches.Patches.PartyWagePostfix));
-                    PatchMethod(originalMethod, postfix);
-
-                    var trainModel = Campaign.Current.Models.PartyTrainingModel;
-                    
-                    // Patch troop upgrade costs
-                    var upgradeModel = Campaign.Current.Models.PartyTroopUpgradeModel;
-                    originalMethod = wageModel.GetType().GetMethod(nameof(upgradeModel.GetGoldCostForUpgrade))
-                        ?.DeclaringType?.GetMethod(nameof(wageModel.GetGoldCostForUpgrade));
-                    postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod(nameof(HarmonyPatches.Patches.UpgradeCostPostfix));
-                    PatchMethod(originalMethod, postfix);
-
-                }
-                catch (Exception exc)
-                {
-                    Settings.Instance.EnableFinancialSolutions = false;
-                    Util.Warning(Strings.FinancialSolutionsPatchFailed, exc);
-                    _harmony.UnpatchAll();
-                }
-
-                try
-                {
-                    // Patch perk xp gain
-                    PartyTrainingModel partyTrainingModel = Campaign.Current.Models.PartyTrainingModel;
-                    originalMethod = partyTrainingModel.GetType()
-                        .GetMethod(nameof(partyTrainingModel.GetHourlyUpgradeXpFromTraining))
-                            ?.DeclaringType?.GetMethod(
-                                nameof(partyTrainingModel.GetHourlyUpgradeXpFromTraining));
-                    postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod(nameof(HarmonyPatches.Patches.GetPerkExperiencePostfix));
-                    PatchMethod(originalMethod, postfix);
-
-                    // Patch garrison xp gain
-                    DailyTroopXpBonusModel garrisonTrainingModel =
-                        Campaign.Current.Models.DailyTroopXpBonusModel;
-                    originalMethod = garrisonTrainingModel.GetType()
-                        .GetMethod(nameof(garrisonTrainingModel.CalculateDailyTroopXpBonus))
-                            ?.DeclaringType?.GetMethod(
-                                nameof(garrisonTrainingModel.CalculateDailyTroopXpBonus));
-                    postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod(nameof(HarmonyPatches.Patches.CalculateDailyTroopXpBonusPostfix));
-                    PatchMethod(originalMethod, postfix);
-                }
-                catch (Exception exc)
-                {
-                    Util.Warning(Strings.DisableNativeTrainingPatchFailed, exc);
-                }
-
-                try
-                {
-                    originalMethod = DefaultPerks.Leadership.RaiseTheMeek.GetType()
-                        .GetMethod(nameof(DefaultPerks.Leadership.RaiseTheMeek.Description))
-                            ?.DeclaringType?.GetMethod(
-                                nameof(DefaultPerks.Leadership.RaiseTheMeek.Description));
-                    postfix = typeof(HarmonyPatches.Patches)
-                        .GetMethod(nameof(HarmonyPatches.Patches.PerkDescriptionPatch));
-                    PatchMethod(originalMethod, postfix);
-                }
-                catch (Exception exc)
-                {
-                    Util.Warning("Failed to patch perk descriptions.", exc);
-                }
-            }
+            foreach (var patch in patches)
+                patch.Apply();
         }
 
-        private void PatchMethod(MethodInfo original, MethodInfo postfix)
-        {
-            if (original != null)
-            {
-                _harmony.Patch(
-                    original: original,
-                    postfix: new HarmonyMethod(postfix));
-            }
-            else
-            {
-                throw new InvalidOperationException(
-                    $"Original method not found for patch: {postfix.Name}");
-            }
-        }
         
         public override void OnGameEnd(Game game)
         {
             base.OnGameEnd(game);
 
-            if (_harmony != null)
+            try
             {
-                try
-                {
-                    _harmony.UnpatchAll(HarmonyId);
-                }
-                catch (Exception exc)
-                {
-                }
+                _harmony.UnpatchAll(HarmonyId);
             }
+            catch (Exception exc) {}
         }
 
         protected override void OnSubModuleUnloaded()
